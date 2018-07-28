@@ -1,6 +1,8 @@
 # Triage-Elm
 An attempt to move the Triage app to Elm.
 
+This project is bootstrapped with [Create Elm App](https://github.com/halfzebra/create-elm-app).
+
 ## Available scripts
 In the project directory you can run:
 
