@@ -1,7 +1,8 @@
 module Main exposing (..)
 
-import Html exposing (Html, text, div, h1, img)
-import Html.Attributes exposing (src)
+import Html exposing (Html, text, div, h1, img, i)
+import Html.Attributes exposing (class, src)
+import Bootstrap.Grid as Grid
 
 
 ---- MODEL ----
@@ -36,8 +37,18 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ img [ src "/logo.svg" ] []
-        , h1 [] [ text "Your Elm App is working!" ]
+        [ Grid.container []
+            [ Grid.row []
+                [ Grid.col []
+                    [ img [ src "/logo.svg" ] [] ]
+                ]
+            , Grid.row []
+                [ Grid.col []
+                    [ text "The future home of Elm Triage"
+                    , i [ class "fa fa-arrow-up" ] []
+                    ]
+                ]
+            ]
         ]
 
 
