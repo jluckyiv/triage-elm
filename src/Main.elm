@@ -16,16 +16,44 @@ import Html.Events exposing (onClick)
 
 type alias Model =
     { navbarState : Navbar.State
+    , actionDropdownState : Dropdown.State
+    , departmentDropdownState : Dropdown.State
+    , departmentFilter : Department
+    , departments : List Department
+    , interpreterDropdownState : Dropdown.State
+    , statusDropdownState : Dropdown.State
     , matters : List Matter
     }
 
 
+type Department
+    = All
+    | F201
+    | F301
+    | F401
+    | F402
+    | F501
+    | F502
+
+
+type alias Language =
+    String
+
+
+type alias CaseNumber =
+    String
+
+
+type alias FullName =
+    String
+
+
 type alias Matter =
-    { department : String
-    , interpreter : String
-    , caseNumber : String
-    , petitioner : String
-    , respondent : String
+    { department : Department
+    , interpreter : Language
+    , caseNumber : CaseNumber
+    , petitioner : FullName
+    , respondent : FullName
     }
 
 
@@ -48,12 +76,35 @@ init =
     let
         ( navbarState, navbarCmd ) =
             Navbar.initialState NavbarMsg
+
+        matters =
+            [ { department = F201, interpreter = "None", caseNumber = "RIF1700174", petitioner = "Beatrice Phelps", respondent = "Shannon Terry" }
+            , { department = F201, interpreter = "None", caseNumber = "RIF1800505", petitioner = "Bethany Oliver", respondent = "Al Bailey" }
+            , { department = F201, interpreter = "None", caseNumber = "RIF1700371", petitioner = "Harry Mendoza", respondent = "Lynette Perry" }
+            , { department = F301, interpreter = "None", caseNumber = "RIF1800524", petitioner = "Teresa Stevens", respondent = "Daniel Bishara" }
+            , { department = F301, interpreter = "None", caseNumber = "RIF1700867", petitioner = "Kelly Clayton", respondent = "Julian Roberson" }
+            , { department = F401, interpreter = "None", caseNumber = "RIF1700273", petitioner = "Leona Jackson", respondent = "Hazel Wood" }
+            , { department = F401, interpreter = "None", caseNumber = "RIF1800578", petitioner = "Ramona Hudson", respondent = "Terry Arnold" }
+            , { department = F401, interpreter = "None", caseNumber = "RIF1800475", petitioner = "Faith Reyes", respondent = "Herman Barber" }
+            , { department = F402, interpreter = "None", caseNumber = "RIF1700123", petitioner = "Terence Chavez", respondent = "Jeannette Mitchell" }
+            , { department = F402, interpreter = "None", caseNumber = "RIF1800836", petitioner = "Tracy Fields", respondent = "Kent Osborne" }
+            , { department = F402, interpreter = "None", caseNumber = "RIF1800183", petitioner = "Daniel Sherman", respondent = "Pam Moss" }
+            , { department = F501, interpreter = "None", caseNumber = "RIF1700678", petitioner = "Javier Roy", respondent = "Clifford Sutton" }
+            , { department = F501, interpreter = "None", caseNumber = "RIF1600977", petitioner = "Colleen Padilla", respondent = "Israel Miles" }
+            , { department = F501, interpreter = "None", caseNumber = "RIF1700081", petitioner = "Cynthia Collier", respondent = "Jesse Moody" }
+            , { department = F502, interpreter = "None", caseNumber = "RIF1600118", petitioner = "Robert Ruiz", respondent = "Margaret Fields" }
+            , { department = F502, interpreter = "None", caseNumber = "RIF1800229", petitioner = "Jodi Flores", respondent = "Wendell Moody" }
+            , { department = F502, interpreter = "None", caseNumber = "RIF1800181", petitioner = "Moses Moss", respondent = "Carrie Matthews" }
+            ]
     in
         ( { navbarState = navbarState
-          , matters =
-                [ { department = "F201", interpreter = "None", caseNumber = "RIF1234567", petitioner = "John Doe", respondent = "Jane Doe" }
-                , { department = "F301", interpreter = "None", caseNumber = "RIF1234568", petitioner = "Ron Roe", respondent = "Reyna Roe" }
-                ]
+          , actionDropdownState = Dropdown.initialState
+          , departmentDropdownState = Dropdown.initialState
+          , departmentFilter = All
+          , departments = [ All, F201, F301, F401, F402, F501, F502 ]
+          , interpreterDropdownState = Dropdown.initialState
+          , statusDropdownState = Dropdown.initialState
+          , matters = matters
           }
         , navbarCmd
         )
@@ -66,8 +117,14 @@ init =
 type Msg
     = NoOp
       -- | ActionItemMsg String
-    | ActionButtonMsg Dropdown.State
     | ActionButtonItemMsg
+    | ActionDropdownToggleMsg Dropdown.State
+    | DepartmentDropdownToggleMsg Dropdown.State
+    | InterpreterDropdownToggleMsg Dropdown.State
+    | StatusDropdownToggleMsg Dropdown.State
+    | FilterDepartment Department
+    | FilterInterpreter String
+    | FilterStatus String
     | NavbarMsg Navbar.State
 
 
@@ -77,11 +134,47 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
+        ActionDropdownToggleMsg state ->
+            ( { model | actionDropdownState = state }
+            , Cmd.none
+            )
+
         ActionButtonItemMsg ->
             ( model, Cmd.none )
 
-        ActionButtonMsg _ ->
-            ( model, Cmd.none )
+        DepartmentDropdownToggleMsg state ->
+            ( { model | departmentDropdownState = state }
+            , Cmd.none
+            )
+
+        InterpreterDropdownToggleMsg state ->
+            ( { model | interpreterDropdownState = state }
+            , Cmd.none
+            )
+
+        StatusDropdownToggleMsg state ->
+            ( { model | statusDropdownState = state }
+            , Cmd.none
+            )
+
+        FilterDepartment department ->
+            ( { model | departmentFilter = department }
+            , Cmd.none
+            )
+
+        FilterInterpreter language ->
+            let
+                _ =
+                    Debug.log "filter language" language
+            in
+                ( model, Cmd.none )
+
+        FilterStatus status ->
+            let
+                _ =
+                    Debug.log "filter status" status
+            in
+                ( model, Cmd.none )
 
         NavbarMsg state ->
             ( { model | navbarState = state }, Cmd.none )
@@ -132,62 +225,93 @@ view model =
             |> Navbar.view model.navbarState
         , div [ attribute "role" "main", class "container" ]
             [ div [ class "starter-template" ]
-                [ img [ src "/logo.svg", class "logo" ] []
-                , h1 [] [ text "Triage Elm" ]
+                [ h1 [] [ text "Triage Elm" ]
                 , p [ class "lead" ]
                     [ text "Making Triage Functional"
                     ]
                 ]
-            , viewActionTable model.matters
+            , viewActionTable model
             ]
         ]
 
 
-viewSorterButton : Html Msg
-viewSorterButton =
+viewActionTable : Model -> Html Msg
+viewActionTable model =
+    let
+        matters =
+            case model.departmentFilter of
+                All ->
+                    model.matters
+
+                department ->
+                    List.filter (\m -> m.department == department) model.matters
+    in
+        Table.table
+            { options = [ Table.hover ]
+            , thead =
+                Table.simpleThead
+                    [ Table.th [] [ departmentDropdown model ]
+                    , Table.th [] [ interpreterDropdown model ]
+                    , Table.th [] [ text "Case Number" ]
+                    , Table.th [] [ text "Petitioner" ]
+                    , Table.th [] [ text "Respondent" ]
+                    , Table.th [] [ statusDropdown model ]
+                    ]
+            , tbody =
+                Table.tbody [] (List.map viewActionRow matters)
+            }
+
+
+departmentDropdown : Model -> Html Msg
+departmentDropdown model =
+    let
+        label =
+            "Department: " ++ toString (model.departmentFilter)
+    in
+        Dropdown.dropdown
+            model.departmentDropdownState
+            { options = []
+            , toggleMsg = DepartmentDropdownToggleMsg
+            , toggleButton = Dropdown.toggle [ Button.light ] [ text label ]
+            , items =
+                List.map (\d -> Dropdown.buttonItem [ onClick (FilterDepartment d) ] [ text (toString d) ]) model.departments
+            }
+
+
+interpreterDropdown : Model -> Html Msg
+interpreterDropdown model =
     Dropdown.dropdown
-        Dropdown.initialState
+        model.interpreterDropdownState
         { options = []
-        , toggleMsg = ActionButtonMsg
-        , toggleButton = Dropdown.toggle [ Button.warning ] [ text "action button" ]
-        , items = [ viewActionButtonItem ]
+        , toggleMsg = InterpreterDropdownToggleMsg
+        , toggleButton = Dropdown.toggle [ Button.light ] [ text "Interpreter" ]
+        , items =
+            [ Dropdown.buttonItem [ onClick (FilterInterpreter "Spanish") ] [ text "Spanish" ]
+            , Dropdown.buttonItem [ onClick (FilterInterpreter "Other") ] [ text "Other" ]
+            ]
         }
 
 
-viewActionTable : List Matter -> Html Msg
-viewActionTable matters =
-    Table.table
-        { options = [ Table.hover ]
-        , thead =
-            Table.simpleThead
-                [ Table.th [] [ viewFilterButton "Dept" ]
-                , Table.th [] [ viewFilterButton "Interpreter" ]
-                , Table.th [] [ text "Case Number" ]
-                , Table.th [] [ text "Petitioner" ]
-                , Table.th [] [ text "Respondent" ]
-                , Table.th [] [ viewFilterButton "Status" ]
-                ]
-        , tbody =
-            Table.tbody [] (List.map viewActionRow matters)
-        }
-
-
-viewFilterButton : String -> Html Msg
-viewFilterButton label =
+statusDropdown : Model -> Html Msg
+statusDropdown model =
     -- needs dropdownstate, buttontext, buttoncolor, menuitems
     Dropdown.dropdown
-        Dropdown.initialState
+        model.statusDropdownState
         { options = []
-        , toggleMsg = ActionButtonMsg
-        , toggleButton = Dropdown.toggle [ Button.light ] [ text label ]
-        , items = [ viewActionButtonItem ]
+        , toggleMsg = StatusDropdownToggleMsg
+        , toggleButton =
+            Dropdown.toggle [ Button.light ] [ text "Status" ]
+        , items =
+            [ Dropdown.buttonItem [ onClick (FilterStatus "Status1") ] [ text "Status1" ]
+            , Dropdown.buttonItem [ onClick (FilterStatus "Status2") ] [ text "Status2" ]
+            ]
         }
 
 
 viewActionRow : Matter -> Table.Row Msg
 viewActionRow matter =
     Table.tr []
-        [ Table.td [] [ text matter.department ]
+        [ Table.td [] [ text (toString matter.department) ]
         , Table.td [] [ text matter.interpreter ]
         , Table.td [] [ text matter.caseNumber ]
         , Table.td [] [ text matter.petitioner ]
@@ -202,7 +326,7 @@ viewActionButton label =
     Dropdown.dropdown
         Dropdown.initialState
         { options = []
-        , toggleMsg = ActionButtonMsg
+        , toggleMsg = ActionDropdownToggleMsg
         , toggleButton = Dropdown.toggle [ Button.warning ] [ text label ]
         , items = []
         }
@@ -231,6 +355,8 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Navbar.subscriptions model.navbarState NavbarMsg
-
-        -- , Dropdown.subscriptions model.navDropdownState DropdownMsg
+        , Dropdown.subscriptions model.actionDropdownState ActionDropdownToggleMsg
+        , Dropdown.subscriptions model.departmentDropdownState DepartmentDropdownToggleMsg
+        , Dropdown.subscriptions model.interpreterDropdownState InterpreterDropdownToggleMsg
+        , Dropdown.subscriptions model.statusDropdownState StatusDropdownToggleMsg
         ]
