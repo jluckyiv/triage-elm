@@ -2,6 +2,10 @@ module Main exposing (..)
 
 import Bootstrap.Button as Button
 import Bootstrap.Dropdown as Dropdown
+import Bootstrap.Form.Input as Input
+import Bootstrap.Navbar as Navbar
+import Bootstrap.Table as Table
+import Bootstrap.Utilities.Spacing as Spacing
 import Html exposing (Html, text, div, h1, img, i, nav, p, br, button, label, a, input, form, li, ul, span)
 import Html.Attributes exposing (class, src, type_, placeholder, href, attribute, id)
 import Html.Events exposing (onClick)
@@ -11,12 +15,48 @@ import Html.Events exposing (onClick)
 
 
 type alias Model =
-    { navDropdownState : Dropdown.State, navDropdownText : String }
+    { navbarState : Navbar.State
+    , matters : List Matter
+    }
+
+
+type alias Matter =
+    { department : String
+    , interpreter : String
+    , caseNumber : String
+    , petitioner : String
+    , respondent : String
+    }
+
+
+type alias ActionButton =
+    { state : Dropdown.State
+    , msg : Msg
+    , text : String
+    , items : List ActionButtonItem
+    }
+
+
+type alias ActionButtonItem =
+    { text : String
+    , data : String
+    }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { navDropdownState = Dropdown.initialState, navDropdownText = "Dropdown" }, Cmd.none )
+    let
+        ( navbarState, navbarCmd ) =
+            Navbar.initialState NavbarMsg
+    in
+        ( { navbarState = navbarState
+          , matters =
+                [ { department = "F201", interpreter = "None", caseNumber = "RIF1234567", petitioner = "John Doe", respondent = "Jane Doe" }
+                , { department = "F301", interpreter = "None", caseNumber = "RIF1234568", petitioner = "Ron Roe", respondent = "Reyna Roe" }
+                ]
+          }
+        , navbarCmd
+        )
 
 
 
@@ -25,9 +65,10 @@ init =
 
 type Msg
     = NoOp
-    | NavDropdownMsg Dropdown.State
-    | NavItemMsg1
-    | NavItemMsg2
+      -- | ActionItemMsg String
+    | ActionButtonMsg Dropdown.State
+    | ActionButtonItemMsg
+    | NavbarMsg Navbar.State
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -36,16 +77,14 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
-        NavItemMsg1 ->
-            ( { model | navDropdownText = "Dropdown 1" }, Cmd.none )
+        ActionButtonItemMsg ->
+            ( model, Cmd.none )
 
-        NavItemMsg2 ->
-            ( { model | navDropdownText = "Dropdown 2" }, Cmd.none )
+        ActionButtonMsg _ ->
+            ( model, Cmd.none )
 
-        NavDropdownMsg state ->
-            ( { model | navDropdownState = state }
-            , Cmd.none
-            )
+        NavbarMsg state ->
+            ( { model | navbarState = state }, Cmd.none )
 
 
 
@@ -55,65 +94,120 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ nav [ class "navbar navbar-expand-md navbar-dark bg-dark fixed-top" ]
-            [ a [ class "navbar-brand", href "#" ]
-                [ text "Navbar" ]
-            , button [ class "navbar-toggler", type_ "button", attribute "data-toggle" "collapse", attribute "data-target" "#navbarsExampleDefault", attribute "aria-controls" "navbarsExampleDefault", attribute "aria-expanded" "false", attribute "aria-label" "Toggle navigation" ]
-                [ span [ class "navbar-toggler-icon" ]
-                    []
+        [ Navbar.config NavbarMsg
+            |> Navbar.withAnimation
+            |> Navbar.dark
+            |> Navbar.brand [ href "#" ] [ text "Triage" ]
+            |> Navbar.items
+                [ Navbar.itemLink [ href "#home" ] [ text "Home" ]
+                , Navbar.itemLink [ href "#link" ] [ text "Link" ]
+                , Navbar.dropdown
+                    { id = "navbarDropdown"
+                    , toggle = Navbar.dropdownToggle [] [ text "Nav" ]
+                    , items =
+                        [ Navbar.dropdownHeader [ text "Heading" ]
+                        , Navbar.dropdownItem
+                            [ href "#drop1" ]
+                            [ text "Drop item 1" ]
+                        , Navbar.dropdownItem
+                            [ href "#drop2" ]
+                            [ text "Drop item 2" ]
+                        , Navbar.dropdownDivider
+                        , Navbar.dropdownItem
+                            [ href "#drop3" ]
+                            [ text "Drop item 3" ]
+                        ]
+                    }
                 ]
-            , div [ class "collapse navbar-collapse", id "navbarsExampleDefault" ]
-                [ ul [ class "navbar-nav mr-auto" ]
-                    [ li [ class "nav-item active" ]
-                        [ a [ class "nav-link", href "#" ]
-                            [ text "Home"
-                            , span
-                                [ class "sr-only" ]
-                                [ text "(current)" ]
-                            ]
+            |> Navbar.customItems
+                [ Navbar.formItem []
+                    [ Input.text [ Input.attrs [ placeholder "search for something" ] ]
+                    , Button.button
+                        [ Button.outlineLight
+                        , Button.attrs [ Spacing.ml2Sm ]
                         ]
-                    , li [ class "nav-item" ]
-                        [ a [ class "nav-link", href "#" ]
-                            [ text "Link" ]
-                        ]
-                    , li [ class "nav-item" ]
-                        [ a [ class "nav-link disabled", href "#" ]
-                            [ text "Disabled" ]
-                        ]
-                    , li [ class "nav-item dropdown" ]
-                        [ Dropdown.dropdown
-                            model.navDropdownState
-                            { options = []
-                            , toggleMsg = NavDropdownMsg
-                            , toggleButton =
-                                Dropdown.toggle [ Button.outlineLight ] [ text model.navDropdownText ]
-                            , items =
-                                [ Dropdown.buttonItem [ onClick NavItemMsg1 ] [ text "Item 1" ]
-                                , Dropdown.buttonItem [ onClick NavItemMsg2 ] [ text "Item 2" ]
-                                ]
-                            }
-                        ]
-                    ]
-                , form [ class "form-inline my-2 my-lg-0" ]
-                    [ input [ class "form-control mr-sm-2", type_ "text", placeholder "Search", attribute "aria-label" "Search" ]
-                        []
-                    , button [ class "btn btn-outline-light my-2 my-sm-0", type_ "submit" ]
                         [ text "Search" ]
                     ]
                 ]
-            ]
+            |> Navbar.view model.navbarState
         , div [ attribute "role" "main", class "container" ]
             [ div [ class "starter-template" ]
                 [ img [ src "/logo.svg", class "logo" ] []
-                , h1 [] [ text "Bootstrap starter template" ]
+                , h1 [] [ text "Triage Elm" ]
                 , p [ class "lead" ]
-                    [ text "Use this document as a way to quickly start any new project."
-                    , br [] []
-                    , text "All you get is this text and a mostly barebones HTML document."
+                    [ text "Making Triage Functional"
                     ]
                 ]
+            , viewActionTable model.matters
             ]
         ]
+
+
+viewSorterButton =
+    Dropdown.dropdown
+        Dropdown.initialState
+        { options = []
+        , toggleMsg = ActionButtonMsg
+        , toggleButton = Dropdown.toggle [ Button.warning ] [ text "action button" ]
+        , items = [ viewActionButtonItem ]
+        }
+
+
+viewActionTable : List Matter -> Html Msg
+viewActionTable matters =
+    Table.table
+        { options = [ Table.hover ]
+        , thead =
+            Table.simpleThead
+                [ Table.th [] [ viewFilterButton "Dept" ]
+                , Table.th [] [ viewFilterButton "Interpreter" ]
+                , Table.th [] [ text "Case Number" ]
+                , Table.th [] [ text "Petitioner" ]
+                , Table.th [] [ text "Respondent" ]
+                , Table.th [] [ viewFilterButton "Status" ]
+                ]
+        , tbody =
+            Table.tbody [] (List.map viewActionRow matters)
+        }
+
+
+viewFilterButton label =
+    -- needs dropdownstate, buttontext, buttoncolor, menuitems
+    Dropdown.dropdown
+        Dropdown.initialState
+        { options = []
+        , toggleMsg = ActionButtonMsg
+        , toggleButton = Dropdown.toggle [ Button.light ] [ text label ]
+        , items = [ viewActionButtonItem ]
+        }
+
+
+viewActionRow : Matter -> Table.Row Msg
+viewActionRow matter =
+    Table.tr []
+        [ Table.td [] [ text matter.department ]
+        , Table.td [] [ text matter.interpreter ]
+        , Table.td [] [ text matter.caseNumber ]
+        , Table.td [] [ text matter.petitioner ]
+        , Table.td [] [ text matter.respondent ]
+        , Table.td [] [ viewActionButton "action" ]
+        ]
+
+
+viewActionButton : String -> Html Msg
+viewActionButton label =
+    -- needs dropdownstate, buttontext, buttoncolor, menuitems
+    Dropdown.dropdown
+        Dropdown.initialState
+        { options = []
+        , toggleMsg = ActionButtonMsg
+        , toggleButton = Dropdown.toggle [ Button.warning ] [ text label ]
+        , items = []
+        }
+
+
+viewActionButtonItem =
+    Dropdown.buttonItem [ onClick ActionButtonItemMsg ] [ text "action" ]
 
 
 
@@ -133,4 +227,7 @@ main =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ Dropdown.subscriptions model.navDropdownState NavDropdownMsg ]
+        [ Navbar.subscriptions model.navbarState NavbarMsg
+
+        -- , Dropdown.subscriptions model.navDropdownState DropdownMsg
+        ]
