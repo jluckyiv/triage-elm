@@ -1,19 +1,22 @@
 module Main exposing (..)
 
+import Bootstrap.Button as Button
+import Bootstrap.Dropdown as Dropdown
 import Html exposing (Html, text, div, h1, img, i, nav, p, br, button, label, a, input, form, li, ul, span)
 import Html.Attributes exposing (class, src, type_, placeholder, href, attribute, id)
+import Html.Events exposing (onClick)
 
 
 ---- MODEL ----
 
 
 type alias Model =
-    {}
+    { navDropdownState : Dropdown.State, navDropdownText : String }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( {}, Cmd.none )
+    ( { navDropdownState = Dropdown.initialState, navDropdownText = "Dropdown" }, Cmd.none )
 
 
 
@@ -22,11 +25,27 @@ init =
 
 type Msg
     = NoOp
+    | NavDropdownMsg Dropdown.State
+    | NavItemMsg1
+    | NavItemMsg2
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        NoOp ->
+            ( model, Cmd.none )
+
+        NavItemMsg1 ->
+            ( { model | navDropdownText = "Dropdown 1" }, Cmd.none )
+
+        NavItemMsg2 ->
+            ( { model | navDropdownText = "Dropdown 2" }, Cmd.none )
+
+        NavDropdownMsg state ->
+            ( { model | navDropdownState = state }
+            , Cmd.none
+            )
 
 
 
@@ -62,22 +81,23 @@ view model =
                             [ text "Disabled" ]
                         ]
                     , li [ class "nav-item dropdown" ]
-                        [ a [ class "nav-link dropdown-toggle", href "#", id "dropdown01", attribute "data-toggle" "dropdown", attribute "aria-haspopup" "true", attribute "aria-expanded" "false" ]
-                            [ text "Dropdown" ]
-                        , div [ class "dropdown-menu", attribute "aria-labelledby" "dropdown01" ]
-                            [ a [ class "dropdown-item", href "#" ]
-                                [ text "Action" ]
-                            , a [ class "dropdown-item", href "#" ]
-                                [ text "Another action" ]
-                            , a [ class "dropdown-item", href "#" ]
-                                [ text "Something else here" ]
-                            ]
+                        [ Dropdown.dropdown
+                            model.navDropdownState
+                            { options = []
+                            , toggleMsg = NavDropdownMsg
+                            , toggleButton =
+                                Dropdown.toggle [ Button.outlineLight ] [ text model.navDropdownText ]
+                            , items =
+                                [ Dropdown.buttonItem [ onClick NavItemMsg1 ] [ text "Item 1" ]
+                                , Dropdown.buttonItem [ onClick NavItemMsg2 ] [ text "Item 2" ]
+                                ]
+                            }
                         ]
                     ]
                 , form [ class "form-inline my-2 my-lg-0" ]
                     [ input [ class "form-control mr-sm-2", type_ "text", placeholder "Search", attribute "aria-label" "Search" ]
                         []
-                    , button [ class "btn btn-outline-success my-2 my-sm-0", type_ "submit" ]
+                    , button [ class "btn btn-outline-light my-2 my-sm-0", type_ "submit" ]
                         [ text "Search" ]
                     ]
                 ]
@@ -106,5 +126,11 @@ main =
         { view = view
         , init = init
         , update = update
-        , subscriptions = always Sub.none
+        , subscriptions = subscriptions
         }
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch
+        [ Dropdown.subscriptions model.navDropdownState NavDropdownMsg ]
