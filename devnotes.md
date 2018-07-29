@@ -17,6 +17,15 @@ Got it to work with departments, but have to find a way to cancel the filter wit
 ### Dropdowns
 I got a mockup of the UI going with hardcoded data and controls that do nothing. Because each dropdown needs to have its own subscription, I'm going have to write code for that. Bill Peregoy has an article on [dynamically creating subscriptions](https://becoming-functional.com/dynamically-creating-elm-subscriptions-3b41e2dc0a30) that I'll be using as a model. I didn't find anything else with a quick search.
 
+State of UI elements doesn't belong in the regular model. Where can I assign this information?
+
+### Moving to Bulma
+It looks like dynamically creating dropdowns is impossible with Elm-Bootstrap. The Dropdown's toggleMsg property takes only a Msg without a payload, and I was unable to make a message with a payload.
+
+Elm-MDL is dropped, and Elm-MDC is not yet released to the Elm package manager.
+
+[Elm-Bulma](https://github.com/surprisetalk/elm-bulma/) leverages the [Bulma](https://bulma.io) CSS library, which looks clean and simple. The [dropdown component](https://github.com/surprisetalk/elm-bulma/blob/master/src/Bulma/Components.elm) looks better than the Elm-Bootstrap version. It uses regular `Html Msg` and its semantics look like drop-ins for Elm Html. I think it might be a win....
+
 ## To do
 - petitioner and respondent dropdowns
 - interpreter filters
