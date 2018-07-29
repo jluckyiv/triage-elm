@@ -143,6 +143,7 @@ view model =
         ]
 
 
+viewSorterButton : Html Msg
 viewSorterButton =
     Dropdown.dropdown
         Dropdown.initialState
@@ -171,6 +172,7 @@ viewActionTable matters =
         }
 
 
+viewFilterButton : String -> Html Msg
 viewFilterButton label =
     -- needs dropdownstate, buttontext, buttoncolor, menuitems
     Dropdown.dropdown
@@ -206,6 +208,7 @@ viewActionButton label =
         }
 
 
+viewActionButtonItem : Dropdown.DropdownItem Msg
 viewActionButtonItem =
     Dropdown.buttonItem [ onClick ActionButtonItemMsg ] [ text "action" ]
 
