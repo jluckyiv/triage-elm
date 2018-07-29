@@ -57,20 +57,6 @@ type alias Matter =
     }
 
 
-type alias ActionButton =
-    { state : Dropdown.State
-    , msg : Msg
-    , text : String
-    , items : List ActionButtonItem
-    }
-
-
-type alias ActionButtonItem =
-    { text : String
-    , data : String
-    }
-
-
 init : ( Model, Cmd Msg )
 init =
     let
@@ -116,7 +102,6 @@ init =
 
 type Msg
     = NoOp
-      -- | ActionItemMsg String
     | ActionButtonItemMsg
     | ActionDropdownToggleMsg Dropdown.State
     | DepartmentDropdownToggleMsg Dropdown.State
@@ -187,42 +172,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ Navbar.config NavbarMsg
-            |> Navbar.withAnimation
-            |> Navbar.dark
-            |> Navbar.brand [ href "#" ] [ text "Triage" ]
-            |> Navbar.items
-                [ Navbar.itemLink [ href "#home" ] [ text "Home" ]
-                , Navbar.itemLink [ href "#link" ] [ text "Link" ]
-                , Navbar.dropdown
-                    { id = "navbarDropdown"
-                    , toggle = Navbar.dropdownToggle [] [ text "Nav" ]
-                    , items =
-                        [ Navbar.dropdownHeader [ text "Heading" ]
-                        , Navbar.dropdownItem
-                            [ href "#drop1" ]
-                            [ text "Drop item 1" ]
-                        , Navbar.dropdownItem
-                            [ href "#drop2" ]
-                            [ text "Drop item 2" ]
-                        , Navbar.dropdownDivider
-                        , Navbar.dropdownItem
-                            [ href "#drop3" ]
-                            [ text "Drop item 3" ]
-                        ]
-                    }
-                ]
-            |> Navbar.customItems
-                [ Navbar.formItem []
-                    [ Input.text [ Input.attrs [ placeholder "search for something" ] ]
-                    , Button.button
-                        [ Button.outlineLight
-                        , Button.attrs [ Spacing.ml2Sm ]
-                        ]
-                        [ text "Search" ]
-                    ]
-                ]
-            |> Navbar.view model.navbarState
+        [ viewNavbar model
         , div [ attribute "role" "main", class "container" ]
             [ div [ class "starter-template" ]
                 [ h1 [] [ text "Triage Elm" ]
@@ -233,6 +183,46 @@ view model =
             , viewActionTable model
             ]
         ]
+
+
+viewNavbar : Model -> Html Msg
+viewNavbar model =
+    Navbar.config NavbarMsg
+        |> Navbar.withAnimation
+        |> Navbar.dark
+        |> Navbar.brand [ href "#" ] [ text "Triage" ]
+        |> Navbar.items
+            [ Navbar.itemLink [ href "#home" ] [ text "Home" ]
+            , Navbar.itemLink [ href "#link" ] [ text "Link" ]
+            , Navbar.dropdown
+                { id = "navbarDropdown"
+                , toggle = Navbar.dropdownToggle [] [ text "Nav" ]
+                , items =
+                    [ Navbar.dropdownHeader [ text "Heading" ]
+                    , Navbar.dropdownItem
+                        [ href "#drop1" ]
+                        [ text "Drop item 1" ]
+                    , Navbar.dropdownItem
+                        [ href "#drop2" ]
+                        [ text "Drop item 2" ]
+                    , Navbar.dropdownDivider
+                    , Navbar.dropdownItem
+                        [ href "#drop3" ]
+                        [ text "Drop item 3" ]
+                    ]
+                }
+            ]
+        |> Navbar.customItems
+            [ Navbar.formItem []
+                [ Input.text [ Input.attrs [ placeholder "search for something" ] ]
+                , Button.button
+                    [ Button.outlineLight
+                    , Button.attrs [ Spacing.ml2Sm ]
+                    ]
+                    [ text "Search" ]
+                ]
+            ]
+        |> Navbar.view model.navbarState
 
 
 viewActionTable : Model -> Html Msg
@@ -332,11 +322,6 @@ viewActionButton label =
         }
 
 
-viewActionButtonItem : Dropdown.DropdownItem Msg
-viewActionButtonItem =
-    Dropdown.buttonItem [ onClick ActionButtonItemMsg ] [ text "action" ]
-
-
 
 ---- PROGRAM ----
 
@@ -358,5 +343,4 @@ subscriptions model =
         , Dropdown.subscriptions model.actionDropdownState ActionDropdownToggleMsg
         , Dropdown.subscriptions model.departmentDropdownState DepartmentDropdownToggleMsg
         , Dropdown.subscriptions model.interpreterDropdownState InterpreterDropdownToggleMsg
-        , Dropdown.subscriptions model.statusDropdownState StatusDropdownToggleMsg
         ]
