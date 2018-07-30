@@ -6,8 +6,8 @@ import Bootstrap.Form.Input as Input
 import Bootstrap.Navbar as Navbar
 import Bootstrap.Table as Table
 import Bootstrap.Utilities.Spacing as Spacing
-import Html exposing (Html, text, div, h1, img, i, nav, p, br, button, label, a, input, form, li, ul, span)
-import Html.Attributes exposing (class, src, type_, placeholder, href, attribute, id)
+import Html exposing (Html, text, div, span, p, ul, li, h1)
+import Html.Attributes exposing (class, id, src, type_, placeholder, href, attribute)
 import Html.Events exposing (onClick)
 
 
@@ -15,14 +15,14 @@ import Html.Events exposing (onClick)
 
 
 type alias Model =
-    { navbarState : Navbar.State
-    , actionDropdownState : Dropdown.State
-    , departmentDropdownState : Dropdown.State
+    { departmentDropdownState : Dropdown.State
     , departmentFilter : Department
     , departments : List Department
     , interpreterDropdownState : Dropdown.State
-    , statusDropdownState : Dropdown.State
     , matters : List Matter
+    , mattersDropdownStates : MatterDropdownStates
+    , navbarState : Navbar.State
+    , statusDropdownState : Dropdown.State
     }
 
 
@@ -34,6 +34,15 @@ type Department
     | F402
     | F501
     | F502
+
+
+type alias Matter =
+    { caseNumber : CaseNumber
+    , department : Department
+    , interpreter : Language
+    , petitioner : FullName
+    , respondent : FullName
+    }
 
 
 type alias Language =
@@ -48,13 +57,8 @@ type alias FullName =
     String
 
 
-type alias Matter =
-    { department : Department
-    , interpreter : Language
-    , caseNumber : CaseNumber
-    , petitioner : FullName
-    , respondent : FullName
-    }
+type alias MatterDropdownStates =
+    List ( CaseNumber, Dropdown.State )
 
 
 init : ( Model, Cmd Msg )
@@ -82,15 +86,18 @@ init =
             , { department = F502, interpreter = "None", caseNumber = "RIF1800229", petitioner = "Jodi Flores", respondent = "Wendell Moody" }
             , { department = F502, interpreter = "None", caseNumber = "RIF1800181", petitioner = "Moses Moss", respondent = "Carrie Matthews" }
             ]
+
+        mattersDropdownStates =
+            List.map (\m -> ( m.caseNumber, Dropdown.initialState )) matters
     in
-        ( { navbarState = navbarState
-          , actionDropdownState = Dropdown.initialState
-          , departmentDropdownState = Dropdown.initialState
+        ( { departmentDropdownState = Dropdown.initialState
           , departmentFilter = All
           , departments = [ All, F201, F301, F401, F402, F501, F502 ]
           , interpreterDropdownState = Dropdown.initialState
-          , statusDropdownState = Dropdown.initialState
           , matters = matters
+          , mattersDropdownStates = mattersDropdownStates
+          , navbarState = navbarState
+          , statusDropdownState = Dropdown.initialState
           }
         , navbarCmd
         )
@@ -102,11 +109,10 @@ init =
 
 type Msg
     = NoOp
-    | ActionButtonItemMsg
-    | ActionDropdownToggleMsg Dropdown.State
-    | DepartmentDropdownToggleMsg Dropdown.State
-    | InterpreterDropdownToggleMsg Dropdown.State
-    | StatusDropdownToggleMsg Dropdown.State
+    | ToggleDropdown String Dropdown.State
+    | DepartmentDropdownToggle Dropdown.State
+    | InterpreterDropdownToggle Dropdown.State
+    | StatusDropdownToggle Dropdown.State
     | FilterDepartment Department
     | FilterInterpreter String
     | FilterStatus String
@@ -119,25 +125,31 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
-        ActionDropdownToggleMsg state ->
-            ( { model | actionDropdownState = state }
-            , Cmd.none
-            )
+        ToggleDropdown caseNumber state ->
+            let
+                mattersDropdownStates =
+                    model.mattersDropdownStates
+                        |> List.map
+                            (\( cn, s ) ->
+                                if cn == caseNumber then
+                                    ( caseNumber, state )
+                                else
+                                    ( cn, s )
+                            )
+            in
+                ( { model | mattersDropdownStates = mattersDropdownStates }, Cmd.none )
 
-        ActionButtonItemMsg ->
-            ( model, Cmd.none )
-
-        DepartmentDropdownToggleMsg state ->
+        DepartmentDropdownToggle state ->
             ( { model | departmentDropdownState = state }
             , Cmd.none
             )
 
-        InterpreterDropdownToggleMsg state ->
+        InterpreterDropdownToggle state ->
             ( { model | interpreterDropdownState = state }
             , Cmd.none
             )
 
-        StatusDropdownToggleMsg state ->
+        StatusDropdownToggle state ->
             ( { model | statusDropdownState = state }
             , Cmd.none
             )
@@ -248,8 +260,46 @@ viewActionTable model =
                     , Table.th [] [ statusDropdown model ]
                     ]
             , tbody =
-                Table.tbody [] (List.map viewActionRow matters)
+                Table.tbody [] (List.map (viewActionRow model) model.matters)
             }
+
+
+viewActionRow : Model -> Matter -> Table.Row Msg
+viewActionRow model matter =
+    Table.tr []
+        [ Table.td [] [ text (toString matter.department) ]
+        , Table.td [] [ text matter.interpreter ]
+        , Table.td [] [ text matter.caseNumber ]
+        , Table.td [] [ text matter.petitioner ]
+        , Table.td [] [ text matter.respondent ]
+        , Table.td [] [ actionDropdown model matter ]
+        ]
+
+
+actionDropdownState : Model -> Matter -> Dropdown.State
+actionDropdownState model matter =
+    model.mattersDropdownStates
+        |> List.filter (\( caseNumber, state ) -> caseNumber == matter.caseNumber)
+        |> List.head
+        |> Maybe.map Tuple.second
+        |> Maybe.withDefault Dropdown.initialState
+
+
+actionDropdown : Model -> Matter -> Html Msg
+actionDropdown model matter =
+    Dropdown.dropdown
+        (actionDropdownState model matter)
+        { options = []
+        , toggleMsg = ToggleDropdown matter.caseNumber
+        , toggleButton =
+            Dropdown.toggle [ Button.light ] [ text "Choose Action" ]
+        , items =
+            [ Dropdown.buttonItem [ onClick (NoOp) ] [ text "Action1" ]
+            , Dropdown.buttonItem [ onClick (NoOp) ] [ text "Action2" ]
+            , Dropdown.buttonItem [ onClick (NoOp) ] [ text "Action3" ]
+            , Dropdown.buttonItem [ onClick (NoOp) ] [ text "Action4" ]
+            ]
+        }
 
 
 departmentDropdown : Model -> Html Msg
@@ -261,7 +311,7 @@ departmentDropdown model =
         Dropdown.dropdown
             model.departmentDropdownState
             { options = []
-            , toggleMsg = DepartmentDropdownToggleMsg
+            , toggleMsg = DepartmentDropdownToggle
             , toggleButton = Dropdown.toggle [ Button.light ] [ text label ]
             , items =
                 List.map (\d -> Dropdown.buttonItem [ onClick (FilterDepartment d) ] [ text (toString d) ]) model.departments
@@ -273,11 +323,11 @@ interpreterDropdown model =
     Dropdown.dropdown
         model.interpreterDropdownState
         { options = []
-        , toggleMsg = InterpreterDropdownToggleMsg
+        , toggleMsg = InterpreterDropdownToggle
         , toggleButton = Dropdown.toggle [ Button.light ] [ text "Interpreter" ]
         , items =
             [ Dropdown.buttonItem [ onClick (FilterInterpreter "Spanish") ] [ text "Spanish" ]
-            , Dropdown.buttonItem [ onClick (FilterInterpreter "Other") ] [ text "Other" ]
+            , Dropdown.buttonItem [ onClick (FilterInterpreter "None") ] [ text "None" ]
             ]
         }
 
@@ -288,37 +338,15 @@ statusDropdown model =
     Dropdown.dropdown
         model.statusDropdownState
         { options = []
-        , toggleMsg = StatusDropdownToggleMsg
+        , toggleMsg = StatusDropdownToggle
         , toggleButton =
-            Dropdown.toggle [ Button.light ] [ text "Status" ]
+            Dropdown.toggle [ Button.light ] [ text "Filter" ]
         , items =
-            [ Dropdown.buttonItem [ onClick (FilterStatus "Status1") ] [ text "Status1" ]
-            , Dropdown.buttonItem [ onClick (FilterStatus "Status2") ] [ text "Status2" ]
+            [ Dropdown.buttonItem [ onClick (FilterStatus "Action1") ] [ text "Action1" ]
+            , Dropdown.buttonItem [ onClick (FilterStatus "Action2") ] [ text "Action2" ]
+            , Dropdown.buttonItem [ onClick (FilterStatus "Action3") ] [ text "Action3" ]
+            , Dropdown.buttonItem [ onClick (FilterStatus "Action4") ] [ text "Action4" ]
             ]
-        }
-
-
-viewActionRow : Matter -> Table.Row Msg
-viewActionRow matter =
-    Table.tr []
-        [ Table.td [] [ text (toString matter.department) ]
-        , Table.td [] [ text matter.interpreter ]
-        , Table.td [] [ text matter.caseNumber ]
-        , Table.td [] [ text matter.petitioner ]
-        , Table.td [] [ text matter.respondent ]
-        , Table.td [] [ viewActionButton "action" ]
-        ]
-
-
-viewActionButton : String -> Html Msg
-viewActionButton label =
-    -- needs dropdownstate, buttontext, buttoncolor, menuitems
-    Dropdown.dropdown
-        Dropdown.initialState
-        { options = []
-        , toggleMsg = ActionDropdownToggleMsg
-        , toggleButton = Dropdown.toggle [ Button.warning ] [ text label ]
-        , items = []
         }
 
 
@@ -336,11 +364,19 @@ main =
         }
 
 
+mattersDropdownSubscriptions : Model -> List (Sub Msg)
+mattersDropdownSubscriptions model =
+    model.mattersDropdownStates
+        |> List.map (\( caseNumber, state ) -> Dropdown.subscriptions state (ToggleDropdown caseNumber))
+
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ Navbar.subscriptions model.navbarState NavbarMsg
-        , Dropdown.subscriptions model.actionDropdownState ActionDropdownToggleMsg
-        , Dropdown.subscriptions model.departmentDropdownState DepartmentDropdownToggleMsg
-        , Dropdown.subscriptions model.interpreterDropdownState InterpreterDropdownToggleMsg
-        ]
+        (mattersDropdownSubscriptions model
+            ++ [ Navbar.subscriptions model.navbarState NavbarMsg
+               , Dropdown.subscriptions model.departmentDropdownState DepartmentDropdownToggle
+               , Dropdown.subscriptions model.interpreterDropdownState InterpreterDropdownToggle
+               , Dropdown.subscriptions model.statusDropdownState StatusDropdownToggle
+               ]
+        )

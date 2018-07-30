@@ -26,6 +26,11 @@ Elm-MDL is dropped, and Elm-MDC is not yet released to the Elm package manager.
 
 [Elm-Bulma](https://github.com/surprisetalk/elm-bulma/) leverages the [Bulma](https://bulma.io) CSS library, which looks clean and simple. The [dropdown component](https://github.com/surprisetalk/elm-bulma/blob/master/src/Bulma/Components.elm) looks better than the Elm-Bootstrap version. It uses regular `Html Msg` and its semantics look like drop-ins for Elm Html. I think it might be a win....
 
+But it wasn't. I had some trouble with the API, but the maintaner sent me an email, so I might try again.
+
+### Back to Bootsrap and using a Dict?
+It occurred to me that I might be able to leverage partial application and a Dict to store dropdown state. For now, though, I'm using a list `(CaseNumber, Dropdown.State)` tuples. It works.
+
 ## To do
 - petitioner and respondent dropdowns
 - interpreter filters
