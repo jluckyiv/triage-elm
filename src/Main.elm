@@ -6,24 +6,41 @@ import Bootstrap.Form.Input as Input
 import Bootstrap.Navbar as Navbar
 import Bootstrap.Table as Table
 import Bootstrap.Utilities.Spacing as Spacing
+import CaseManagementData
+import Date
 import Html exposing (Html, text, div, span, p, ul, li, h1)
 import Html.Attributes exposing (class, id, src, type_, placeholder, href, attribute)
 import Html.Events exposing (onClick)
+import Http
+import Moment
+import RemoteData exposing (WebData)
+import Task
 
 
 ---- MODEL ----
 
 
 type alias Model =
-    { departmentDropdownState : Dropdown.State
+    { dateString : DateString
+    , departmentDropdownState : Dropdown.State
     , departmentFilter : Department
     , departments : List Department
+    , f201Hearings : WebData (List CaseManagementData.Hearing)
+    , f301Hearings : WebData (List CaseManagementData.Hearing)
+    , f401Hearings : WebData (List CaseManagementData.Hearing)
+    , f402Hearings : WebData (List CaseManagementData.Hearing)
+    , f501Hearings : WebData (List CaseManagementData.Hearing)
+    , f502Hearings : WebData (List CaseManagementData.Hearing)
     , interpreterDropdownState : Dropdown.State
     , matters : List Matter
     , mattersDropdownStates : MatterDropdownStates
     , navbarState : Navbar.State
     , statusDropdownState : Dropdown.State
     }
+
+
+type alias DateString =
+    String
 
 
 type Department
@@ -98,9 +115,69 @@ init =
           , mattersDropdownStates = mattersDropdownStates
           , navbarState = navbarState
           , statusDropdownState = Dropdown.initialState
+          , f201Hearings = RemoteData.Loading
+          , f301Hearings = RemoteData.Loading
+          , f401Hearings = RemoteData.Loading
+          , f402Hearings = RemoteData.Loading
+          , f501Hearings = RemoteData.Loading
+          , f502Hearings = RemoteData.Loading
+          , dateString = ""
           }
-        , navbarCmd
+        , Cmd.batch [ navbarCmd, requestDate ]
         )
+
+
+requestDate : Cmd Msg
+requestDate =
+    Task.perform ReceiveDate Date.now
+
+
+hearingsUrl : ( DateString, Department ) -> String
+hearingsUrl ( date, department ) =
+    "https://cbmdev.riverside.courts.ca.gov/Hearing/FLR/" ++ date ++ "/" ++ (toString department)
+
+
+receiveHearings : Model -> Department -> WebData (List CaseManagementData.Hearing) -> Model
+receiveHearings model department response =
+    case department of
+        F201 ->
+            { model | f201Hearings = response }
+
+        F301 ->
+            { model | f301Hearings = response }
+
+        F401 ->
+            { model | f401Hearings = response }
+
+        F402 ->
+            { model | f402Hearings = response }
+
+        F501 ->
+            { model | f501Hearings = response }
+
+        F502 ->
+            { model | f502Hearings = response }
+
+        _ ->
+            model
+
+
+requestHearings : ( DateString, Department ) -> Cmd Msg
+requestHearings ( date, department ) =
+    Http.get (Debug.log "hearingsUrl" <| hearingsUrl ( date, department )) CaseManagementData.hearingsDecoder
+        |> RemoteData.sendRequest
+        |> Cmd.map (ReceiveHearings department)
+
+
+requestAllHearings : DateString -> List (Cmd Msg)
+requestAllHearings dateString =
+    [ requestHearings ( dateString, F201 )
+    , requestHearings ( dateString, F301 )
+    , requestHearings ( dateString, F401 )
+    , requestHearings ( dateString, F402 )
+    , requestHearings ( dateString, F501 )
+    , requestHearings ( dateString, F502 )
+    ]
 
 
 
@@ -117,6 +194,10 @@ type Msg
     | FilterInterpreter String
     | FilterStatus String
     | NavbarMsg Navbar.State
+    | RequestHearings
+    | ReceiveHearings Department (WebData (List CaseManagementData.Hearing))
+    | ReceiveDate Date.Date
+    | UpdateDateString DateString
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -176,6 +257,33 @@ update msg model =
         NavbarMsg state ->
             ( { model | navbarState = state }, Cmd.none )
 
+        RequestHearings ->
+            ( { model
+                | f201Hearings = RemoteData.Loading
+                , f301Hearings = RemoteData.Loading
+                , f401Hearings = RemoteData.Loading
+                , f402Hearings = RemoteData.Loading
+                , f501Hearings = RemoteData.Loading
+                , f502Hearings = RemoteData.Loading
+              }
+            , Cmd.batch
+                (requestAllHearings model.dateString)
+            )
+
+        UpdateDateString dateString ->
+            ( { model | dateString = dateString }, Cmd.none )
+
+        ReceiveDate date ->
+            ( model, Cmd.batch <| requestAllHearings (toDateString date) )
+
+        ReceiveHearings department response ->
+            ( receiveHearings model department response, Cmd.none )
+
+
+toDateString : Date.Date -> String
+toDateString date =
+    Moment.format [ Moment.YearNumberCapped, Moment.MonthFixed, Moment.DayOfMonthFixed ] date
+
 
 
 ---- VIEW ----
@@ -226,10 +334,11 @@ viewNavbar model =
             ]
         |> Navbar.customItems
             [ Navbar.formItem []
-                [ Input.text [ Input.attrs [ placeholder "search for something" ] ]
+                [ Input.text [ Input.attrs [ placeholder "YYYYMMDD" ], Input.onInput UpdateDateString ]
                 , Button.button
                     [ Button.outlineLight
                     , Button.attrs [ Spacing.ml2Sm ]
+                    , Button.onClick RequestHearings
                     ]
                     [ text "Search" ]
                 ]
