@@ -4,11 +4,6 @@ import Json.Decode
 import Json.Decode.Pipeline exposing (decode, required, optional)
 
 
--- Possible "selfRepresented" values: "In Pro Per", "Unrepresented"
--- Possible "representedBy" values: List Attorney
--- Attorneys are partyType: "Attorney". Discard them.
-
-
 type alias Hearing =
     { scheduledEventId : Int
     , scheduledEventDateTime : DateTime
@@ -60,15 +55,13 @@ maybeInterpreterDecoder =
 
 
 type alias Attorney =
-    { repFullName : String
-    , organizationName : String
+    { organizationName : String
     }
 
 
 attorneyDecoder : Json.Decode.Decoder Attorney
 attorneyDecoder =
     Json.Decode.Pipeline.decode Attorney
-        |> Json.Decode.Pipeline.required "repFullName" (Json.Decode.string)
         |> Json.Decode.Pipeline.required "organizationName" (Json.Decode.string)
 
 

@@ -1,180 +1,3475 @@
 [
     {
-        "schedEvntId": 599319,
-        "schedEvntDateTime": "2018-08-06T10:00:00",
-        "caseId": 106514,
-        "schedEvntType": "HEP",
+        "schedEvntId": 1720047,
+        "schedEvntDateTime": "2018-08-06T13:30:00",
+        "caseId": 439355,
+        "schedEvntType": "TRC",
         "eventStatus": "EVENT",
         "schedEvntLocation": "Department F201",
         "docketNumber": 2147483647,
-        "schedEvntName": "Ex-Parte Hearing",
-        "caseNumber": "FLRI1800081",
-        "caseName": "SNOW vs. SMITH",
+        "schedEvntName": "Hearing on Trial Readiness Conference.",
+        "caseNumber": "RID1401473",
+        "caseName": "RUIZ VS RUIZ",
         "caseType": "FL",
-        "category": "ROSCD",
-        "dispositionDate": "2018-06-25T00:00:00",
-        "dispositionType": "AD",
-        "judicialOfficer": "Belinda A. Handy",
+        "category": "DWOC",
+        "judicialOfficer": "Jennifer Gerard",
         "caseLocation": "RI",
-        "filingDate": "6\/25\/2018",
+        "filingDate": "4\/8\/2014",
         "filedByProPer": "False",
         "locationCode": "F201",
         "locationName": "Department F201",
         "parentLocationCode": "FLD",
         "parentLocationName": "Riverside Family Law Courthouse",
-        "interpreter": [
-            {
-                "language": "Mandarin"
-            }
-        ],
         "party": [
             {
-                "firstName": "Victor",
-                "middleName": "Emil",
-                "lastName": "Kaplan",
-                "organizationName": "Kaplan Law Corp",
-                "partyId": 410084,
-                "personId": 473759,
+                "firstName": "YOLANDA",
+                "lastName": "RUIZ",
+                "partyNumber": "1",
+                "dateOfBirth": "8\/9\/1968",
+                "partyId": 1775432,
+                "personId": 1707791,
+                "subCase_id": 529023,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "MELQUIADES",
+                "lastName": "RUIZ",
+                "partyNumber": "2",
+                "dateOfBirth": "9\/11\/1963",
+                "partyId": 1775433,
+                "personId": 1707792,
+                "subCase_id": 529023,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "ERIC M RICE"
+                    }
+                ],
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "ERIC M RICE",
+                "partyId": 1775434,
+                "personId": 1707793,
+                "subCase_id": 529023,
                 "partyType": "Attorney"
             },
             {
-                "firstName": "JOHN",
-                "lastName": "SNOW",
-                "partyId": 410085,
-                "personId": 473760,
+                "firstName": "YOLANDA",
+                "lastName": "RUIZ",
+                "partyNumber": "1",
+                "dateOfBirth": "8\/9\/1968",
+                "partyId": 1775435,
+                "personId": 1707791,
+                "subCase_id": 529024,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "MELQUIADES",
+                "lastName": "RUIZ",
+                "partyNumber": "2",
+                "dateOfBirth": "9\/11\/1963",
+                "partyId": 1775436,
+                "personId": 1707792,
+                "subCase_id": 529024,
+                "selfRepresented": "N",
                 "representedBy": [
                     {
-                        "repFullName": "Victor Emil Kaplan",
-                        "organizationName": "Kaplan Law Corp"
+                        "organizationName": "ERIC M RICE"
+                    }
+                ],
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "ERIC M RICE",
+                "partyId": 1775437,
+                "personId": 1707793,
+                "subCase_id": 529024,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "YOLANDA",
+                "lastName": "RUIZ",
+                "partyNumber": "1",
+                "dateOfBirth": "8\/9\/1968",
+                "partyId": 1775438,
+                "personId": 1707791,
+                "subCase_id": 529025,
+                "selfRepresented": "Y",
+                "partyType": "Protected Person"
+            },
+            {
+                "firstName": "MELQUIADES",
+                "lastName": "RUIZ",
+                "partyNumber": "2",
+                "dateOfBirth": "9\/11\/1963",
+                "partyId": 1775439,
+                "personId": 1707792,
+                "subCase_id": 529025,
+                "partyType": "Restrained Person"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1720048,
+        "schedEvntDateTime": "2018-08-06T13:30:00",
+        "caseId": 439355,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: NONCOMPLIANCE WITH DISCLOSURES REQUIREMENTS filed on 11\/04\/16 by YOLANDA RUIZ represented by PRO\/PER.",
+        "caseNumber": "RID1401473",
+        "caseName": "RUIZ VS RUIZ",
+        "caseType": "FL",
+        "category": "DWOC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "4\/8\/2014",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "YOLANDA",
+                "lastName": "RUIZ",
+                "partyNumber": "1",
+                "dateOfBirth": "8\/9\/1968",
+                "partyId": 1775432,
+                "personId": 1707791,
+                "subCase_id": 529023,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "MELQUIADES",
+                "lastName": "RUIZ",
+                "partyNumber": "2",
+                "dateOfBirth": "9\/11\/1963",
+                "partyId": 1775433,
+                "personId": 1707792,
+                "subCase_id": 529023,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "ERIC M RICE"
+                    }
+                ],
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "ERIC M RICE",
+                "partyId": 1775434,
+                "personId": 1707793,
+                "subCase_id": 529023,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "YOLANDA",
+                "lastName": "RUIZ",
+                "partyNumber": "1",
+                "dateOfBirth": "8\/9\/1968",
+                "partyId": 1775435,
+                "personId": 1707791,
+                "subCase_id": 529024,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "MELQUIADES",
+                "lastName": "RUIZ",
+                "partyNumber": "2",
+                "dateOfBirth": "9\/11\/1963",
+                "partyId": 1775436,
+                "personId": 1707792,
+                "subCase_id": 529024,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "ERIC M RICE"
+                    }
+                ],
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "ERIC M RICE",
+                "partyId": 1775437,
+                "personId": 1707793,
+                "subCase_id": 529024,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "YOLANDA",
+                "lastName": "RUIZ",
+                "partyNumber": "1",
+                "dateOfBirth": "8\/9\/1968",
+                "partyId": 1775438,
+                "personId": 1707791,
+                "subCase_id": 529025,
+                "selfRepresented": "Y",
+                "partyType": "Protected Person"
+            },
+            {
+                "firstName": "MELQUIADES",
+                "lastName": "RUIZ",
+                "partyNumber": "2",
+                "dateOfBirth": "9\/11\/1963",
+                "partyId": 1775439,
+                "personId": 1707792,
+                "subCase_id": 529025,
+                "partyType": "Restrained Person"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1813509,
+        "schedEvntDateTime": "2018-08-06T13:30:00",
+        "caseId": 458166,
+        "schedEvntType": "FLMSCN",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Mandatory Settlement Conference (parties noticed)",
+        "caseNumber": "RID1702136",
+        "caseName": "GUTIERREZ & ORTIZ",
+        "caseType": "FL",
+        "category": "DWC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "5\/30\/2017",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "JORGE",
+                "lastName": "GUTIERREZ",
+                "partyNumber": "1",
+                "partyId": 1854287,
+                "personId": 1774717,
+                "subCase_id": 551146,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "LAW OFFICES OF JANIS L HILKE"
                     }
                 ],
                 "partyType": "Petitioner"
             },
             {
-                "firstName": "JANE",
-                "lastName": "SMITH",
-                "partyId": 410086,
-                "personId": 473761,
-                "selfRepresented": "Unrepresented",
+                "organizationName": "LAW OFFICES OF JANIS L HILKE",
+                "partyId": 1854288,
+                "personId": 1774722,
+                "subCase_id": 551146,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "ISABELL",
+                "lastName": "GUTIERREZ",
+                "partyNumber": "3",
+                "dateOfBirth": "8\/13\/2002",
+                "partyId": 1854289,
+                "personId": 1774719,
+                "subCase_id": 551146,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "JORGE",
+                "lastName": "GUTIERREZ",
+                "partyNumber": "4",
+                "dateOfBirth": "2\/22\/2005",
+                "partyId": 1854290,
+                "personId": 1774720,
+                "subCase_id": 551146,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ANABELL",
+                "lastName": "GUTIERREZ",
+                "partyNumber": "5",
+                "dateOfBirth": "3\/9\/2007",
+                "partyId": 1854291,
+                "personId": 1774721,
+                "subCase_id": 551146,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "VICTORIA",
+                "lastName": "ORTIZ",
+                "partyNumber": "2",
+                "partyId": 1854292,
+                "personId": 1774718,
+                "subCase_id": 551146,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1818351,
+        "schedEvntDateTime": "2018-08-06T13:30:00",
+        "caseId": 459606,
+        "schedEvntType": "FLMSCN",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Mandatory Settlement Conference (parties noticed)",
+        "caseNumber": "RID1703453",
+        "caseName": "TRESSLER & TRESSLER",
+        "caseType": "FL",
+        "category": "DWOC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "8\/29\/2017",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "JONATHAN",
+                "middleName": "F",
+                "lastName": "TRESSLER",
+                "partyNumber": "1",
+                "partyId": 1860312,
+                "personId": 1779763,
+                "subCase_id": 552860,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "BRATTON RAZO & LORD"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "BRATTON RAZO & LORD",
+                "partyId": 1860313,
+                "personId": 1779765,
+                "subCase_id": 552860,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "JENNIFER",
+                "lastName": "TRESSLER",
+                "partyNumber": "2",
+                "partyId": 1860314,
+                "personId": 1779764,
+                "subCase_id": 552860,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1892698,
+        "schedEvntDateTime": "2018-08-06T13:30:00",
+        "caseId": 473958,
+        "schedEvntType": "HEWCFC",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F502",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Eligibility of Waiver of Court Fees and costs as to REUBEN MILTON NORWOOD.",
+        "caseNumber": "RID1802724",
+        "caseName": "NORWOOD & JOHNSON",
+        "caseType": "FL",
+        "category": "DWOC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "7\/11\/2018",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "REUBEN",
+                "middleName": "MILTON",
+                "lastName": "NORWOOD",
+                "partyNumber": "1",
+                "partyId": 1906381,
+                "personId": 1823205,
+                "subCase_id": 568231,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "JAYNAE",
+                "lastName": "JOHNSON",
+                "partyNumber": "2",
+                "partyId": 1906382,
+                "personId": 1823206,
+                "subCase_id": 568231,
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1974051,
+        "schedEvntDateTime": "2018-08-06T13:30:00",
+        "caseId": 485723,
+        "schedEvntType": "FLMSCN",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Mandatory Settlement Conference (parties noticed)",
+        "caseNumber": "RID191544",
+        "caseName": "WAGNER & WAGNER",
+        "caseType": "FL",
+        "category": "DWC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "7\/11\/2001",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "MARSHA",
+                "lastName": "WAGNER",
+                "partyNumber": "1",
+                "partyId": 1946599,
+                "personId": 1861956,
+                "subCase_id": 581581,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "BRADLEY J HAGUE"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "BRADLEY J HAGUE",
+                "partyId": 1946600,
+                "personId": 1861958,
+                "subCase_id": 581581,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "GERHARD",
+                "lastName": "WAGNER",
+                "partyNumber": "2",
+                "partyId": 1946601,
+                "personId": 1861957,
+                "subCase_id": 581581,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "CHRISTOPHER C CARTER"
+                    }
+                ],
                 "partyType": "Respondent"
             },
             {
-                "firstName": "CALLY",
-                "lastName": "SMITH",
-                "partyId": 410088,
-                "personId": 473764,
-                "selfRepresented": "In Pro Per",
+                "organizationName": "CHRISTOPHER C CARTER",
+                "partyId": 1946602,
+                "personId": 1861959,
+                "subCase_id": 581581,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "MARSHA",
+                "lastName": "WAGNER",
+                "partyNumber": "1",
+                "partyId": 1946603,
+                "personId": 1861956,
+                "subCase_id": 581582,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "BRADLEY J HAGUE"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "BRADLEY J HAGUE",
+                "partyId": 1946604,
+                "personId": 1861958,
+                "subCase_id": 581582,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "GERHARD",
+                "lastName": "WAGNER",
+                "partyNumber": "2",
+                "partyId": 1946605,
+                "personId": 1861957,
+                "subCase_id": 581582,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "CHRISTOPHER C CARTER"
+                    }
+                ],
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "CHRISTOPHER C CARTER",
+                "partyId": 1946606,
+                "personId": 1861959,
+                "subCase_id": 581582,
+                "partyType": "Attorney"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 2180112,
+        "schedEvntDateTime": "2018-08-06T13:30:00",
+        "caseId": 513024,
+        "schedEvntType": "HPROR",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F502",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing Re: Permanent Restraining Orderon Request filed on 06\/28\/18 filed by ANDRE SABBATH JR, represented by PRO\/PER.",
+        "caseNumber": "RID217944",
+        "caseName": "SABBATH JR. VS. BAGGETT",
+        "caseType": "FL",
+        "category": "EPR",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "11\/29\/2006",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "ANDRE",
+                "lastName": "SABBATH",
+                "partyNumber": "1",
+                "dateOfBirth": "12\/26\/1984",
+                "partyId": 2068756,
+                "personId": 1974707,
+                "subCase_id": 614224,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "AALIYAH",
+                "middleName": "S.",
+                "lastName": "SABBATH",
+                "partyNumber": "3",
+                "dateOfBirth": "6\/18\/2004",
+                "partyId": 2068757,
+                "personId": 1974709,
+                "subCase_id": 614224,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ANDRE",
+                "middleName": "L.",
+                "lastName": "SABBATH",
+                "partyNumber": "4",
+                "dateOfBirth": "9\/11\/2006",
+                "partyId": 2068758,
+                "personId": 1974710,
+                "subCase_id": 614224,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ANGELA",
+                "lastName": "BAGGETT",
+                "partyNumber": "2",
+                "dateOfBirth": "11\/17\/1984",
+                "partyId": 2068759,
+                "personId": 1974708,
+                "subCase_id": 614224,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "COUNTY OF RIVERSIDE",
+                "partyNumber": "10",
+                "partyId": 2068760,
+                "personId": 1974716,
+                "subCase_id": 614224,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES"
+                    }
+                ],
+                "partyType": "Claimant"
+            },
+            {
+                "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES",
+                "partyId": 2068761,
+                "personId": 1974717,
+                "subCase_id": 614224,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "ANDRE",
+                "lastName": "SABBATH",
+                "partyNumber": "1",
+                "dateOfBirth": "12\/26\/1984",
+                "partyId": 2068765,
+                "personId": 1974707,
+                "subCase_id": 614225,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "AALIYAH",
+                "middleName": "S.",
+                "lastName": "SABBATH",
+                "partyNumber": "3",
+                "dateOfBirth": "6\/18\/2004",
+                "partyId": 2068766,
+                "personId": 1974709,
+                "subCase_id": 614225,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ANDRE",
+                "middleName": "L.",
+                "lastName": "SABBATH",
+                "partyNumber": "4",
+                "dateOfBirth": "9\/11\/2006",
+                "partyId": 2068767,
+                "personId": 1974710,
+                "subCase_id": 614225,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ANGELA",
+                "lastName": "BAGGETT",
+                "partyNumber": "2",
+                "dateOfBirth": "11\/17\/1984",
+                "partyId": 2068768,
+                "personId": 1974708,
+                "subCase_id": 614225,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "COUNTY OF RIVERSIDE",
+                "partyNumber": "10",
+                "partyId": 2068769,
+                "personId": 1974716,
+                "subCase_id": 614225,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES"
+                    }
+                ],
+                "partyType": "Claimant"
+            },
+            {
+                "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES",
+                "partyId": 2068770,
+                "personId": 1974717,
+                "subCase_id": 614225,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "ANGELA",
+                "lastName": "BAGGETT",
+                "partyNumber": "2",
+                "dateOfBirth": "11\/17\/1984",
+                "partyId": 2068774,
+                "personId": 1974708,
+                "subCase_id": 614226,
+                "selfRepresented": "Y",
+                "partyType": "Protected Person"
+            },
+            {
+                "firstName": "ANDRE",
+                "middleName": "L.",
+                "lastName": "SABBATH",
+                "partyNumber": "4",
+                "dateOfBirth": "9\/11\/2006",
+                "partyId": 2068775,
+                "personId": 1974710,
+                "subCase_id": 614226,
+                "partyType": "Minor"
+            },
+            {
+                "firstName": "ANDRE",
+                "lastName": "SABBATH",
+                "partyNumber": "1",
+                "dateOfBirth": "12\/26\/1984",
+                "partyId": 2068776,
+                "personId": 1974707,
+                "subCase_id": 614226,
+                "selfRepresented": "Y",
+                "partyType": "Restrained Person"
+            },
+            {
+                "firstName": "AALIYAH",
+                "middleName": "S.",
+                "lastName": "SABBATH",
+                "partyNumber": "3",
+                "dateOfBirth": "6\/18\/2004",
+                "partyId": 2068777,
+                "personId": 1974709,
+                "subCase_id": 614227,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ANDRE",
+                "middleName": "L.",
+                "lastName": "SABBATH",
+                "partyNumber": "4",
+                "dateOfBirth": "9\/11\/2006",
+                "partyId": 2068778,
+                "personId": 1974710,
+                "subCase_id": 614227,
+                "partyType": "Child"
+            },
+            {
+                "organizationName": "COUNTY OF RIVERSIDE",
+                "partyNumber": "7",
+                "partyId": 2068779,
+                "personId": 1974713,
+                "subCase_id": 614227,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES",
+                "partyId": 2068780,
+                "personId": 1974717,
+                "subCase_id": 614227,
+                "partyType": "Attorney"
+            },
+            {
+                "organizationName": "RID629917DCS",
+                "partyNumber": "8",
+                "partyId": 2068781,
+                "personId": 1974714,
+                "subCase_id": 614227,
+                "partyType": "Consolidated Case Number"
+            },
+            {
+                "firstName": "ANDRE",
+                "lastName": "SABBATH",
+                "partyNumber": "1",
+                "dateOfBirth": "12\/26\/1984",
+                "partyId": 2068782,
+                "personId": 1974707,
+                "subCase_id": 614227,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            },
+            {
+                "firstName": "ANGELA",
+                "lastName": "BAGGETT",
+                "partyNumber": "2",
+                "dateOfBirth": "11\/17\/1984",
+                "partyId": 2068783,
+                "personId": 1974708,
+                "subCase_id": 614227,
+                "partyType": "Other Parent"
+            },
+            {
+                "firstName": "ANDRE",
+                "lastName": "SABBATH",
+                "partyNumber": "1",
+                "dateOfBirth": "12\/26\/1984",
+                "partyId": 2068784,
+                "personId": 1974707,
+                "subCase_id": 614228,
+                "selfRepresented": "Y",
+                "partyType": "Protected Person"
+            },
+            {
+                "firstName": "AALIYAH",
+                "middleName": "S.",
+                "lastName": "SABBATH",
+                "partyNumber": "3",
+                "dateOfBirth": "6\/18\/2004",
+                "partyId": 2068785,
+                "personId": 1974709,
+                "subCase_id": 614228,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ANDRE",
+                "middleName": "L.",
+                "lastName": "SABBATH",
+                "partyNumber": "4",
+                "dateOfBirth": "9\/11\/2006",
+                "partyId": 2068786,
+                "personId": 1974710,
+                "subCase_id": 614228,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ANGELA",
+                "lastName": "BAGGETT",
+                "partyNumber": "2",
+                "dateOfBirth": "11\/17\/1984",
+                "partyId": 2068787,
+                "personId": 1974708,
+                "subCase_id": 614228,
+                "partyType": "Restrained Person"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1603761,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 420982,
+        "schedEvntType": "HREOC",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Child Support filed on 08\/06\/18 by DAVID SCOTT CARRILLO represented by PRO\/PER. (continued matter)",
+        "caseNumber": "RID1100064",
+        "caseName": "CARRILLO VS CARRILLO",
+        "caseType": "FL",
+        "category": "DWC",
+        "dispositionDate": "2012-03-06T00:00:00",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "1\/5\/2011",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "CHERINA",
+                "middleName": "MALISA",
+                "lastName": "WILLIAMS",
+                "partyNumber": "1",
+                "dateOfBirth": "4\/20\/1988",
+                "partyId": 1685648,
+                "personId": 1632508,
+                "subCase_id": 506711,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "MATTHEW",
+                "middleName": "ISAAC",
+                "lastName": "CARRILLO",
+                "partyNumber": "3",
+                "dateOfBirth": "3\/2\/2008",
+                "partyId": 1685649,
+                "personId": 1632510,
+                "subCase_id": 506711,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "MELISSA",
+                "middleName": "PAIGE",
+                "lastName": "CARRILLO",
+                "partyNumber": "4",
+                "dateOfBirth": "6\/6\/2009",
+                "partyId": 1685650,
+                "personId": 1632511,
+                "subCase_id": 506711,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "DAVID",
+                "middleName": "SCOTT",
+                "lastName": "CARRILLO",
+                "partyNumber": "2",
+                "dateOfBirth": "9\/10\/1984",
+                "partyId": 1685651,
+                "personId": 1632509,
+                "subCase_id": 506711,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "COUNTY OF RIVERSIDE",
+                "partyNumber": "6",
+                "partyId": 1685652,
+                "personId": 1632513,
+                "subCase_id": 506711,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES"
+                    }
+                ],
+                "partyType": "Claimant"
+            },
+            {
+                "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES",
+                "partyId": 1685653,
+                "personId": 1632514,
+                "subCase_id": 506711,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "DAVID",
+                "middleName": "SCOTT",
+                "lastName": "CARRILLO",
+                "partyNumber": "2",
+                "dateOfBirth": "9\/10\/1984",
+                "partyId": 1685655,
+                "personId": 1632509,
+                "subCase_id": 506712,
+                "selfRepresented": "Y",
+                "partyType": "Protected Person"
+            },
+            {
+                "firstName": "MATTHEW",
+                "middleName": "ISAAC",
+                "lastName": "CARRILLO",
+                "partyNumber": "3",
+                "dateOfBirth": "3\/2\/2008",
+                "partyId": 1685656,
+                "personId": 1632510,
+                "subCase_id": 506712,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "MELISSA",
+                "middleName": "PAIGE",
+                "lastName": "CARRILLO",
+                "partyNumber": "4",
+                "dateOfBirth": "6\/6\/2009",
+                "partyId": 1685657,
+                "personId": 1632511,
+                "subCase_id": 506712,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "CHERINA",
+                "middleName": "MALISA",
+                "lastName": "WILLIAMS",
+                "partyNumber": "1",
+                "dateOfBirth": "4\/20\/1988",
+                "partyId": 1685658,
+                "personId": 1632508,
+                "subCase_id": 506712,
+                "selfRepresented": "Y",
+                "partyType": "Restrained Person"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1618435,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 423513,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F402",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: VACATION 2018 filed on 06\/18\/18 by ROCHELLE EMERICK represented by PRO\/PER.",
+        "caseNumber": "RID1102605",
+        "caseName": "FITE VS. EMERICK",
+        "caseType": "FL",
+        "category": "DWC",
+        "dispositionDate": "2013-07-03T00:00:00",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "6\/6\/2011",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "TIM",
+                "lastName": "FITE",
+                "partyNumber": "1",
+                "partyId": 1697789,
+                "personId": 1642706,
+                "subCase_id": 509756,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "WYATT",
+                "lastName": "FITE",
+                "partyNumber": "3",
+                "dateOfBirth": "3\/1\/2005",
+                "partyId": 1697790,
+                "personId": 1642708,
+                "subCase_id": 509756,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "CASSIDY",
+                "lastName": "FITE",
+                "partyNumber": "4",
+                "dateOfBirth": "5\/4\/2009",
+                "partyId": 1697791,
+                "personId": 1642709,
+                "subCase_id": 509756,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ROCHELLE",
+                "lastName": "EMERICK",
+                "partyNumber": "2",
+                "partyId": 1697792,
+                "personId": 1642707,
+                "subCase_id": 509756,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1676166,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 433099,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order for Change re: Visitation filed on 05\/18\/18 by FRANCISCO JAVIER MORFIN represented by PRO\/PER.",
+        "caseNumber": "RID1300594",
+        "caseName": "MORFIN & MORFIN",
+        "caseType": "FL",
+        "category": "DWC",
+        "dispositionDate": "2014-07-02T00:00:00",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "2\/7\/2013",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "FRANCISCO",
+                "middleName": "JAVIER",
+                "lastName": "MORFIN",
+                "partyNumber": "1",
+                "dateOfBirth": "8\/19\/1980",
+                "partyId": 1744901,
+                "personId": 1682033,
+                "subCase_id": 521483,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "ALEXIS",
+                "lastName": "MORFIN",
+                "partyNumber": "3",
+                "dateOfBirth": "7\/31\/2010",
+                "partyId": 1744902,
+                "personId": 1682035,
+                "subCase_id": 521483,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "DOMINIC",
+                "lastName": "MORFIN",
+                "partyNumber": "4",
+                "dateOfBirth": "4\/21\/2012",
+                "partyId": 1744903,
+                "personId": 1682036,
+                "subCase_id": 521483,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "JENNIFER",
+                "middleName": "C",
+                "lastName": "MORFIN",
+                "partyNumber": "2",
+                "dateOfBirth": "6\/8\/1983",
+                "partyId": 1744904,
+                "personId": 1682034,
+                "subCase_id": 521483,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "COUNTY OF RIVERSIDE",
+                "partyNumber": "6",
+                "partyId": 1744905,
+                "personId": 1682038,
+                "subCase_id": 521483,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES"
+                    }
+                ],
+                "partyType": "Claimant"
+            },
+            {
+                "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES",
+                "partyId": 1744906,
+                "personId": 1682040,
+                "subCase_id": 521483,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "JENNIFER",
+                "middleName": "C",
+                "lastName": "MORFIN",
+                "partyNumber": "2",
+                "dateOfBirth": "6\/8\/1983",
+                "partyId": 1744908,
+                "personId": 1682034,
+                "subCase_id": 521484,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "LAW OFFICES OF MARIE MORENO MYERS"
+                    }
+                ],
+                "partyType": "Protected Person"
+            },
+            {
+                "organizationName": "LAW OFFICES OF MARIE MORENO MYERS",
+                "partyId": 1744909,
+                "personId": 1682041,
+                "subCase_id": 521484,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "ALEXIS",
+                "lastName": "MORFIN",
+                "partyNumber": "3",
+                "dateOfBirth": "7\/31\/2010",
+                "partyId": 1744910,
+                "personId": 1682035,
+                "subCase_id": 521484,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "FRANCISCO",
+                "middleName": "JAVIER",
+                "lastName": "MORFIN",
+                "partyNumber": "1",
+                "dateOfBirth": "8\/19\/1980",
+                "partyId": 1744911,
+                "personId": 1682033,
+                "subCase_id": 521484,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "AARON M HUDSON"
+                    }
+                ],
+                "partyType": "Restrained Person"
+            },
+            {
+                "organizationName": "AARON M HUDSON",
+                "partyId": 1744912,
+                "personId": 1682039,
+                "subCase_id": 521484,
+                "partyType": "Attorney"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1714700,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 438532,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order for Change re: Property Control and RESPDT SIGN AGREEMENT filed on 03\/27\/18 by JAMES THOMAS CHURCHILL represented by PRO\/PER.",
+        "caseNumber": "RID1400646",
+        "caseName": "CHURCHILL & CHURCHILL",
+        "caseType": "FL",
+        "category": "DWOC",
+        "dispositionDate": "2014-05-13T00:00:00",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "2\/18\/2014",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "JAMES",
+                "middleName": "THOMAS",
+                "lastName": "CHURCHILL",
+                "partyNumber": "1",
+                "partyId": 1771604,
+                "personId": 1704524,
+                "subCase_id": 528045,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "CASSANDRA",
+                "middleName": "GAIL",
+                "lastName": "CHURCHILL",
+                "partyNumber": "2",
+                "partyId": 1771605,
+                "personId": 1704525,
+                "subCase_id": 528045,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1729768,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 440978,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order for Change re: Spousal Support filed on 06\/30\/17 by ADAM LOPEZ represented by LAW OFFICES OF RICHARD A KENNEDY.",
+        "caseNumber": "RID1403103",
+        "caseName": "LOPEZ & LOPEZ",
+        "caseType": "FL",
+        "category": "DWOC",
+        "dispositionDate": "2017-02-03T00:00:00",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "7\/23\/2014",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "ALMA",
+                "lastName": "LOPEZ",
+                "partyNumber": "1",
+                "partyId": 1782868,
+                "personId": 1714015,
+                "subCase_id": 530977,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "ROSSANA P MITCHELL ESQ"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "ROSSANA P MITCHELL ESQ",
+                "partyId": 1782869,
+                "personId": 1714018,
+                "subCase_id": 530977,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "ADAM",
+                "lastName": "LOPEZ",
+                "partyNumber": "2",
+                "partyId": 1782870,
+                "personId": 1714016,
+                "subCase_id": 530977,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "LAW OFFICES OF RICHARD A KENNEDY"
+                    }
+                ],
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "LAW OFFICES OF RICHARD A KENNEDY",
+                "partyId": 1782871,
+                "personId": 1714017,
+                "subCase_id": 530977,
+                "partyType": "Attorney"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1729769,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 440978,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Attorney Fees and Costs and 271 SANCTIONS\/ENFORCEMENT\/PAYMENT filed on 08\/11\/17 by ALMA LOPEZ represented by ROSSANA P MITCHELL ESQ.",
+        "caseNumber": "RID1403103",
+        "caseName": "LOPEZ & LOPEZ",
+        "caseType": "FL",
+        "category": "DWOC",
+        "dispositionDate": "2017-02-03T00:00:00",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "7\/23\/2014",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "ALMA",
+                "lastName": "LOPEZ",
+                "partyNumber": "1",
+                "partyId": 1782868,
+                "personId": 1714015,
+                "subCase_id": 530977,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "ROSSANA P MITCHELL ESQ"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "ROSSANA P MITCHELL ESQ",
+                "partyId": 1782869,
+                "personId": 1714018,
+                "subCase_id": 530977,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "ADAM",
+                "lastName": "LOPEZ",
+                "partyNumber": "2",
+                "partyId": 1782870,
+                "personId": 1714016,
+                "subCase_id": 530977,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "LAW OFFICES OF RICHARD A KENNEDY"
+                    }
+                ],
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "LAW OFFICES OF RICHARD A KENNEDY",
+                "partyId": 1782871,
+                "personId": 1714017,
+                "subCase_id": 530977,
+                "partyType": "Attorney"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1730966,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 441147,
+        "schedEvntType": "HR",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Vocational Evaluation",
+        "caseNumber": "RID1403273",
+        "caseName": "HAMMETT & HAMMETT",
+        "caseType": "FL",
+        "category": "LSWOC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "8\/5\/2014",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "CARIN",
+                "middleName": "JEANEEN",
+                "lastName": "HAMMETT",
+                "partyNumber": "1",
+                "partyId": 1783599,
+                "personId": 1714635,
+                "subCase_id": 531177,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "GURJIT SINGH"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "GURJIT SINGH",
+                "partyId": 1783600,
+                "personId": 1714637,
+                "subCase_id": 531177,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "JOSEPH",
+                "middleName": "JAMES",
+                "lastName": "HAMMETT",
+                "partyNumber": "2",
+                "partyId": 1783601,
+                "personId": 1714636,
+                "subCase_id": 531177,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "LAW OFFICES OF SHERRIE L DAVIDSON"
+                    }
+                ],
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "LAW OFFICES OF SHERRIE L DAVIDSON",
+                "partyId": 1783602,
+                "personId": 1714638,
+                "subCase_id": 531177,
+                "partyType": "Attorney"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1730967,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 441147,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Attorney Fees and Costs and BEHIND ON SPOUSAL SUPPORT filed on 02\/28\/18 by CARIN JEANEEN HAMMETT represented by GURJIT SINGH.",
+        "caseNumber": "RID1403273",
+        "caseName": "HAMMETT & HAMMETT",
+        "caseType": "FL",
+        "category": "LSWOC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "8\/5\/2014",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "CARIN",
+                "middleName": "JEANEEN",
+                "lastName": "HAMMETT",
+                "partyNumber": "1",
+                "partyId": 1783599,
+                "personId": 1714635,
+                "subCase_id": 531177,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "GURJIT SINGH"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "GURJIT SINGH",
+                "partyId": 1783600,
+                "personId": 1714637,
+                "subCase_id": 531177,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "JOSEPH",
+                "middleName": "JAMES",
+                "lastName": "HAMMETT",
+                "partyNumber": "2",
+                "partyId": 1783601,
+                "personId": 1714636,
+                "subCase_id": 531177,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "LAW OFFICES OF SHERRIE L DAVIDSON"
+                    }
+                ],
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "LAW OFFICES OF SHERRIE L DAVIDSON",
+                "partyId": 1783602,
+                "personId": 1714638,
+                "subCase_id": 531177,
+                "partyType": "Attorney"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1767671,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 447867,
+        "schedEvntType": "TRC",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing on Trial Readiness Conference.",
+        "caseNumber": "RID1504603",
+        "caseName": "KLAAS & KLAAS",
+        "caseType": "FL",
+        "category": "DWC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "11\/9\/2015",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "TYLER",
+                "lastName": "KLAAS",
+                "partyNumber": "1",
+                "partyId": 1812595,
+                "personId": 1739133,
+                "subCase_id": 539133,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "LAW OFFICES OF ELLEN WEINFURTNER"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "LAW OFFICES OF ELLEN WEINFURTNER",
+                "partyId": 1812596,
+                "personId": 1739138,
+                "subCase_id": 539133,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "ASHTON",
+                "middleName": "PIERCE",
+                "lastName": "KLAAS",
+                "partyNumber": "3",
+                "dateOfBirth": "6\/1\/2007",
+                "partyId": 1812597,
+                "personId": 1739135,
+                "subCase_id": 539133,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "WESLEY",
+                "middleName": "REID",
+                "lastName": "KLAAS",
+                "partyNumber": "4",
+                "dateOfBirth": "4\/10\/2012",
+                "partyId": 1812598,
+                "personId": 1739136,
+                "subCase_id": 539133,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "MARY",
+                "middleName": "JEANNE",
+                "lastName": "KLAAS",
+                "partyNumber": "2",
+                "partyId": 1812599,
+                "personId": 1739134,
+                "subCase_id": 539133,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "RANCHO FAMILY LAW GROUP"
+                    }
+                ],
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "RANCHO FAMILY LAW GROUP",
+                "partyId": 1812600,
+                "personId": 1739139,
+                "subCase_id": 539133,
+                "partyType": "Attorney"
+            },
+            {
+                "organizationName": "DAVID T RUEGG",
+                "partyNumber": "5",
+                "partyId": 1812601,
+                "personId": 1739137,
+                "subCase_id": 539133,
+                "partyType": "Expert"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1820216,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 460237,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order for Change re: Child Custody, Visitation filed on 05\/10\/18 by NICOLE RYAN represented by DEBRA A SMITH.",
+        "caseNumber": "RID1704036",
+        "caseName": "RYAN & RYAN",
+        "caseType": "FL",
+        "category": "DWC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "10\/11\/2017",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "NICOLE",
+                "lastName": "RYAN",
+                "partyNumber": "1",
+                "partyId": 1862834,
+                "personId": 1781954,
+                "subCase_id": 553584,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "DEBRA A SMITH"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "DEBRA A SMITH",
+                "partyId": 1862835,
+                "personId": 1781958,
+                "subCase_id": 553584,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "SIERRA",
+                "lastName": "RYAN",
+                "partyNumber": "3",
+                "dateOfBirth": "12\/21\/2010",
+                "partyId": 1862836,
+                "personId": 1781956,
+                "subCase_id": 553584,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "KENZIE",
+                "lastName": "RYAN",
+                "partyNumber": "4",
+                "dateOfBirth": "8\/4\/2014",
+                "partyId": 1862837,
+                "personId": 1781957,
+                "subCase_id": 553584,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "STEVE",
+                "lastName": "RYAN",
+                "partyNumber": "2",
+                "partyId": 1862838,
+                "personId": 1781955,
+                "subCase_id": 553584,
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1822574,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 461113,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Child Cust, Visit, Child Supp, Spousal Supp, Atty Fees\/Costs and Property Control,Standard Healthcare,Appoint 730 filed on 05\/09\/18 by YANFEI LAN represented by BARON LEGAL.",
+        "caseNumber": "RID1704833",
+        "caseName": "ZOU & LAN",
+        "caseType": "FL",
+        "category": "DWC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "12\/15\/2017",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "HANYU",
+                "lastName": "ZOU",
+                "partyNumber": "1",
+                "partyId": 1866397,
+                "personId": 1785034,
+                "subCase_id": 554593,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "CASTLETON LAW GROUP"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "CASTLETON LAW GROUP",
+                "partyId": 1866398,
+                "personId": 1785039,
+                "subCase_id": 554593,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "CHRIS",
+                "middleName": "LAN",
+                "lastName": "ZOU",
+                "partyNumber": "3",
+                "dateOfBirth": "3\/14\/2015",
+                "partyId": 1866399,
+                "personId": 1785036,
+                "subCase_id": 554593,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ETHAN",
+                "middleName": "LAN",
+                "lastName": "ZOU",
+                "partyNumber": "4",
+                "dateOfBirth": "10\/4\/2017",
+                "partyId": 1866400,
+                "personId": 1785037,
+                "subCase_id": 554593,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "YANFEI",
+                "lastName": "LAN",
+                "partyNumber": "2",
+                "partyId": 1866401,
+                "personId": 1785035,
+                "subCase_id": 554593,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "BARON LEGAL"
+                    }
+                ],
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "BARON LEGAL",
+                "partyId": 1866402,
+                "personId": 1785038,
+                "subCase_id": 554593,
+                "partyType": "Attorney"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1822976,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 461255,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Child Support, Spousal Support, Attorney Fees & Costs filed on 05\/11\/18 by BIVIAN MARIE MANLEY represented by LAW OFFICES OF CATHERINE A SCHWARTZ.",
+        "caseNumber": "RID1704963",
+        "caseName": "MANLEY & MANLEY",
+        "caseType": "FL",
+        "category": "DWC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "12\/28\/2017",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "STEPHEN",
+                "middleName": "DANIEL",
+                "lastName": "MANLEY",
+                "partyNumber": "1",
+                "dateOfBirth": "11\/23\/1990",
+                "partyId": 1866960,
+                "personId": 1785528,
+                "subCase_id": 554756,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "HANSON, GORIAN, BRADFORD & HANICH"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "HANSON, GORIAN, BRADFORD & HANICH",
+                "partyId": 1866961,
+                "personId": 1785533,
+                "subCase_id": 554756,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "DANIEL",
+                "middleName": "JAY",
+                "lastName": "MANLEY",
+                "partyNumber": "3",
+                "dateOfBirth": "6\/3\/2010",
+                "partyId": 1866962,
+                "personId": 1785530,
+                "subCase_id": 554756,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "KATRINA",
+                "middleName": "MARIE",
+                "lastName": "MANLEY",
+                "partyNumber": "4",
+                "dateOfBirth": "9\/14\/2013",
+                "partyId": 1866963,
+                "personId": 1785531,
+                "subCase_id": 554756,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "BIVIAN",
+                "middleName": "MARIE",
+                "lastName": "MANLEY",
+                "partyNumber": "2",
+                "dateOfBirth": "2\/18\/1991",
+                "partyId": 1866964,
+                "personId": 1785529,
+                "subCase_id": 554756,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "LAW OFFICES OF CATHERINE A SCHWARTZ"
+                    }
+                ],
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "LAW OFFICES OF CATHERINE A SCHWARTZ",
+                "partyId": 1866965,
+                "personId": 1785532,
+                "subCase_id": 554756,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "BIVIAN",
+                "middleName": "MARIE",
+                "lastName": "MANLEY",
+                "partyNumber": "2",
+                "dateOfBirth": "2\/18\/1991",
+                "partyId": 1866966,
+                "personId": 1785529,
+                "subCase_id": 554757,
+                "selfRepresented": "Y",
+                "partyType": "Protected Person"
+            },
+            {
+                "firstName": "DANIEL",
+                "middleName": "JAY",
+                "lastName": "MANLEY",
+                "partyNumber": "3",
+                "dateOfBirth": "6\/3\/2010",
+                "partyId": 1866967,
+                "personId": 1785530,
+                "subCase_id": 554757,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "KATRINA",
+                "middleName": "MARIE",
+                "lastName": "MANLEY",
+                "partyNumber": "4",
+                "dateOfBirth": "9\/14\/2013",
+                "partyId": 1866968,
+                "personId": 1785531,
+                "subCase_id": 554757,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "STEPHEN",
+                "middleName": "DANIEL",
+                "lastName": "MANLEY",
+                "partyNumber": "1",
+                "dateOfBirth": "11\/23\/1990",
+                "partyId": 1866969,
+                "personId": 1785528,
+                "subCase_id": 554757,
+                "partyType": "Restrained Person"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1889333,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 471895,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Child Custody, Visitation filed on 03\/06\/18 by PAVEL PIOTOR LAZO GOMEZ represented by LAW OFFICES OF PETER M MARQUEZ.",
+        "caseNumber": "RID1800845",
+        "caseName": "LAO GOMEZ & SOLANO SALDARRIAGA",
+        "caseType": "FL",
+        "category": "DWC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "3\/6\/2018",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "PAVEL",
+                "middleName": "PIOTOR",
+                "lastName": "LAZO GOMEZ",
+                "partyNumber": "1",
+                "partyId": 1898993,
+                "personId": 1816436,
+                "subCase_id": 565988,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "LAW OFFICES OF PETER M MARQUEZ"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "LAW OFFICES OF PETER M MARQUEZ",
+                "partyId": 1898994,
+                "personId": 1816440,
+                "subCase_id": 565988,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "LUNA",
+                "middleName": "PATRICIA",
+                "lastName": "LAZO SOLANO",
+                "partyNumber": "3",
+                "dateOfBirth": "9\/11\/2009",
+                "partyId": 1898995,
+                "personId": 1816438,
+                "subCase_id": 565988,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "MARCIA",
+                "middleName": "VIVIANA",
+                "lastName": "LAZO SOLANO",
+                "partyNumber": "4",
+                "dateOfBirth": "1\/17\/2015",
+                "partyId": 1898996,
+                "personId": 1816439,
+                "subCase_id": 565988,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "PATRICIA",
+                "middleName": "VIVIANA",
+                "lastName": "SOLANO SALDARRIAGA",
+                "partyNumber": "2",
+                "partyId": 1898997,
+                "personId": 1816437,
+                "subCase_id": 565988,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1890317,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 472447,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order for Change re: Child Custody, Visitation filed on 06\/05\/18 by PRISCILLA RENEE BRUNY represented by PRO\/PER.",
+        "caseNumber": "RID1801346",
+        "caseName": "BRUNY & BRUNY",
+        "caseType": "FL",
+        "category": "DWC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "4\/9\/2018",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "PRISCILLA",
+                "middleName": "RENEE",
+                "lastName": "BRUNY",
+                "partyNumber": "1",
+                "dateOfBirth": "4\/15\/1984",
+                "partyId": 1900958,
+                "personId": 1818214,
+                "subCase_id": 566596,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "JOSEPH",
+                "middleName": "ELI",
+                "lastName": "BRUNY",
+                "partyNumber": "3",
+                "dateOfBirth": "9\/12\/2017",
+                "partyId": 1900959,
+                "personId": 1818216,
+                "subCase_id": 566596,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "JOSEPH",
+                "middleName": "ELI",
+                "lastName": "BRUNY",
+                "partyNumber": "2",
+                "dateOfBirth": "5\/6\/1982",
+                "partyId": 1900960,
+                "personId": 1818215,
+                "subCase_id": 566596,
+                "partyType": "Respondent"
+            },
+            {
+                "firstName": "JOSEPH",
+                "middleName": "ELI",
+                "lastName": "BRUNY",
+                "partyNumber": "2",
+                "dateOfBirth": "5\/6\/1982",
+                "partyId": 1900961,
+                "personId": 1818215,
+                "subCase_id": 566597,
+                "selfRepresented": "Y",
+                "partyType": "Protected Person"
+            },
+            {
+                "firstName": "JOSEPH",
+                "middleName": "ELI",
+                "lastName": "BRUNY",
+                "partyNumber": "3",
+                "dateOfBirth": "9\/12\/2017",
+                "partyId": 1900962,
+                "personId": 1818216,
+                "subCase_id": 566597,
+                "partyType": "Child"
+            },
+            {
+                "organizationName": "RIV1701547",
+                "partyNumber": "4",
+                "partyId": 1900963,
+                "personId": 1818217,
+                "subCase_id": 566597,
+                "partyType": "Consolidated Case Number"
+            },
+            {
+                "firstName": "PRISCILLA",
+                "middleName": "RENEE",
+                "lastName": "BRUNY",
+                "partyNumber": "1",
+                "dateOfBirth": "4\/15\/1984",
+                "partyId": 1900964,
+                "personId": 1818214,
+                "subCase_id": 566597,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "LAW OFFICE OF GARY S AUSTIN"
+                    }
+                ],
+                "partyType": "Restrained Person"
+            },
+            {
+                "organizationName": "LAW OFFICE OF GARY S AUSTIN",
+                "partyId": 1900965,
+                "personId": 1818218,
+                "subCase_id": 566597,
+                "partyType": "Attorney"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 2155508,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 509717,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order for Change re: Child Support and Attorney's Fees and Costs filed on 05\/16\/18 by TRACEY LYNN GOOD represented by LAW OFFICES OF JAMES D MADDEN.",
+        "caseNumber": "RID214743",
+        "caseName": "GOOD VS GOOD",
+        "caseType": "FL",
+        "category": "DWC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "4\/13\/2006",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "TRACEY",
+                "middleName": "LYNN",
+                "lastName": "GOOD",
+                "partyNumber": "1",
+                "partyId": 2052931,
+                "personId": 1960941,
+                "subCase_id": 610241,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "JAMES D MADDEN"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "JAMES D MADDEN",
+                "partyId": 2052932,
+                "personId": 1960946,
+                "subCase_id": 610241,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "PHILIP",
+                "lastName": "GOOD",
+                "partyNumber": "3",
+                "dateOfBirth": "6\/15\/2003",
+                "partyId": 2052933,
+                "personId": 1960943,
+                "subCase_id": 610241,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "BRIAN",
+                "lastName": "GOOD",
+                "partyNumber": "2",
+                "partyId": 2052934,
+                "personId": 1960942,
+                "subCase_id": 610241,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "LAW OFFICES OF STEPHEN M COHEN"
+                    },
+                    {
+                        "organizationName": "SCHWAMB & STABILE"
+                    }
+                ],
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "LAW OFFICES OF STEPHEN M COHEN",
+                "partyId": 2052935,
+                "personId": 1960947,
+                "subCase_id": 610241,
+                "partyType": "Attorney"
+            },
+            {
+                "organizationName": "SCHWAMB & STABILE",
+                "partyId": 2052936,
+                "personId": 1960948,
+                "subCase_id": 610241,
+                "partyType": "Attorney"
+            },
+            {
+                "organizationName": "GOOD WATERHOUSE INC. 401(K)PLAN",
+                "partyNumber": "5",
+                "partyId": 2052937,
+                "personId": 1960945,
+                "subCase_id": 610241,
                 "partyType": "Claimant"
             }
         ]
     },
     {
-        "schedEvntId": 599318,
+        "schedEvntId": 2308008,
         "schedEvntDateTime": "2018-08-06T08:30:00",
-        "caseId": 106508,
-        "schedEvntType": "CAUHS",
+        "caseId": 531195,
+        "schedEvntType": "FLMSCN",
         "eventStatus": "EVENT",
         "schedEvntLocation": "Department F201",
         "docketNumber": 2147483647,
-        "schedEvntName": "Child Abduction Unit Hearing Set",
-        "caseNumber": "FLRI1800078",
-        "caseName": "SMITH & JONES",
+        "schedEvntName": "Mandatory Settlement Conference (parties noticed)",
+        "caseNumber": "RID235563",
+        "caseName": "KHULLAR VS KHULLAR",
         "caseType": "FL",
-        "category": "COJ",
-        "dispositionDate": "2018-07-02T00:00:00",
-        "dispositionType": "AD",
-        "judicialOfficer": "Belinda A. Handy",
+        "category": "DWC",
+        "judicialOfficer": "Jennifer Gerard",
         "caseLocation": "RI",
-        "filingDate": "7\/2\/2018",
-        "filedByProPer": "True",
+        "filingDate": "4\/6\/2010",
+        "filedByProPer": "False",
         "locationCode": "F201",
         "locationName": "Department F201",
         "parentLocationCode": "FLD",
         "parentLocationName": "Riverside Family Law Courthouse",
-        "interpreter": [
-            {
-                "language": "Sign Language - American"
-            }
-        ],
         "party": [
             {
-                "firstName": "JOHN",
-                "lastName": "SMITH",
-                "partyId": 410059,
-                "personId": 473733,
-                "selfRepresented": "In Pro Per",
-                "partyType": "Father"
+                "firstName": "ASHOK",
+                "lastName": "KHULLAR",
+                "partyNumber": "1",
+                "partyId": 2155086,
+                "personId": 2048306,
+                "subCase_id": 636027,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "JAMES A HAGAN"
+                    }
+                ],
+                "partyType": "Petitioner"
             },
             {
-                "firstName": "WARREN",
-                "lastName": "JONES",
-                "partyId": 410060,
-                "personId": 473734,
-                "selfRepresented": "In Pro Per",
-                "partyType": "Father"
+                "organizationName": "JAMES A HAGAN",
+                "partyId": 2155087,
+                "personId": 2048310,
+                "subCase_id": 636027,
+                "partyType": "Attorney"
             },
             {
-                "firstName": "TIM",
-                "lastName": "SMITH",
-                "partyId": 410061,
-                "personId": 473735,
-                "selfRepresented": "Unrepresented",
+                "firstName": "ARJUN",
+                "lastName": "KHULLAR",
+                "partyNumber": "3",
+                "dateOfBirth": "4\/16\/2008",
+                "partyId": 2155088,
+                "personId": 2048308,
+                "subCase_id": 636027,
                 "partyType": "Child"
+            },
+            {
+                "firstName": "SEEMA",
+                "lastName": "KHULLAR",
+                "partyNumber": "2",
+                "partyId": 2155089,
+                "personId": 2048307,
+                "subCase_id": 636027,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "GANESH OIL COMPANY INC.",
+                "partyNumber": "4",
+                "partyId": 2155090,
+                "personId": 2048309,
+                "subCase_id": 636027,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "JOHN W BRANCH"
+                    }
+                ],
+                "partyType": "Claimant"
+            },
+            {
+                "organizationName": "JOHN W BRANCH",
+                "partyId": 2155091,
+                "personId": 2048311,
+                "subCase_id": 636027,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "ASHOK",
+                "lastName": "KHULLAR",
+                "partyNumber": "1",
+                "partyId": 2155092,
+                "personId": 2048306,
+                "subCase_id": 636028,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "JAMES A HAGAN"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "JAMES A HAGAN",
+                "partyId": 2155093,
+                "personId": 2048310,
+                "subCase_id": 636028,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "ARJUN",
+                "lastName": "KHULLAR",
+                "partyNumber": "3",
+                "dateOfBirth": "4\/16\/2008",
+                "partyId": 2155094,
+                "personId": 2048308,
+                "subCase_id": 636028,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "SEEMA",
+                "lastName": "KHULLAR",
+                "partyNumber": "2",
+                "partyId": 2155095,
+                "personId": 2048307,
+                "subCase_id": 636028,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "GANESH OIL COMPANY INC.",
+                "partyNumber": "4",
+                "partyId": 2155096,
+                "personId": 2048309,
+                "subCase_id": 636028,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "JOHN W BRANCH"
+                    }
+                ],
+                "partyType": "Claimant"
+            },
+            {
+                "organizationName": "JOHN W BRANCH",
+                "partyId": 2155097,
+                "personId": 2048311,
+                "subCase_id": 636028,
+                "partyType": "Attorney"
             }
         ]
     },
     {
-        "schedEvntId": 599321,
+        "schedEvntId": 2969693,
         "schedEvntDateTime": "2018-08-06T08:30:00",
-        "caseId": 106685,
-        "schedEvntType": "PRCOM",
+        "caseId": 782183,
+        "schedEvntType": "FLMSCN",
         "eventStatus": "EVENT",
         "schedEvntLocation": "Department F201",
         "docketNumber": 2147483647,
-        "schedEvntName": "Court on its Own Motion:",
-        "caseNumber": "FLRI1800110",
-        "caseName": "STONES &. STONE",
+        "schedEvntName": "Mandatory Settlement Conference (parties noticed)",
+        "caseNumber": "SWD1701394",
+        "caseName": "BRENNER & BRENNER",
         "caseType": "FL",
-        "category": "CSM",
-        "judicialOfficer": "Belinda A. Handy",
-        "caseLocation": "RI",
-        "filingDate": "7\/6\/2018",
-        "filedByProPer": "True",
+        "category": "DWOC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "HE",
+        "filingDate": "6\/8\/2017",
+        "filedByProPer": "False",
         "locationCode": "F201",
         "locationName": "Department F201",
         "parentLocationCode": "FLD",
         "parentLocationName": "Riverside Family Law Courthouse",
-        "interpreter": [
-            {
-                "language": "Sign Language - American"
-            }
-        ],
         "party": [
             {
-                "firstName": "MISSY",
-                "lastName": "STONES",
-                "partyId": 410556,
-                "personId": 474259,
-                "selfRepresented": "In Pro Per",
+                "firstName": "MICHAEL",
+                "middleName": "A.",
+                "lastName": "BRENNER",
+                "partyNumber": "1",
+                "dateOfBirth": "1\/30\/1964",
+                "partyId": 3369112,
+                "personId": 3158149,
+                "subCase_id": 915596,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "MOORE FAMILY LAW GROUP, APC"
+                    }
+                ],
                 "partyType": "Petitioner"
             },
             {
-                "firstName": "MISSY",
-                "lastName": "STONES",
-                "dateOfBirth": "1\/1\/1970",
-                "partyId": 410556,
-                "personId": 474259,
-                "selfRepresented": "In Pro Per",
-                "partyType": "Petitioner"
+                "organizationName": "MOORE FAMILY LAW GROUP, APC",
+                "partyId": 3369113,
+                "personId": 3158151,
+                "subCase_id": 915596,
+                "partyType": "Attorney"
             },
             {
-                "firstName": "DALE",
-                "lastName": "STONE",
-                "dateOfBirth": "1\/1\/1969",
-                "partyId": 410557,
-                "personId": 474260,
-                "selfRepresented": "Unrepresented",
+                "firstName": "LISA",
+                "middleName": "C.",
+                "lastName": "BRENNER",
+                "partyNumber": "2",
+                "dateOfBirth": "9\/17\/1972",
+                "partyId": 3369114,
+                "personId": 3158150,
+                "subCase_id": 915596,
+                "selfRepresented": "Y",
                 "partyType": "Respondent"
+            },
+            {
+                "firstName": "MICHAEL",
+                "middleName": "A.",
+                "lastName": "BRENNER",
+                "partyNumber": "1",
+                "dateOfBirth": "1\/30\/1964",
+                "partyId": 3369115,
+                "personId": 3158149,
+                "subCase_id": 915597,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "MOORE LAW GROUP"
+                    }
+                ],
+                "partyType": "Protected Person"
+            },
+            {
+                "organizationName": "MOORE LAW GROUP",
+                "partyId": 3369116,
+                "personId": 3158152,
+                "subCase_id": 915597,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "LISA",
+                "middleName": "C.",
+                "lastName": "BRENNER",
+                "partyNumber": "2",
+                "dateOfBirth": "9\/17\/1972",
+                "partyId": 3369117,
+                "personId": 3158150,
+                "subCase_id": 915597,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "THOMPSON & THOMPSON"
+                    }
+                ],
+                "partyType": "Restrained Person"
+            },
+            {
+                "organizationName": "THOMPSON & THOMPSON",
+                "partyId": 3369118,
+                "personId": 3158153,
+                "subCase_id": 915597,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "LISA",
+                "middleName": "C.",
+                "lastName": "BRENNER",
+                "partyNumber": "2",
+                "dateOfBirth": "9\/17\/1972",
+                "partyId": 3369119,
+                "personId": 3158150,
+                "subCase_id": 915598,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "THOMPSON & THOMPSON"
+                    }
+                ],
+                "partyType": "Protected Person"
+            },
+            {
+                "organizationName": "THOMPSON & THOMPSON",
+                "partyId": 3369120,
+                "personId": 3158153,
+                "subCase_id": 915598,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "MICHAEL",
+                "middleName": "A.",
+                "lastName": "BRENNER",
+                "partyNumber": "1",
+                "dateOfBirth": "1\/30\/1964",
+                "partyId": 3369121,
+                "personId": 3158149,
+                "subCase_id": 915598,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "MOORE LAW GROUP"
+                    }
+                ],
+                "partyType": "Restrained Person"
+            },
+            {
+                "organizationName": "MOORE LAW GROUP",
+                "partyId": 3369122,
+                "personId": 3158152,
+                "subCase_id": 915598,
+                "partyType": "Attorney"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1788933,
+        "schedEvntDateTime": "2018-08-06T08:15:00",
+        "caseId": 452628,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Child Custody, Visitation, Child Support filed on 05\/18\/18 by CINTHYA JOSELYN HERNANDEZ represented by PRO\/PER.",
+        "caseNumber": "RID1603935",
+        "caseName": "HERNANDEZ & HERNANDEZ",
+        "caseType": "FL",
+        "category": "DWC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "9\/9\/2016",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "FREDI",
+                "lastName": "HERNANDEZ",
+                "partyNumber": "1",
+                "partyId": 1833440,
+                "personId": 1756431,
+                "subCase_id": 544860,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "VALERIE",
+                "lastName": "HERNANDEZ",
+                "partyNumber": "3",
+                "dateOfBirth": "8\/20\/2004",
+                "partyId": 1833441,
+                "personId": 1756433,
+                "subCase_id": 544860,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "CINTHYA",
+                "middleName": "JOSELYN",
+                "lastName": "HERNANDEZ",
+                "partyNumber": "2",
+                "partyId": 1833442,
+                "personId": 1756432,
+                "subCase_id": 544860,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1888752,
+        "schedEvntDateTime": "2018-08-06T08:15:00",
+        "caseId": 471621,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Child Custody, Visitation, Child Support, Spousal Support, A filed on 05\/21\/18 by ANTWAN KILZI represented by PRO\/PER.",
+        "caseNumber": "RID1800594",
+        "caseName": "KILZI & KILZI",
+        "caseType": "FL",
+        "category": "DWC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "2\/15\/2018",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "SALVIA",
+                "lastName": "KILZI",
+                "partyNumber": "1",
+                "partyId": 1897945,
+                "personId": 1815482,
+                "subCase_id": 565689,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "LAW OFFICES OF STEPHEN M COHEN"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "LAW OFFICES OF STEPHEN M COHEN",
+                "partyId": 1897946,
+                "personId": 1815487,
+                "subCase_id": 565689,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "VERA",
+                "lastName": "KILZI",
+                "partyNumber": "3",
+                "dateOfBirth": "5\/12\/2000",
+                "partyId": 1897947,
+                "personId": 1815484,
+                "subCase_id": 565689,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "MIA",
+                "lastName": "KILZI",
+                "partyNumber": "4",
+                "dateOfBirth": "4\/23\/2003",
+                "partyId": 1897948,
+                "personId": 1815485,
+                "subCase_id": 565689,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "AMI",
+                "lastName": "KILZI",
+                "partyNumber": "5",
+                "dateOfBirth": "4\/23\/2003",
+                "partyId": 1897949,
+                "personId": 1815486,
+                "subCase_id": 565689,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ANTWAN",
+                "lastName": "KILZI",
+                "partyNumber": "2",
+                "partyId": 1897950,
+                "personId": 1815483,
+                "subCase_id": 565689,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1890193,
+        "schedEvntDateTime": "2018-08-06T08:15:00",
+        "caseId": 472367,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Child Custody, Visitation, Child Support filed on 04\/04\/18 by JOANA MELISSA MONCADA represented by HALEH RASHIDI.",
+        "caseNumber": "RID1801273",
+        "caseName": "MONCADA & CARDOSO,JR",
+        "caseType": "FL",
+        "category": "EPR",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "4\/4\/2018",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "JOANA",
+                "middleName": "MELISSA",
+                "lastName": "MONCADA",
+                "partyNumber": "1",
+                "partyId": 1900695,
+                "personId": 1817967,
+                "subCase_id": 566511,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "HALEH RASHIDI"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "HALEH RASHIDI",
+                "partyId": 1900696,
+                "personId": 1817970,
+                "subCase_id": 566511,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "JELENA",
+                "lastName": "CARDOSO",
+                "partyNumber": "3",
+                "dateOfBirth": "10\/31\/2013",
+                "partyId": 1900697,
+                "personId": 1817969,
+                "subCase_id": 566511,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "MIGUEL",
+                "lastName": "CARDOSO",
+                "partyNumber": "2",
+                "partyId": 1900698,
+                "personId": 1817968,
+                "subCase_id": 566511,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1890909,
+        "schedEvntDateTime": "2018-08-06T08:15:00",
+        "caseId": 472785,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Child Custody, Visitation, Child Support filed on 06\/28\/18 by NANCI CHAVEZ represented by PRO\/PER.",
+        "caseNumber": "RID1801655",
+        "caseName": "COMPTON & CHAVEZ",
+        "caseType": "FL",
+        "category": "EPR",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "4\/30\/2018",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "ROBERT",
+                "lastName": "COMPTON",
+                "partyNumber": "1",
+                "partyId": 1902214,
+                "personId": 1819348,
+                "subCase_id": 566968,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "LAW OFFICE OF JOYCE M HOLCOMB"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "LAW OFFICE OF JOYCE M HOLCOMB",
+                "partyId": 1902215,
+                "personId": 1819351,
+                "subCase_id": 566968,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "CECILIA",
+                "middleName": "GRACE",
+                "lastName": "CHAVEZ-COMPTON",
+                "partyNumber": "3",
+                "dateOfBirth": "12\/6\/2015",
+                "partyId": 1902216,
+                "personId": 1819350,
+                "subCase_id": 566968,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "NANCI",
+                "lastName": "CHAVEZ",
+                "partyNumber": "2",
+                "partyId": 1902217,
+                "personId": 1819349,
+                "subCase_id": 566968,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1891480,
+        "schedEvntDateTime": "2018-08-06T08:15:00",
+        "caseId": 473057,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Child Support, Spousal Support filed on 05\/17\/18 by LEYDA ESPINOZA SALAS represented by PRO\/PER.",
+        "caseNumber": "RID1801903",
+        "caseName": "ESPINOZA SALAS & PALACIOS",
+        "caseType": "FL",
+        "category": "DWC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "5\/14\/2018",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "LEYDA",
+                "lastName": "ESPINOZA SALAS",
+                "partyNumber": "1",
+                "partyId": 1903156,
+                "personId": 1820223,
+                "subCase_id": 567262,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "VERENICE",
+                "lastName": "PALACIOS",
+                "partyNumber": "3",
+                "dateOfBirth": "11\/26\/2005",
+                "partyId": 1903157,
+                "personId": 1820225,
+                "subCase_id": 567262,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ERIC",
+                "lastName": "PALACIOS",
+                "partyNumber": "4",
+                "dateOfBirth": "5\/25\/2007",
+                "partyId": 1903158,
+                "personId": 1820226,
+                "subCase_id": 567262,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "IVETH",
+                "lastName": "PALACIOS",
+                "partyNumber": "5",
+                "dateOfBirth": "9\/24\/2010",
+                "partyId": 1903159,
+                "personId": 1820227,
+                "subCase_id": 567262,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "DAVID",
+                "lastName": "PALACIOS",
+                "partyNumber": "2",
+                "partyId": 1903160,
+                "personId": 1820224,
+                "subCase_id": 567262,
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1891565,
+        "schedEvntDateTime": "2018-08-06T08:15:00",
+        "caseId": 473102,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Spousal Support, Property Control filed on 05\/16\/18 by NINFA ALCANTAR DE ULLOA represented by PRO\/PER.",
+        "caseNumber": "RID1801944",
+        "caseName": "ALCANTAR DE ULLOA & ULLOA PARRA",
+        "caseType": "FL",
+        "category": "DWOC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "5\/16\/2018",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "NINFA",
+                "lastName": "ALCANTAR DE ULLOA",
+                "partyNumber": "1",
+                "partyId": 1903318,
+                "personId": 1820379,
+                "subCase_id": 567309,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "VICTOR",
+                "middleName": "MANUEL",
+                "lastName": "ULLOA PARRA",
+                "partyNumber": "2",
+                "partyId": 1903319,
+                "personId": 1820380,
+                "subCase_id": 567309,
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1891566,
+        "schedEvntDateTime": "2018-08-06T08:15:00",
+        "caseId": 473103,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Child Custody, Visitation, Child Support filed on 05\/16\/18 by CYNTHIA I TORRES represented by PRO\/PER.",
+        "caseNumber": "RID1801945",
+        "caseName": "TORRES vs. BRYCSAK ",
+        "caseType": "FL",
+        "category": "EPR",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "5\/16\/2018",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "CYNTHIA",
+                "middleName": "I",
+                "lastName": "TORRES",
+                "partyNumber": "1",
+                "partyId": 1903320,
+                "personId": 1820381,
+                "subCase_id": 567310,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "MOORE FAMILY LAW GROUP, APC"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "organizationName": "MOORE FAMILY LAW GROUP, APC",
+                "partyId": 1903321,
+                "personId": 1820385,
+                "subCase_id": 567310,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "SOPHIA",
+                "middleName": "NICOLE",
+                "lastName": "BRYCSAK",
+                "partyNumber": "3",
+                "dateOfBirth": "5\/7\/2015",
+                "partyId": 1903322,
+                "personId": 1820383,
+                "subCase_id": 567310,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "LIAM",
+                "middleName": "SERGIO",
+                "lastName": "BRYCSAK",
+                "partyNumber": "4",
+                "dateOfBirth": "11\/27\/2016",
+                "partyId": 1903323,
+                "personId": 1820384,
+                "subCase_id": 567310,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ANTHONY",
+                "middleName": "ROBERT",
+                "lastName": "BRYCSAK",
+                "partyNumber": "2",
+                "partyId": 1903324,
+                "personId": 1820382,
+                "subCase_id": 567310,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1891581,
+        "schedEvntDateTime": "2018-08-06T08:15:00",
+        "caseId": 473112,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F201",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Visitation filed on 05\/17\/18 by PHILLIP JONES represented by PRO\/PER.",
+        "caseNumber": "RID1801953",
+        "caseName": "JONES & DILLARD",
+        "caseType": "FL",
+        "category": "EPR",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "5\/17\/2018",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "PHILLIP",
+                "lastName": "JONES",
+                "partyNumber": "1",
+                "partyId": 1903355,
+                "personId": 1820411,
+                "subCase_id": 567320,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "JEREMIAH",
+                "middleName": "LAWRENCE",
+                "lastName": "JONES",
+                "partyNumber": "3",
+                "dateOfBirth": "9\/13\/2016",
+                "partyId": 1903356,
+                "personId": 1820413,
+                "subCase_id": 567320,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "SARITA",
+                "lastName": "DILLARD",
+                "partyNumber": "2",
+                "partyId": 1903357,
+                "personId": 1820412,
+                "subCase_id": 567320,
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1603760,
+        "schedEvntDateTime": "2018-08-06T08:00:00",
+        "caseId": 420982,
+        "schedEvntType": "HREOC",
+        "eventStatus": "EVENT",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Child Support filed on 03\/27\/18 by DAVID SCOTT CARRILLO represented by PRO\/PER. (continued matter)",
+        "caseNumber": "RID1100064",
+        "caseName": "CARRILLO VS CARRILLO",
+        "caseType": "FL",
+        "category": "DWC",
+        "dispositionDate": "2012-03-06T00:00:00",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "1\/5\/2011",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "CHERINA",
+                "middleName": "MALISA",
+                "lastName": "WILLIAMS",
+                "partyNumber": "1",
+                "dateOfBirth": "4\/20\/1988",
+                "partyId": 1685648,
+                "personId": 1632508,
+                "subCase_id": 506711,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "MATTHEW",
+                "middleName": "ISAAC",
+                "lastName": "CARRILLO",
+                "partyNumber": "3",
+                "dateOfBirth": "3\/2\/2008",
+                "partyId": 1685649,
+                "personId": 1632510,
+                "subCase_id": 506711,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "MELISSA",
+                "middleName": "PAIGE",
+                "lastName": "CARRILLO",
+                "partyNumber": "4",
+                "dateOfBirth": "6\/6\/2009",
+                "partyId": 1685650,
+                "personId": 1632511,
+                "subCase_id": 506711,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "DAVID",
+                "middleName": "SCOTT",
+                "lastName": "CARRILLO",
+                "partyNumber": "2",
+                "dateOfBirth": "9\/10\/1984",
+                "partyId": 1685651,
+                "personId": 1632509,
+                "subCase_id": 506711,
+                "selfRepresented": "Y",
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "COUNTY OF RIVERSIDE",
+                "partyNumber": "6",
+                "partyId": 1685652,
+                "personId": 1632513,
+                "subCase_id": 506711,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES"
+                    }
+                ],
+                "partyType": "Claimant"
+            },
+            {
+                "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES",
+                "partyId": 1685653,
+                "personId": 1632514,
+                "subCase_id": 506711,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "DAVID",
+                "middleName": "SCOTT",
+                "lastName": "CARRILLO",
+                "partyNumber": "2",
+                "dateOfBirth": "9\/10\/1984",
+                "partyId": 1685655,
+                "personId": 1632509,
+                "subCase_id": 506712,
+                "selfRepresented": "Y",
+                "partyType": "Protected Person"
+            },
+            {
+                "firstName": "MATTHEW",
+                "middleName": "ISAAC",
+                "lastName": "CARRILLO",
+                "partyNumber": "3",
+                "dateOfBirth": "3\/2\/2008",
+                "partyId": 1685656,
+                "personId": 1632510,
+                "subCase_id": 506712,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "MELISSA",
+                "middleName": "PAIGE",
+                "lastName": "CARRILLO",
+                "partyNumber": "4",
+                "dateOfBirth": "6\/6\/2009",
+                "partyId": 1685657,
+                "personId": 1632511,
+                "subCase_id": 506712,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "CHERINA",
+                "middleName": "MALISA",
+                "lastName": "WILLIAMS",
+                "partyNumber": "1",
+                "dateOfBirth": "4\/20\/1988",
+                "partyId": 1685658,
+                "personId": 1632508,
+                "subCase_id": 506712,
+                "selfRepresented": "Y",
+                "partyType": "Restrained Person"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 1741635,
+        "schedEvntDateTime": "2018-08-06T08:00:00",
+        "caseId": 442998,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order re: Child Support and ORDER TO DETERMINE ARREARS;PAY PLAN filed on 07\/03\/18 by GABRIELLE I ELIAS represented by PRO\/PER.",
+        "caseNumber": "RID1405134",
+        "caseName": "ELIAS VS DE LA TORRE",
+        "caseType": "FL",
+        "category": "EPR",
+        "dispositionDate": "2015-02-17T00:00:00",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "12\/12\/2014",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "GABRIELLE",
+                "middleName": "I",
+                "lastName": "ELIAS",
+                "partyNumber": "1",
+                "partyId": 1791853,
+                "personId": 1721573,
+                "subCase_id": 533388,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "GISELLE",
+                "middleName": "I",
+                "lastName": "DE LA TORRE",
+                "partyNumber": "3",
+                "dateOfBirth": "5\/17\/2014",
+                "partyId": 1791854,
+                "personId": 1721575,
+                "subCase_id": 533388,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "FABIAN",
+                "lastName": "DE LA TORRE",
+                "partyNumber": "2",
+                "partyId": 1791855,
+                "personId": 1721574,
+                "subCase_id": 533388,
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "COUNTY OF RIVERSIDE",
+                "partyNumber": "4",
+                "partyId": 1791856,
+                "personId": 1721576,
+                "subCase_id": 533388,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES"
+                    }
+                ],
+                "partyType": "Claimant"
+            },
+            {
+                "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES",
+                "partyId": 1791857,
+                "personId": 1721577,
+                "subCase_id": 533388,
+                "partyType": "Attorney"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 2209501,
+        "schedEvntDateTime": "2018-08-06T08:00:00",
+        "caseId": 516807,
+        "schedEvntType": "LEGACY",
+        "eventStatus": "EVENT",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Motion (DCSS Modification) re: CHILD SUPPORT filed on 06\/19\/18 filed by COUNTY OF RIVERSIDE represented by DEPARTMENT OF CHILD SUPPORT SERVICES",
+        "caseNumber": "RID221620",
+        "caseName": "TYNER VS BOZEMAN",
+        "caseType": "FL",
+        "category": "DWC",
+        "judicialOfficer": "Jennifer Gerard",
+        "caseLocation": "RI",
+        "filingDate": "8\/27\/2007",
+        "filedByProPer": "False",
+        "locationCode": "F201",
+        "locationName": "Department F201",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "MONEE",
+                "lastName": "TYNER",
+                "partyNumber": "1",
+                "partyId": 2087271,
+                "personId": 1990558,
+                "subCase_id": 618776,
+                "selfRepresented": "Y",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "CHRISTIAN",
+                "lastName": "BOZEMAN",
+                "partyNumber": "3",
+                "dateOfBirth": "2\/24\/2006",
+                "partyId": 2087272,
+                "personId": 1990560,
+                "subCase_id": 618776,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "TYRON",
+                "middleName": "ROMELL",
+                "lastName": "BOZEMAN",
+                "partyNumber": "2",
+                "partyId": 2087273,
+                "personId": 1990559,
+                "subCase_id": 618776,
+                "partyType": "Respondent"
+            },
+            {
+                "organizationName": "COUNTY OF RIVERSIDE",
+                "partyNumber": "6",
+                "partyId": 2087274,
+                "personId": 1990563,
+                "subCase_id": 618776,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES"
+                    }
+                ],
+                "partyType": "Claimant"
+            },
+            {
+                "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES",
+                "partyId": 2087275,
+                "personId": 1990570,
+                "subCase_id": 618776,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "CHRISTIAN",
+                "lastName": "BOZEMAN",
+                "partyNumber": "3",
+                "dateOfBirth": "2\/24\/2006",
+                "partyId": 2087277,
+                "personId": 1990560,
+                "subCase_id": 618777,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "TYRON",
+                "lastName": "BOZEMAN",
+                "partyNumber": "5",
+                "partyId": 2087278,
+                "personId": 1990562,
+                "subCase_id": 618777,
+                "selfRepresented": "Y",
+                "partyType": "Protected Person"
+            },
+            {
+                "firstName": "MONEE",
+                "lastName": "TYNER",
+                "partyNumber": "1",
+                "partyId": 2087279,
+                "personId": 1990558,
+                "subCase_id": 618777,
+                "selfRepresented": "Y",
+                "partyType": "Restrained Person"
+            },
+            {
+                "firstName": "MONEE",
+                "lastName": "TYNER",
+                "partyNumber": "1",
+                "partyId": 2087280,
+                "personId": 1990558,
+                "subCase_id": 618778,
+                "selfRepresented": "Y",
+                "partyType": "Protected Person"
+            },
+            {
+                "firstName": "CHRISTIAN",
+                "lastName": "BOZEMAN",
+                "partyNumber": "3",
+                "dateOfBirth": "2\/24\/2006",
+                "partyId": 2087281,
+                "personId": 1990560,
+                "subCase_id": 618778,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "TYRON",
+                "middleName": "ROMELL",
+                "lastName": "BOZEMAN",
+                "partyNumber": "2",
+                "partyId": 2087282,
+                "personId": 1990559,
+                "subCase_id": 618778,
+                "partyType": "Restrained Person"
+            },
+            {
+                "firstName": "MONEE",
+                "lastName": "TYNER",
+                "partyNumber": "1",
+                "partyId": 2087283,
+                "personId": 1990558,
+                "subCase_id": 618779,
+                "selfRepresented": "Y",
+                "partyType": "Protected Person"
+            },
+            {
+                "firstName": "CHRISTIAN",
+                "lastName": "BOZEMAN",
+                "partyNumber": "3",
+                "dateOfBirth": "2\/24\/2006",
+                "partyId": 2087284,
+                "personId": 1990560,
+                "subCase_id": 618779,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "TYRON",
+                "middleName": "ROMELL",
+                "lastName": "BOZEMAN",
+                "partyNumber": "2",
+                "partyId": 2087285,
+                "personId": 1990559,
+                "subCase_id": 618779,
+                "partyType": "Restrained Person"
+            },
+            {
+                "organizationName": "COUNTY OF RIVERSIDE",
+                "partyNumber": "9",
+                "partyId": 2087287,
+                "personId": 1990566,
+                "subCase_id": 618780,
+                "selfRepresented": "N",
+                "representedBy": [
+                    {
+                        "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES"
+                    }
+                ],
+                "partyType": "DCSS Claimant"
+            },
+            {
+                "organizationName": "DEPARTMENT OF CHILD SUPPORT SERVICES",
+                "partyId": 2087288,
+                "personId": 1990570,
+                "subCase_id": 618780,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "CHRISTIAN",
+                "lastName": "BOZEMAN",
+                "partyNumber": "10",
+                "dateOfBirth": "2\/24\/2006",
+                "partyId": 2087289,
+                "personId": 1990567,
+                "subCase_id": 618780,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "NOAH",
+                "lastName": "BOZEMAN",
+                "partyNumber": "11",
+                "dateOfBirth": "4\/1\/2010",
+                "partyId": 2087290,
+                "personId": 1990568,
+                "subCase_id": 618780,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ANIYAH",
+                "lastName": "BOZEMAN",
+                "partyNumber": "12",
+                "dateOfBirth": "5\/30\/2011",
+                "partyId": 2087291,
+                "personId": 1990569,
+                "subCase_id": 618780,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "MONEE",
+                "lastName": "TYNER",
+                "partyNumber": "7",
+                "partyId": 2087292,
+                "personId": 1990564,
+                "subCase_id": 618780,
+                "partyType": "Obligor\/Petitioner"
+            },
+            {
+                "firstName": "TYRON",
+                "lastName": "BOZEMAN",
+                "partyNumber": "8",
+                "partyId": 2087293,
+                "personId": 1990565,
+                "subCase_id": 618780,
+                "partyType": "Obligor\/Respondent"
             }
         ]
     }
