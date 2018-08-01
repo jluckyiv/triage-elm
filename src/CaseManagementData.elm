@@ -20,35 +20,35 @@ type alias Hearing =
     }
 
 
-decodeHearings : Json.Decode.Decoder (List Hearing)
-decodeHearings =
-    Json.Decode.list decodeHearing
+hearingsDecoder : Json.Decode.Decoder (List Hearing)
+hearingsDecoder =
+    Json.Decode.list hearingDecoder
 
 
-decodeHearing : Json.Decode.Decoder Hearing
-decodeHearing =
+hearingDecoder : Json.Decode.Decoder Hearing
+hearingDecoder =
     Json.Decode.Pipeline.decode Hearing
         |> Json.Decode.Pipeline.required "schedEvntId" (Json.Decode.int)
         |> Json.Decode.Pipeline.required "schedEvntDateTime" (Json.Decode.string)
         |> Json.Decode.Pipeline.required "caseId" (Json.Decode.int)
         |> Json.Decode.Pipeline.required "caseNumber" (Json.Decode.string)
         |> Json.Decode.Pipeline.required "locationCode" (Json.Decode.string)
-        |> Json.Decode.Pipeline.optional "interpreter" (decodeMaybeInterpreter) Nothing
-        |> Json.Decode.Pipeline.required "party" (Json.Decode.list decodeParty)
+        |> Json.Decode.Pipeline.optional "interpreter" (maybeInterpreterDecoder) Nothing
+        |> Json.Decode.Pipeline.required "party" (Json.Decode.list partyDecoder)
 
 
 type alias Interpreter =
     { language : Language }
 
 
-decodeInterpreter : Json.Decode.Decoder Interpreter
-decodeInterpreter =
+interpreterDecoder : Json.Decode.Decoder Interpreter
+interpreterDecoder =
     Json.Decode.Pipeline.decode Interpreter
         |> Json.Decode.Pipeline.required "language" (Json.Decode.string)
 
 
-decodeMaybeInterpreter : Json.Decode.Decoder (Maybe (List Interpreter))
-decodeMaybeInterpreter =
+maybeInterpreterDecoder : Json.Decode.Decoder (Maybe (List Interpreter))
+maybeInterpreterDecoder =
     Json.Decode.map
         (\value ->
             if value == [] then
@@ -56,7 +56,7 @@ decodeMaybeInterpreter =
             else
                 Just value
         )
-        (Json.Decode.list decodeInterpreter)
+        (Json.Decode.list interpreterDecoder)
 
 
 type alias Attorney =
@@ -65,15 +65,15 @@ type alias Attorney =
     }
 
 
-decodeAttorney : Json.Decode.Decoder Attorney
-decodeAttorney =
+attorneyDecoder : Json.Decode.Decoder Attorney
+attorneyDecoder =
     Json.Decode.Pipeline.decode Attorney
         |> Json.Decode.Pipeline.required "repFullName" (Json.Decode.string)
         |> Json.Decode.Pipeline.required "organizationName" (Json.Decode.string)
 
 
-decodeMaybeAttorneys : Json.Decode.Decoder (Maybe (List Attorney))
-decodeMaybeAttorneys =
+maybeAttorneyDecoder : Json.Decode.Decoder (Maybe (List Attorney))
+maybeAttorneyDecoder =
     Json.Decode.map
         (\value ->
             if value == [] then
@@ -81,7 +81,7 @@ decodeMaybeAttorneys =
             else
                 Just value
         )
-        (Json.Decode.list decodeAttorney)
+        (Json.Decode.list attorneyDecoder)
 
 
 type alias Party =
@@ -96,17 +96,17 @@ type alias Party =
     }
 
 
-decodeParty : Json.Decode.Decoder Party
-decodeParty =
+partyDecoder : Json.Decode.Decoder Party
+partyDecoder =
     Json.Decode.Pipeline.decode Party
         |> Json.Decode.Pipeline.required "partyId" (Json.Decode.int)
         |> Json.Decode.Pipeline.required "partyType" (Json.Decode.string)
         |> Json.Decode.Pipeline.required "personId" (Json.Decode.int)
-        |> Json.Decode.Pipeline.optional "firstName" (decodeMaybeString) Nothing
-        |> Json.Decode.Pipeline.optional "lastName" (decodeMaybeString) Nothing
-        |> Json.Decode.Pipeline.optional "organizationName" (decodeMaybeString) Nothing
-        |> Json.Decode.Pipeline.optional "selfRepresented" (decodeMaybeString) Nothing
-        |> Json.Decode.Pipeline.optional "representedBy" (decodeMaybeAttorneys) Nothing
+        |> Json.Decode.Pipeline.optional "firstName" (maybeStringDecoder) Nothing
+        |> Json.Decode.Pipeline.optional "lastName" (maybeStringDecoder) Nothing
+        |> Json.Decode.Pipeline.optional "organizationName" (maybeStringDecoder) Nothing
+        |> Json.Decode.Pipeline.optional "selfRepresented" (maybeStringDecoder) Nothing
+        |> Json.Decode.Pipeline.optional "representedBy" (maybeAttorneyDecoder) Nothing
 
 
 type alias DateTime =
@@ -129,8 +129,8 @@ type alias Language =
     String
 
 
-decodeMaybeString : Json.Decode.Decoder (Maybe String)
-decodeMaybeString =
+maybeStringDecoder : Json.Decode.Decoder (Maybe String)
+maybeStringDecoder =
     Json.Decode.map
         (\value ->
             if value == "" then
