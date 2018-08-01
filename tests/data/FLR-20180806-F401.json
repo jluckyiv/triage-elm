@@ -1,0 +1,111 @@
+[
+    {
+        "schedEvntId": 599184,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 106305,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F401",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order",
+        "caseNumber": "FLRI1800018",
+        "caseName": "MACK & MACK",
+        "caseType": "FL",
+        "category": "DWC",
+        "judicialOfficer": "Joan F. Burgess",
+        "caseLocation": "RI",
+        "filingDate": "6\/19\/2018",
+        "filedByProPer": "True",
+        "locationCode": "F401",
+        "locationName": "Department F401",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "interpreter": [
+            {
+                "language": "Spanish"
+            }
+        ],
+        "party": [
+            {
+                "firstName": "JUAN",
+                "lastName": "MACK",
+                "partyId": 409540,
+                "personId": 473158,
+                "selfRepresented": "In Pro Per",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "JUAN",
+                "lastName": "MACK",
+                "dateOfBirth": "1\/1\/1986",
+                "partyId": 409540,
+                "personId": 473158,
+                "selfRepresented": "In Pro Per",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "LISA",
+                "lastName": "MACK",
+                "dateOfBirth": "1\/1\/1986",
+                "partyId": 409541,
+                "personId": 473159,
+                "selfRepresented": "Unrepresented",
+                "partyType": "Respondent"
+            },
+            {
+                "firstName": "JUALISA",
+                "lastName": "MACK",
+                "dateOfBirth": "1\/2\/2017",
+                "partyId": 409542,
+                "personId": 473160,
+                "selfRepresented": "Unrepresented",
+                "partyType": "Child"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 599243,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 106500,
+        "schedEvntType": "HASAVDP",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F401",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Application to Set Aside Voluntary Declaration of Paternity",
+        "caseNumber": "FLRI1800075",
+        "caseName": "SNOW vs. SMITH",
+        "caseType": "FL",
+        "category": "REHASVDP",
+        "judicialOfficer": "Joan F. Burgess",
+        "caseLocation": "RI",
+        "filingDate": "6\/25\/2018",
+        "filedByProPer": "True",
+        "locationCode": "F401",
+        "locationName": "Department F401",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "interpreter": [
+            {
+                "language": "Sign Language - American"
+            }
+        ],
+        "party": [
+            {
+                "firstName": "JOHN",
+                "lastName": "SNOW",
+                "partyId": 410016,
+                "personId": 473699,
+                "selfRepresented": "In Pro Per",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "JANET",
+                "lastName": "SMITH",
+                "partyId": 410017,
+                "personId": 473700,
+                "selfRepresented": "Unrepresented",
+                "partyType": "Respondent"
+            }
+        ]
+    }
+]

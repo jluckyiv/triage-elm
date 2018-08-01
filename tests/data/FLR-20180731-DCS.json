@@ -1,0 +1,130 @@
+[
+    {
+        "schedEvntId": 609638,
+        "schedEvntDateTime": "2018-07-31T08:30:00",
+        "caseId": 117213,
+        "schedEvntType": "CTIP",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department of Child Support Services",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Court Trial - In Progress",
+        "caseNumber": "FLIN1800143",
+        "caseName": "COUNTY OF RIVERSIDE vs. GRIFFIN",
+        "caseType": "FL",
+        "category": "DCSPCSH",
+        "caseLocation": "IN",
+        "filingDate": "7\/24\/2018",
+        "filedByProPer": "False",
+        "locationCode": "DCS",
+        "locationName": "Department of Child Support Services",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "interpreter": [
+            {
+                "language": "Bengali"
+            }
+        ],
+        "party": [
+            {
+                "organizationName": "COUNTY OF RIVERSIDE",
+                "partyId": 422594,
+                "personId": 486260,
+                "representedBy": [
+                    {
+                        "repFullName": "Department of Child Support Services",
+                        "organizationName": "Department of Child Support Services"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "EDWARD",
+                "middleName": "AF",
+                "lastName": "GRIFFIN",
+                "partyId": 422595,
+                "personId": 486261,
+                "partyType": "Respondent"
+            },
+            {
+                "firstName": "KELLY",
+                "middleName": "D",
+                "lastName": "GRIFFIN",
+                "partyId": 422596,
+                "personId": 486262,
+                "partyType": "Other Parent"
+            },
+            {
+                "firstName": "DONALD",
+                "middleName": "G",
+                "lastName": "GRIFFIN",
+                "dateOfBirth": "4\/4\/2006",
+                "partyId": 422597,
+                "personId": 486263,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "CHARLES",
+                "middleName": "A",
+                "lastName": "GRIFFIN",
+                "dateOfBirth": "7\/5\/2003",
+                "partyId": 422598,
+                "personId": 486264,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "STEPHEN",
+                "middleName": "S",
+                "lastName": "GRIFFIN",
+                "dateOfBirth": "9\/6\/2007",
+                "partyId": 422599,
+                "personId": 486265,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "BILLY",
+                "middleName": "BOB",
+                "lastName": "WILLIAMS",
+                "dateOfBirth": "1\/1\/2018",
+                "partyId": 422600,
+                "personId": 486266,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "JOHN",
+                "middleName": "D",
+                "lastName": "GRIFFIN",
+                "dateOfBirth": "12\/21\/2004",
+                "partyId": 422601,
+                "personId": 486267,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ROGER",
+                "middleName": "D",
+                "lastName": "GRIFFIN",
+                "dateOfBirth": "2\/6\/2009",
+                "partyId": 422602,
+                "personId": 486268,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "ANDREW",
+                "middleName": "F",
+                "lastName": "GRIFFIN",
+                "dateOfBirth": "4\/4\/2011",
+                "partyId": 422603,
+                "personId": 486269,
+                "partyType": "Child"
+            },
+            {
+                "firstName": "Department of",
+                "middleName": "Child Support",
+                "lastName": "Services",
+                "organizationName": "Department of Child Support Services",
+                "partyId": 422604,
+                "personId": 486270,
+                "partyType": "Attorney"
+            }
+        ]
+    }
+]

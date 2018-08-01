@@ -31,8 +31,29 @@ But it wasn't. I had some trouble with the API, but the maintaner sent me an ema
 ### Back to Bootsrap and using a Dict?
 It occurred to me that I might be able to leverage partial application and a Dict to store dropdown state. For now, though, I'm using a list `(CaseNumber, Dropdown.State)` tuples. It works.
 
+## JSON decoders
+Time to do some JSON decoding. I'll start with the JSON that I need and hope that it's shaped that way.
+
+The CMS API is at two different endpoints, giving the same data:
+```
+https://cbmdev.riverside.courts.ca.gov/Hearing/FLR/20180806/F402
+https://cbmdev.riverside.courts.ca.gov/Hearing?cc=FLR&date=20180806&dept=F402
+```
+
+Because the former is concise, I'll use it. I need one for each department, so I'll have to aggregate a number of requests. For that reason, I might do it on the server side. The responses are quick right now. I don't know if that will change in production.
+
+### CMS fields
+The data per courtroom comes in a list of cases. Some of the test data is weird. At least one case has two Petitioners and two Respondents.
+
+Must filter the hearings down to one case.
+
+- PROD web server: https://cbmTriage/swagger/index.html
+- DEV web server: https://cbmdev.riverside.courts.ca.gov/swagger/index.html
+
+I got all the JSON decoders working. I'm still not sure how to do the interpreters correctly, but I am able to parse responses. Next is wiring up the http requests.
+
 ## To do
-- petitioner and respondent dropdowns
+- kill the table. I probably can't have a notes, chat, or history div using a table.
 - interpreter filters
 - model status
 - add notes to each case
@@ -42,7 +63,6 @@ It occurred to me that I might be able to leverage partial application and a Dic
 - model case information
 - model elements
 - json encoders and decoders
-- consume cms data
 - consume triage data
 - consume triage websockets
 - CRUD for users

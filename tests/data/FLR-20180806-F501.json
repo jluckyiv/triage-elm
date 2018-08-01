@@ -1,0 +1,227 @@
+[
+    {
+        "schedEvntId": 599245,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 106502,
+        "schedEvntType": "HASAVDP",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F501",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Application to Set Aside Voluntary Declaration of Paternity",
+        "caseNumber": "FLRI1800076",
+        "caseName": "SNOW vs. JONES",
+        "caseType": "FL",
+        "category": "REHASVDP",
+        "judicialOfficer": "Chad W. Firetag",
+        "caseLocation": "RI",
+        "filingDate": "6\/25\/2018",
+        "filedByProPer": "False",
+        "locationCode": "F501",
+        "locationName": "Department F501",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "Victor",
+                "middleName": "Emil",
+                "lastName": "Kaplan",
+                "organizationName": "Kaplan Law Corp",
+                "partyId": 410022,
+                "personId": 473707,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "JOHN",
+                "lastName": "SNOW",
+                "partyId": 410023,
+                "personId": 473708,
+                "representedBy": [
+                    {
+                        "repFullName": "Victor Emil Kaplan",
+                        "organizationName": "Kaplan Law Corp"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "JAKE",
+                "lastName": "SNOW",
+                "partyId": 410024,
+                "personId": 473709,
+                "representedBy": [
+                    {
+                        "repFullName": "Victor Emil Kaplan",
+                        "organizationName": "Kaplan Law Corp"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "TERRY",
+                "lastName": "JONES",
+                "partyId": 410025,
+                "personId": 473710,
+                "selfRepresented": "Unrepresented",
+                "partyType": "Respondent"
+            },
+            {
+                "firstName": "KEN",
+                "lastName": "JONES",
+                "partyId": 410026,
+                "personId": 473711,
+                "selfRepresented": "In Pro Per",
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 599247,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 106502,
+        "schedEvntType": "HRHASVDP",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F501",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing and Application to Set Aside Voluntary Declaration of Paternity filed on test",
+        "caseNumber": "FLRI1800076",
+        "caseName": "SNOW vs. JONES",
+        "caseType": "FL",
+        "category": "REHASVDP",
+        "judicialOfficer": "Chad W. Firetag",
+        "caseLocation": "RI",
+        "filingDate": "6\/25\/2018",
+        "filedByProPer": "False",
+        "locationCode": "F501",
+        "locationName": "Department F501",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "Victor",
+                "middleName": "Emil",
+                "lastName": "Kaplan",
+                "organizationName": "Kaplan Law Corp",
+                "partyId": 410022,
+                "personId": 473707,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "JOHN",
+                "lastName": "SNOW",
+                "partyId": 410023,
+                "personId": 473708,
+                "representedBy": [
+                    {
+                        "repFullName": "Victor Emil Kaplan",
+                        "organizationName": "Kaplan Law Corp"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "JAKE",
+                "lastName": "SNOW",
+                "partyId": 410024,
+                "personId": 473709,
+                "representedBy": [
+                    {
+                        "repFullName": "Victor Emil Kaplan",
+                        "organizationName": "Kaplan Law Corp"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "TERRY",
+                "lastName": "JONES",
+                "partyId": 410025,
+                "personId": 473710,
+                "selfRepresented": "Unrepresented",
+                "partyType": "Respondent"
+            },
+            {
+                "firstName": "KEN",
+                "lastName": "JONES",
+                "partyId": 410026,
+                "personId": 473711,
+                "selfRepresented": "In Pro Per",
+                "partyType": "Respondent"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 599249,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 106502,
+        "schedEvntType": "HRHASVDP",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F501",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing and Application to Set Aside Voluntary Declaration of Paternity filed on test",
+        "caseNumber": "FLRI1800076",
+        "caseName": "SNOW vs. JONES",
+        "caseType": "FL",
+        "category": "REHASVDP",
+        "judicialOfficer": "Chad W. Firetag",
+        "caseLocation": "RI",
+        "filingDate": "6\/25\/2018",
+        "filedByProPer": "False",
+        "locationCode": "F501",
+        "locationName": "Department F501",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "Victor",
+                "middleName": "Emil",
+                "lastName": "Kaplan",
+                "organizationName": "Kaplan Law Corp",
+                "partyId": 410022,
+                "personId": 473707,
+                "partyType": "Attorney"
+            },
+            {
+                "firstName": "JOHN",
+                "lastName": "SNOW",
+                "partyId": 410023,
+                "personId": 473708,
+                "representedBy": [
+                    {
+                        "repFullName": "Victor Emil Kaplan",
+                        "organizationName": "Kaplan Law Corp"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "JAKE",
+                "lastName": "SNOW",
+                "partyId": 410024,
+                "personId": 473709,
+                "representedBy": [
+                    {
+                        "repFullName": "Victor Emil Kaplan",
+                        "organizationName": "Kaplan Law Corp"
+                    }
+                ],
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "TERRY",
+                "lastName": "JONES",
+                "partyId": 410025,
+                "personId": 473710,
+                "selfRepresented": "Unrepresented",
+                "partyType": "Respondent"
+            },
+            {
+                "firstName": "KEN",
+                "lastName": "JONES",
+                "partyId": 410026,
+                "personId": 473711,
+                "selfRepresented": "In Pro Per",
+                "partyType": "Respondent"
+            }
+        ]
+    }
+]

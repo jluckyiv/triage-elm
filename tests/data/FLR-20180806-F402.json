@@ -1,0 +1,74 @@
+[
+    {
+        "schedEvntId": 599161,
+        "schedEvntDateTime": "2018-08-06T08:30:00",
+        "caseId": 106289,
+        "schedEvntType": "HMSMOCSFS",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F402",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing on Motion for Simplified Modification of Order for Child Support, Spousal Support and Family Support filed on",
+        "caseNumber": "FLRI1800016",
+        "caseName": "SNOW & SNOW",
+        "caseType": "FL",
+        "category": "DWC",
+        "dispositionDate": "2018-06-01T00:00:00",
+        "dispositionType": "JO",
+        "judicialOfficer": "Christopher B. Hamon",
+        "caseLocation": "RI",
+        "filingDate": "5\/1\/2018",
+        "filedByProPer": "True",
+        "locationCode": "F402",
+        "locationName": "Department F402",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "JOHN",
+                "lastName": "SNOW",
+                "partyId": 409481,
+                "personId": 473105,
+                "selfRepresented": "In Pro Per",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "SALLTY",
+                "lastName": "SNOW",
+                "partyId": 409482,
+                "personId": 473106,
+                "selfRepresented": "Unrepresented",
+                "partyType": "Respondent"
+            },
+            {
+                "firstName": "JOHN",
+                "lastName": "SNOW",
+                "partyId": 409483,
+                "personId": 473105,
+                "selfRepresented": "In Pro Per",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "SALLTY",
+                "lastName": "SNOW",
+                "partyId": 409484,
+                "personId": 473106,
+                "representedBy": [
+                    {
+                        "repFullName": "Austin Brundage Comstock",
+                        "organizationName": "Austin B. Comstock"
+                    }
+                ],
+                "partyType": "Respondent"
+            },
+            {
+                "firstName": "Austin",
+                "middleName": "Brundage",
+                "lastName": "Comstock",
+                "organizationName": "Austin B. Comstock",
+                "partyId": 412036,
+                "personId": 475907,
+                "partyType": "Attorney"
+            }
+        ]
+    }
+]

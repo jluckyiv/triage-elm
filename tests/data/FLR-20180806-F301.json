@@ -1,0 +1,136 @@
+[
+    {
+        "schedEvntId": 599175,
+        "schedEvntDateTime": "2018-08-06T08:15:00",
+        "caseId": 106233,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F301",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order",
+        "caseNumber": "FLRI1800006",
+        "caseName": "TEST PROTECTED PERSON vs. TEST RESTRAINED PERSON",
+        "caseType": "FL",
+        "category": "DVWC",
+        "judicialOfficer": "Gail O'Rane",
+        "caseLocation": "RI",
+        "filingDate": "6\/12\/2018",
+        "filedByProPer": "True",
+        "locationCode": "F301",
+        "locationName": "Department F301",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "party": [
+            {
+                "firstName": "TEST",
+                "lastName": "PROTECTED PERSON",
+                "partyId": 409299,
+                "personId": 472934,
+                "selfRepresented": "In Pro Per",
+                "partyType": "Proposed Protected Person"
+            },
+            {
+                "firstName": "TEST",
+                "lastName": "RESTRAINED PERSON",
+                "partyId": 409300,
+                "personId": 472935,
+                "selfRepresented": "Unrepresented",
+                "partyType": "Proposed Restrained Person"
+            },
+            {
+                "firstName": "TEST",
+                "lastName": "CHILD",
+                "dateOfBirth": "10\/10\/2009",
+                "partyId": 409301,
+                "personId": 472936,
+                "selfRepresented": "Unrepresented",
+                "partyType": "Child"
+            }
+        ]
+    },
+    {
+        "schedEvntId": 599202,
+        "schedEvntDateTime": "2018-08-06T08:15:00",
+        "caseId": 106317,
+        "schedEvntType": "HREO",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F301",
+        "proceedingId": 579278,
+        "docketNumber": 2147483647,
+        "schedEvntName": "Hearing re: Request for Order",
+        "caseNumber": "FLRI1800022",
+        "caseName": "PERSON ONE vs. PERSON TWO",
+        "caseType": "FL",
+        "category": "DVWC",
+        "judicialOfficer": "Gail O'Rane",
+        "caseLocation": "RI",
+        "filingDate": "6\/19\/2018",
+        "filedByProPer": "True",
+        "locationCode": "F301",
+        "locationName": "Department F301",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "interpreter": [
+            {
+                "language": "Sign Language - American"
+            }
+        ],
+        "party": [
+            {
+                "firstName": "PERSON",
+                "lastName": "ONE",
+                "partyId": 409580,
+                "personId": 473197,
+                "selfRepresented": "In Pro Per",
+                "partyType": "Proposed Protected Person"
+            },
+            {
+                "firstName": "PERSON",
+                "lastName": "TWO",
+                "partyId": 409581,
+                "personId": 473198,
+                "selfRepresented": "Unrepresented",
+                "partyType": "Proposed Restrained Person"
+            },
+            {
+                "firstName": "CHILD",
+                "lastName": "ONE",
+                "dateOfBirth": "6\/4\/2009",
+                "partyId": 409582,
+                "personId": 473199,
+                "selfRepresented": "Unrepresented",
+                "partyType": "Child"
+            },
+            {
+                "firstName": "JACK",
+                "lastName": "BLACK",
+                "partyId": 410066,
+                "personId": 473743,
+                "representedBy": [
+                    {
+                        "repFullName": "David Keene Leavitt",
+                        "organizationName": "Attorney at Law"
+                    }
+                ],
+                "partyType": "Proposed Restrained Person"
+            },
+            {
+                "firstName": "PENNY",
+                "lastName": "BLACK",
+                "partyId": 410067,
+                "personId": 473744,
+                "selfRepresented": "In Pro Per",
+                "partyType": "Proposed Restrained Person"
+            },
+            {
+                "firstName": "David",
+                "middleName": "Keene",
+                "lastName": "Leavitt",
+                "organizationName": "Attorney at Law",
+                "partyId": 410077,
+                "personId": 473755,
+                "partyType": "Attorney"
+            }
+        ]
+    }
+]

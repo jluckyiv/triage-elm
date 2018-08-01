@@ -1,0 +1,47 @@
+[
+    {
+        "schedEvntId": 599320,
+        "schedEvntDateTime": "2018-08-06T10:00:00",
+        "caseId": 106532,
+        "schedEvntType": "HEP",
+        "eventStatus": "EVENT",
+        "schedEvntLocation": "Department F502",
+        "docketNumber": 2147483647,
+        "schedEvntName": "Ex-Parte Hearing",
+        "caseNumber": "FLRI1800088",
+        "caseName": "Petition of: TIM GREER",
+        "caseType": "FL",
+        "category": "FPC",
+        "judicialOfficer": "Eric V. Issac",
+        "caseLocation": "RI",
+        "filingDate": "7\/3\/2018",
+        "filedByProPer": "True",
+        "locationCode": "F502",
+        "locationName": "Department F502",
+        "parentLocationCode": "FLD",
+        "parentLocationName": "Riverside Family Law Courthouse",
+        "interpreter": [
+            {
+                "language": "Tagalog"
+            }
+        ],
+        "party": [
+            {
+                "firstName": "TIM",
+                "lastName": "GREER",
+                "partyId": 410156,
+                "personId": 473831,
+                "selfRepresented": "In Pro Per",
+                "partyType": "Petitioner"
+            },
+            {
+                "firstName": "ULOA",
+                "lastName": "GREER-GUNN",
+                "partyId": 410157,
+                "personId": 473832,
+                "selfRepresented": "Unrepresented",
+                "partyType": "Respondent"
+            }
+        ]
+    }
+]
