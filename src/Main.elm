@@ -3,21 +3,24 @@ module Main exposing (..)
 import Bootstrap.Button as Button
 import Bootstrap.Dropdown as Dropdown
 import Bootstrap.Form.Input as Input
+import Bootstrap.Grid as Grid
+import Bootstrap.Grid.Col as Col
 import Bootstrap.Navbar as Navbar
-import Bootstrap.Table as Table
 import Bootstrap.Utilities.Spacing as Spacing
 import CaseManagementData exposing (Hearing)
 import Date
-import Dict exposing (Dict)
 import Html exposing (Html, text, div, span, p, ul, li, h1)
 import Html.Attributes exposing (class, id, src, type_, placeholder, href, attribute)
 import Html.Events exposing (onClick)
 import Http
+import List.Extra
+import Maybe.Extra
 import Moment
 import RemoteData exposing (WebData)
 import Task
 
 
+-- TODO: dynamic department filter button
 ---- MODEL ----
 
 
@@ -26,10 +29,9 @@ type alias Model =
     , departmentDropdownState : Dropdown.State
     , departmentFilter : Department
     , departments : List Department
-    , hearings : Dict DepartmentString (WebData (List Hearing))
+    , hearings : List ( DepartmentString, WebData (List Hearing) )
     , interpreterDropdownState : Dropdown.State
-    , matters : List Matter
-    , mattersDropdownStates : MatterDropdownStates
+    , hearingsDropdownStates : HearingDropdownStates
     , navbarState : Navbar.State
     , statusDropdownState : Dropdown.State
     }
@@ -53,15 +55,6 @@ type Department
     | F502
 
 
-type alias Matter =
-    { caseNumber : CaseNumber
-    , department : Department
-    , interpreter : Language
-    , petitioner : FullName
-    , respondent : FullName
-    }
-
-
 type alias Language =
     String
 
@@ -74,20 +67,28 @@ type alias FullName =
     String
 
 
-type alias MatterDropdownStates =
+type alias HearingDropdownStates =
     List ( CaseNumber, Dropdown.State )
 
 
-resetHearings : Dict DepartmentString (WebData (List Hearing))
+resetHearings : List ( DepartmentString, WebData (List Hearing) )
 resetHearings =
-    Dict.fromList
-        [ ( toString F201, RemoteData.Loading )
-        , ( toString F301, RemoteData.Loading )
-        , ( toString F401, RemoteData.Loading )
-        , ( toString F402, RemoteData.Loading )
-        , ( toString F501, RemoteData.Loading )
-        , ( toString F502, RemoteData.Loading )
-        ]
+    [ ( toString F201, RemoteData.Loading )
+    , ( toString F301, RemoteData.Loading )
+    , ( toString F401, RemoteData.Loading )
+    , ( toString F402, RemoteData.Loading )
+    , ( toString F501, RemoteData.Loading )
+    , ( toString F502, RemoteData.Loading )
+    ]
+
+
+initActionButtons : { d | hearings : List { b | caseNumber : a }, hearingsDropdownStates : c } -> { d | hearings : List { b | caseNumber : a }, hearingsDropdownStates : List ( a, Dropdown.State ) }
+initActionButtons model =
+    let
+        hearingsDropdownStates =
+            List.map (\h -> ( h.caseNumber, Dropdown.initialState )) model.hearings
+    in
+        { model | hearingsDropdownStates = hearingsDropdownStates }
 
 
 init : ( Model, Cmd Msg )
@@ -96,47 +97,24 @@ init =
         ( navbarState, navbarCmd ) =
             Navbar.initialState NavbarMsg
 
-        matters =
-            [ { department = F201, interpreter = "None", caseNumber = "RIF1700174", petitioner = "Beatrice Phelps", respondent = "Shannon Terry" }
-            , { department = F201, interpreter = "None", caseNumber = "RIF1800505", petitioner = "Bethany Oliver", respondent = "Al Bailey" }
-            , { department = F201, interpreter = "None", caseNumber = "RIF1700371", petitioner = "Harry Mendoza", respondent = "Lynette Perry" }
-            , { department = F301, interpreter = "None", caseNumber = "RIF1800524", petitioner = "Teresa Stevens", respondent = "Daniel Bishara" }
-            , { department = F301, interpreter = "None", caseNumber = "RIF1700867", petitioner = "Kelly Clayton", respondent = "Julian Roberson" }
-            , { department = F401, interpreter = "None", caseNumber = "RIF1700273", petitioner = "Leona Jackson", respondent = "Hazel Wood" }
-            , { department = F401, interpreter = "None", caseNumber = "RIF1800578", petitioner = "Ramona Hudson", respondent = "Terry Arnold" }
-            , { department = F401, interpreter = "None", caseNumber = "RIF1800475", petitioner = "Faith Reyes", respondent = "Herman Barber" }
-            , { department = F402, interpreter = "None", caseNumber = "RIF1700123", petitioner = "Terence Chavez", respondent = "Jeannette Mitchell" }
-            , { department = F402, interpreter = "None", caseNumber = "RIF1800836", petitioner = "Tracy Fields", respondent = "Kent Osborne" }
-            , { department = F402, interpreter = "None", caseNumber = "RIF1800183", petitioner = "Daniel Sherman", respondent = "Pam Moss" }
-            , { department = F501, interpreter = "None", caseNumber = "RIF1700678", petitioner = "Javier Roy", respondent = "Clifford Sutton" }
-            , { department = F501, interpreter = "None", caseNumber = "RIF1600977", petitioner = "Colleen Padilla", respondent = "Israel Miles" }
-            , { department = F501, interpreter = "None", caseNumber = "RIF1700081", petitioner = "Cynthia Collier", respondent = "Jesse Moody" }
-            , { department = F502, interpreter = "None", caseNumber = "RIF1600118", petitioner = "Robert Ruiz", respondent = "Margaret Fields" }
-            , { department = F502, interpreter = "None", caseNumber = "RIF1800229", petitioner = "Jodi Flores", respondent = "Wendell Moody" }
-            , { department = F502, interpreter = "None", caseNumber = "RIF1800181", petitioner = "Moses Moss", respondent = "Carrie Matthews" }
-            ]
+        hearings =
+            []
 
-        mattersDropdownStates =
-            List.map (\m -> ( m.caseNumber, Dropdown.initialState )) matters
+        hearingsDropdownStates =
+            List.map (\m -> ( m.caseNumber, Dropdown.initialState )) hearings
     in
         ( { departmentDropdownState = Dropdown.initialState
           , departmentFilter = All
           , departments = [ All, F201, F301, F401, F402, F501, F502 ]
           , interpreterDropdownState = Dropdown.initialState
-          , matters = matters
-          , mattersDropdownStates = mattersDropdownStates
+          , hearingsDropdownStates = hearingsDropdownStates
           , navbarState = navbarState
           , statusDropdownState = Dropdown.initialState
           , hearings = resetHearings
           , dateString = ""
           }
-        , Cmd.batch [ navbarCmd, getToday ]
+        , Cmd.batch [ navbarCmd, Task.perform ReceiveDate Date.now ]
         )
-
-
-getToday : Cmd Msg
-getToday =
-    Task.perform ReceiveDate Date.now
 
 
 hearingsUrl : ( DateString, Department ) -> String
@@ -172,12 +150,12 @@ receiveHearings model department response =
         _ ->
             { model
                 | hearings =
-                    Dict.map
-                        (\key value ->
+                    List.map
+                        (\( key, value ) ->
                             if key == toString department then
-                                response
+                                ( key, response )
                             else
-                                value
+                                ( key, value )
                         )
                         model.hearings
             }
@@ -192,6 +170,7 @@ type Msg
     | ToggleDropdown String Dropdown.State
     | DepartmentDropdownToggle Dropdown.State
     | InterpreterDropdownToggle Dropdown.State
+    | InitActionButtons HearingDropdownStates
     | StatusDropdownToggle Dropdown.State
     | FilterDepartment Department
     | FilterInterpreter String
@@ -203,9 +182,9 @@ type Msg
     | UpdateDateString DateString
 
 
-mapMattersDropdownStates : Model -> CaseNumber -> Dropdown.State -> List ( CaseNumber, Dropdown.State )
-mapMattersDropdownStates model caseNumber state =
-    model.mattersDropdownStates
+mapHearingsDropdownStates : Model -> CaseNumber -> Dropdown.State -> List ( CaseNumber, Dropdown.State )
+mapHearingsDropdownStates model caseNumber state =
+    model.hearingsDropdownStates
         |> List.map
             (\( cn, s ) ->
                 if cn == caseNumber then
@@ -223,10 +202,10 @@ update msg model =
 
         ToggleDropdown caseNumber state ->
             let
-                mattersDropdownStates =
-                    mapMattersDropdownStates model caseNumber state
+                hearingsDropdownStates =
+                    mapHearingsDropdownStates model caseNumber state
             in
-                ( { model | mattersDropdownStates = mattersDropdownStates }, Cmd.none )
+                ( { model | hearingsDropdownStates = hearingsDropdownStates }, Cmd.none )
 
         DepartmentDropdownToggle state ->
             ( { model | departmentDropdownState = state }
@@ -281,6 +260,9 @@ update msg model =
 
         ReceiveHearings department response ->
             ( receiveHearings model department response, Cmd.none )
+
+        InitActionButtons hearingDropdownStates ->
+            ( model, Cmd.none )
 
 
 toDateString : Date.Date -> String
@@ -356,57 +338,147 @@ viewNavbar model =
 viewActionTable : Model -> Html Msg
 viewActionTable model =
     let
-        matters =
+        hearings =
             case model.departmentFilter of
                 All ->
-                    model.matters
+                    model.hearings
 
                 department ->
-                    List.filter (\m -> m.department == department) model.matters
+                    model.hearings
+                        |> List.filter (\( d, _ ) -> d == toString department)
     in
-        Table.table
-            { options = [ Table.hover ]
-            , thead =
-                Table.simpleThead
-                    [ Table.th [] [ departmentDropdown model ]
-                    , Table.th [] [ interpreterDropdown model ]
-                    , Table.th [] [ text "Case Number" ]
-                    , Table.th [] [ text "Petitioner" ]
-                    , Table.th [] [ text "Respondent" ]
-                    , Table.th [] [ statusDropdown model ]
-                    ]
-            , tbody =
-                Table.tbody [] (List.map (viewActionRow model) model.matters)
-            }
+        Grid.container []
+            ([ Grid.row
+                []
+                [ Grid.col [ Col.xs1, Col.middleMd ] [ departmentDropdown model ]
+                , Grid.col [ Col.xs2 ] [ text "Case Number" ]
+                , Grid.col [ Col.xs1 ] [ text "Interp" ]
+                , Grid.col [ Col.xs3 ] [ text "Petitioner" ]
+                , Grid.col [ Col.xs3 ] [ text "Respondent" ]
+                , Grid.col [ Col.xs1 ] [ statusDropdown model ]
+                ]
+             ]
+                ++ List.concatMap (viewDepartmentRow model) hearings
+            )
 
 
-viewActionRow : Model -> Matter -> Table.Row Msg
-viewActionRow model matter =
-    Table.tr []
-        [ Table.td [] [ text (toString matter.department) ]
-        , Table.td [] [ text matter.interpreter ]
-        , Table.td [] [ text matter.caseNumber ]
-        , Table.td [] [ text matter.petitioner ]
-        , Table.td [] [ text matter.respondent ]
-        , Table.td [] [ actionDropdown model matter ]
+viewDepartmentRow : Model -> ( DepartmentString, WebData (List Hearing) ) -> List (Html Msg)
+viewDepartmentRow model departmentHearings =
+    case departmentHearings of
+        ( departmentString, RemoteData.NotAsked ) ->
+            [ Grid.row []
+                [ Grid.col [] [ text "Pending" ] ]
+            ]
+
+        ( departmentString, RemoteData.Loading ) ->
+            [ Grid.row []
+                [ Grid.col [] [ text "Loading" ] ]
+            ]
+
+        ( departmentString, RemoteData.Success hearings ) ->
+            viewHearingRows model hearings departmentString
+
+        ( departmentString, RemoteData.Failure e ) ->
+            [ Grid.row []
+                [ Grid.col [] [ text <| "Department " ++ departmentString ++ " had the following error " ++ (toString e) ]
+                ]
+            ]
+
+
+viewHearingRows : Model -> List Hearing -> DepartmentString -> List (Html Msg)
+viewHearingRows model hearings departmentString =
+    let
+        hearingRows =
+            hearings
+                |> List.filter (\h -> String.startsWith "HREO" h.scheduledEventType)
+                |> List.Extra.uniqueBy (\h -> h.caseNumber)
+    in
+        case hearingRows of
+            [] ->
+                [ Grid.row [] [ Grid.col [ Col.attrs [ class "text-muted" ] ] [ text (departmentString ++ " has no RFOs on calendar.") ] ] ]
+
+            _ ->
+                List.map (viewHearingRow model) hearingRows
+
+
+viewHearingRow : Model -> CaseManagementData.Hearing -> Html Msg
+viewHearingRow model hearing =
+    Grid.row []
+        [ Grid.col [ Col.xs1 ] [ text hearing.department ]
+        , Grid.col [ Col.xs2 ] [ text hearing.caseNumber ]
+        , viewInterpreter hearing.interpreter
+        , viewPetitionerOrOtherParty hearing.parties
+        , viewRespondent hearing.parties
+        , Grid.col [ Col.xs1 ] [ text "action" ]
+        , Grid.colBreak []
+
+        -- , Grid.col [] [ actionDropdown model matter ]
         ]
 
 
-actionDropdownState : Model -> Matter -> Dropdown.State
-actionDropdownState model matter =
-    model.mattersDropdownStates
-        |> List.filter (\( caseNumber, state ) -> caseNumber == matter.caseNumber)
+viewInterpreter : Maybe (List CaseManagementData.Interpreter) -> Grid.Column msg
+viewInterpreter interpreter =
+    case interpreter of
+        Nothing ->
+            Grid.col [ Col.xs1, Col.attrs [ class "text-muted" ] ] [ text "None" ]
+
+        Just interpreters ->
+            let
+                languages =
+                    interpreters |> List.map (\i -> i.language) |> String.join ", " |> String.left 8
+            in
+                Grid.col [ Col.xs1, Col.attrs [ class "text-primary" ] ] [ text languages ]
+
+
+viewPetitionerOrOtherParty : List CaseManagementData.Party -> Grid.Column msg
+viewPetitionerOrOtherParty parties =
+    let
+        petitioner =
+            parties
+                |> List.filter (\p -> String.contains "Other" p.partyType || p.partyType == "Mother" || p.partyType == "Wife" || p.partyType == "Protected Person" || p.partyType == "Petitioner")
+                |> List.Extra.uniqueBy (\p -> p.id)
+                |> List.filter (\p -> not <| String.contains "COUNTY OF RIVERSIDE" (String.toUpper <| Maybe.withDefault "" p.organizationName))
+                |> List.head
+                |> Maybe.map (\p -> [ p.firstName, p.lastName ])
+                |> Maybe.map (Maybe.Extra.combine)
+                |> Maybe.Extra.join
+                |> Maybe.map (String.join " ")
+                |> Maybe.withDefault "Person Doe"
+    in
+        Grid.col [ Col.xs3 ] [ text petitioner ]
+
+
+viewRespondent : List CaseManagementData.Party -> Grid.Column msg
+viewRespondent parties =
+    let
+        respondent =
+            parties
+                |> List.filter (\p -> p.partyType == "Respondent" || p.partyType == "Father" || p.partyType == "Husband" || p.partyType == "Restrained Person")
+                |> List.head
+                |> Maybe.map (\p -> [ p.firstName, p.lastName ])
+                |> Maybe.map (Maybe.Extra.combine)
+                |> Maybe.Extra.join
+                |> Maybe.map (String.join " ")
+                |> Maybe.withDefault "Person Doe"
+    in
+        Grid.col [ Col.xs3 ] [ text respondent ]
+
+
+actionDropdownState : Model -> Hearing -> Dropdown.State
+actionDropdownState model hearing =
+    model.hearingsDropdownStates
+        |> List.filter (\( caseNumber, state ) -> caseNumber == hearing.caseNumber)
         |> List.head
         |> Maybe.map Tuple.second
         |> Maybe.withDefault Dropdown.initialState
 
 
-actionDropdown : Model -> Matter -> Html Msg
-actionDropdown model matter =
+actionDropdown : Model -> Hearing -> Html Msg
+actionDropdown model hearing =
     Dropdown.dropdown
-        (actionDropdownState model matter)
+        (actionDropdownState model hearing)
         { options = []
-        , toggleMsg = ToggleDropdown matter.caseNumber
+        , toggleMsg = ToggleDropdown hearing.caseNumber
         , toggleButton =
             Dropdown.toggle [ Button.light ] [ text "Choose Action" ]
         , items =
@@ -422,7 +494,7 @@ departmentDropdown : Model -> Html Msg
 departmentDropdown model =
     let
         label =
-            "Department: " ++ toString (model.departmentFilter)
+            toString (model.departmentFilter)
     in
         Dropdown.dropdown
             model.departmentDropdownState
@@ -440,7 +512,7 @@ interpreterDropdown model =
         model.interpreterDropdownState
         { options = []
         , toggleMsg = InterpreterDropdownToggle
-        , toggleButton = Dropdown.toggle [ Button.light ] [ text "Interpreter" ]
+        , toggleButton = Dropdown.toggle [ Button.light ] [ text "Interp" ]
         , items =
             [ Dropdown.buttonItem [ onClick (FilterInterpreter "Spanish") ] [ text "Spanish" ]
             , Dropdown.buttonItem [ onClick (FilterInterpreter "None") ] [ text "None" ]
@@ -480,16 +552,16 @@ main =
         }
 
 
-mattersDropdownSubscriptions : Model -> List (Sub Msg)
-mattersDropdownSubscriptions model =
-    model.mattersDropdownStates
+hearingsDropdownSubscriptions : Model -> List (Sub Msg)
+hearingsDropdownSubscriptions model =
+    model.hearingsDropdownStates
         |> List.map (\( caseNumber, state ) -> Dropdown.subscriptions state (ToggleDropdown caseNumber))
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        (mattersDropdownSubscriptions model
+        (hearingsDropdownSubscriptions model
             ++ [ Navbar.subscriptions model.navbarState NavbarMsg
                , Dropdown.subscriptions model.departmentDropdownState DepartmentDropdownToggle
                , Dropdown.subscriptions model.interpreterDropdownState InterpreterDropdownToggle
