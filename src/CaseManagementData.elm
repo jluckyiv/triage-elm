@@ -7,6 +7,8 @@ import Json.Decode.Pipeline exposing (decode, required, optional)
 type alias Hearing =
     { scheduledEventId : Int
     , scheduledEventDateTime : DateTime
+    , scheduledEventType : EventType
+    , scheduledEventName : EventName
     , caseId : Int
     , caseNumber : CaseNumber
     , department : Department
@@ -23,11 +25,13 @@ hearingsDecoder =
 hearingDecoder : Json.Decode.Decoder Hearing
 hearingDecoder =
     Json.Decode.Pipeline.decode Hearing
-        |> Json.Decode.Pipeline.required "schedEvntId" (Json.Decode.int)
-        |> Json.Decode.Pipeline.required "schedEvntDateTime" (Json.Decode.string)
-        |> Json.Decode.Pipeline.required "caseId" (Json.Decode.int)
+        |> Json.Decode.Pipeline.required "id" (Json.Decode.int)
+        |> Json.Decode.Pipeline.required "startDateTime" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "type" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "schedEvntName" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "case_id" (Json.Decode.int)
         |> Json.Decode.Pipeline.required "caseNumber" (Json.Decode.string)
-        |> Json.Decode.Pipeline.required "locationCode" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "code" (Json.Decode.string)
         |> Json.Decode.Pipeline.optional "interpreter" (maybeInterpreterDecoder) Nothing
         |> Json.Decode.Pipeline.required "party" (Json.Decode.list partyDecoder)
 
@@ -55,14 +59,16 @@ maybeInterpreterDecoder =
 
 
 type alias Attorney =
-    { organizationName : String
+    { organizationName : Maybe String
+    , repFullName : Maybe String
     }
 
 
 attorneyDecoder : Json.Decode.Decoder Attorney
 attorneyDecoder =
     Json.Decode.Pipeline.decode Attorney
-        |> Json.Decode.Pipeline.required "organizationName" (Json.Decode.string)
+        |> Json.Decode.Pipeline.optional "organizationName" (maybeStringDecoder) Nothing
+        |> Json.Decode.Pipeline.optional "repFullName" (maybeStringDecoder) Nothing
 
 
 maybeAttorneyDecoder : Json.Decode.Decoder (Maybe (List Attorney))
@@ -78,9 +84,8 @@ maybeAttorneyDecoder =
 
 
 type alias Party =
-    { partyId : Int
+    { id : Int
     , partyType : String
-    , personId : Int
     , firstName : Maybe String
     , lastName : Maybe String
     , organizationName : Maybe String
@@ -92,14 +97,21 @@ type alias Party =
 partyDecoder : Json.Decode.Decoder Party
 partyDecoder =
     Json.Decode.Pipeline.decode Party
-        |> Json.Decode.Pipeline.required "partyId" (Json.Decode.int)
+        |> Json.Decode.Pipeline.required "id" (Json.Decode.int)
         |> Json.Decode.Pipeline.required "partyType" (Json.Decode.string)
-        |> Json.Decode.Pipeline.required "personId" (Json.Decode.int)
         |> Json.Decode.Pipeline.optional "firstName" (maybeStringDecoder) Nothing
         |> Json.Decode.Pipeline.optional "lastName" (maybeStringDecoder) Nothing
         |> Json.Decode.Pipeline.optional "organizationName" (maybeStringDecoder) Nothing
         |> Json.Decode.Pipeline.optional "selfRepresented" (maybeStringDecoder) Nothing
         |> Json.Decode.Pipeline.optional "representedBy" (maybeAttorneyDecoder) Nothing
+
+
+type alias EventType =
+    String
+
+
+type alias EventName =
+    String
 
 
 type alias DateTime =
