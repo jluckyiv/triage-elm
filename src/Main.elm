@@ -26,12 +26,12 @@ import Task
 
 
 type alias Model =
-    { dateString : DateString
+    { currentDateString : DateString
     , departmentDropdownState : Dropdown.State
     , departmentFilter : Department
     , departments : List Department
-    , hearingDropdownStates : List ( CaseNumber, Dropdown.State )
     , hearings : List ( DepartmentString, WebData (List Hearing) )
+    , hearingsDropdownStates : List ( CaseNumber, Dropdown.State )
     , navbarState : Navbar.State
     , searchBoxValue : String
     , statusDropdownState : Dropdown.State
@@ -79,23 +79,18 @@ init =
         ( navbarState, navbarCmd ) =
             Navbar.initialState NavbarMsg
     in
-        ( { departmentDropdownState = Dropdown.initialState
+        ( { currentDateString = ""
+          , departmentDropdownState = Dropdown.initialState
           , departmentFilter = All
           , departments = [ All, F201, F301, F401, F402, F501, F502 ]
-          , hearingDropdownStates = []
-          , navbarState = navbarState
-          , statusDropdownState = Dropdown.initialState
           , hearings = initHearings
-          , dateString = ""
+          , hearingsDropdownStates = []
+          , navbarState = navbarState
           , searchBoxValue = ""
+          , statusDropdownState = Dropdown.initialState
           }
         , Cmd.batch [ navbarCmd, Task.perform ReceiveDate Date.now ]
         )
-
-
-initHearingDropdownStates : a -> List b
-initHearingDropdownStates departmentHearings =
-    []
 
 
 initHearings : List ( DepartmentString, WebData (List Hearing) )
@@ -107,6 +102,21 @@ initHearings =
     , ( toString F501, RemoteData.Loading )
     , ( toString F502, RemoteData.Loading )
     ]
+
+
+initHearingDropdownStates : List ( DepartmentString, WebData (List Hearing) ) -> List ( CaseNumber, Dropdown.State )
+initHearingDropdownStates departmentHearings =
+    departmentHearings
+        |> List.map (Tuple.second)
+        |> List.concatMap
+            (\v ->
+                case v of
+                    RemoteData.Success hearings ->
+                        hearings |> List.map (\hearing -> ( hearing.caseNumber, Dropdown.initialState ))
+
+                    _ ->
+                        []
+            )
 
 
 
@@ -125,7 +135,7 @@ type Msg
     | ToggleHearingDropdown String Dropdown.State
     | ToggleDepartmentDropdown Dropdown.State
     | ToggleStatusDropdown Dropdown.State
-    | UpdateDateString DateString
+    | UpdateCurrentDateString DateString
     | UpdateSearchBoxValue String
 
 
@@ -137,10 +147,10 @@ update msg model =
 
         InitHearingDropdown ->
             let
-                hearingDropdownStates =
+                hearingsDropdownStates =
                     initHearingDropdownStates model.hearings
             in
-                ( { model | hearingDropdownStates = hearingDropdownStates }, Cmd.none )
+                ( { model | hearingsDropdownStates = hearingsDropdownStates }, Cmd.none )
 
         FilterDepartment department ->
             ( { model | departmentFilter = department }
@@ -159,36 +169,45 @@ update msg model =
 
         ReceiveDate date ->
             let
-                dateString =
+                currentDateString =
                     dateToDateString date
             in
-                ( { model | dateString = dateString }
-                , Cmd.batch <| requestHearings dateString
+                ( { model | currentDateString = currentDateString }
+                , Cmd.batch <| requestHearings currentDateString
                 )
 
         ReceiveHearings department response ->
-            ( { model | hearings = receiveHearings model department response }, Cmd.none )
+            let
+                hearings =
+                    receiveHearings model department response
+            in
+                ( { model
+                    | hearings = hearings
+                    , hearingsDropdownStates = initHearingDropdownStates hearings
+                  }
+                , Cmd.none
+                )
 
         RequestHearings ->
             let
-                dateString =
+                currentDateString =
                     model.searchBoxValue
             in
                 ( { model
                     | hearings = initHearings
-                    , dateString = dateString
+                    , currentDateString = currentDateString
                     , searchBoxValue = ""
                   }
                 , Cmd.batch
-                    (requestHearings dateString)
+                    (requestHearings currentDateString)
                 )
 
         ToggleHearingDropdown caseNumber state ->
             let
-                hearingDropdownStates =
+                hearingsDropdownStates =
                     mapHearingDropdownStates model caseNumber state
             in
-                ( { model | hearingDropdownStates = hearingDropdownStates }, Cmd.none )
+                ( { model | hearingsDropdownStates = hearingsDropdownStates }, Cmd.none )
 
         ToggleDepartmentDropdown state ->
             ( { model | departmentDropdownState = state }
@@ -200,8 +219,8 @@ update msg model =
             , Cmd.none
             )
 
-        UpdateDateString dateString ->
-            ( { model | dateString = dateString }, Cmd.none )
+        UpdateCurrentDateString currentDateString ->
+            ( { model | currentDateString = currentDateString }, Cmd.none )
 
         UpdateSearchBoxValue string ->
             ( { model | searchBoxValue = string }, Cmd.none )
@@ -213,7 +232,7 @@ update msg model =
 
 mapHearingDropdownStates : Model -> CaseNumber -> Dropdown.State -> List ( CaseNumber, Dropdown.State )
 mapHearingDropdownStates model caseNumber state =
-    model.hearingDropdownStates
+    model.hearingsDropdownStates
         |> List.map
             (\( cn, s ) ->
                 if caseNumber == cn then
@@ -225,7 +244,7 @@ mapHearingDropdownStates model caseNumber state =
 
 toggleHearingDropdown : Model -> Hearing -> Dropdown.State
 toggleHearingDropdown model hearing =
-    model.hearingDropdownStates
+    model.hearingsDropdownStates
         |> List.filter (\( caseNumber, _ ) -> caseNumber == hearing.caseNumber)
         |> List.head
         |> Maybe.map Tuple.second
@@ -260,13 +279,13 @@ updateHearings department response hearings =
 
 
 requestHearings : DateString -> List (Cmd Msg)
-requestHearings dateString =
-    [ requestDepartmentHearings ( dateString, F201 )
-    , requestDepartmentHearings ( dateString, F301 )
-    , requestDepartmentHearings ( dateString, F401 )
-    , requestDepartmentHearings ( dateString, F402 )
-    , requestDepartmentHearings ( dateString, F501 )
-    , requestDepartmentHearings ( dateString, F502 )
+requestHearings currentDateString =
+    [ requestDepartmentHearings ( currentDateString, F201 )
+    , requestDepartmentHearings ( currentDateString, F301 )
+    , requestDepartmentHearings ( currentDateString, F401 )
+    , requestDepartmentHearings ( currentDateString, F402 )
+    , requestDepartmentHearings ( currentDateString, F501 )
+    , requestDepartmentHearings ( currentDateString, F502 )
     ]
 
 
@@ -294,7 +313,7 @@ view model =
                 [ div [ class "starter-template" ]
                     [ h1 [] [ text "Riverside Superior Court Triage" ]
                     , p [ class "lead text-primary" ]
-                        [ text ("Hearings for " ++ model.dateString)
+                        [ text ("Hearings for " ++ model.currentDateString)
                         ]
                     ]
                 , hearingsGrid model
@@ -321,7 +340,7 @@ dateSearchForm : Model -> Navbar.CustomItem Msg
 dateSearchForm model =
     Navbar.formItem []
         [ Input.text
-            [ Input.attrs [ placeholder ("Ex: " ++ model.dateString), value model.searchBoxValue ]
+            [ Input.attrs [ placeholder ("Ex: " ++ model.currentDateString), value model.searchBoxValue ]
             , Input.onInput UpdateSearchBoxValue
             ]
         , Button.button
@@ -585,5 +604,5 @@ subscriptions model =
 
 hearingDropdownSubscriptions : Model -> List (Sub Msg)
 hearingDropdownSubscriptions model =
-    model.hearingDropdownStates
+    model.hearingsDropdownStates
         |> List.map (\( caseNumber, state ) -> Dropdown.subscriptions state (ToggleHearingDropdown caseNumber))
