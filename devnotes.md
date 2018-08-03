@@ -53,21 +53,22 @@ Must filter the hearings down to one case.
 I got all the JSON decoders working. I'm still not sure how to do the interpreters correctly, but I am able to parse responses. Next is wiring up the http requests.
 
 ## To do
-- interpreter filters
-- model status
-- add notes to each case
-- add collapsible div for notes
-- add collapsible div for events
-- add delete to collapsible div instead of dropdown box
-- model case information
-- model elements
-- json encoders and decoders
+- tell Armando that PROD is serving `[{}]` for empty list
+- dynamic actions in action button
 - consume triage data
 - consume triage websockets
+- json encoders and decoders for events and notes
+- filter events by day
+- filter actions/create filter bar
+- add authors to notes and events
+- wire up date/time stamp
+- make div collapsible for notes
+- make div collapsible for events
+- add delete to collapsible div instead of dropdown box
 - CRUD for users
 - CRUD for dispos
 - CRUD for events
 - export to CSV
 - aggregate reports of dispos by month
-- filter events by day
 - navigation
+- interpreter filters
