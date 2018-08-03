@@ -12,6 +12,7 @@ import Bootstrap.Text as Text
 import Bootstrap.Utilities.Spacing as Spacing
 import CaseManagementData exposing (Hearing)
 import Date
+import TriageData exposing (Event, User)
 import Html exposing (Html, text, div, span, p, ol, ul, li, h1)
 import Html.Attributes exposing (class, id, src, type_, placeholder, href, attribute, value)
 import Html.Events exposing (onClick)
@@ -31,7 +32,7 @@ type alias Model =
     , departmentDropdownState : Dropdown.State
     , departmentFilter : Department
     , departments : List Department
-    , events : List Event
+    , events : List TriageData.Event
     , hearings : List ( DepartmentString, WebData (List Hearing) )
     , hearingsDropdownStates : List ( CaseNumber, Dropdown.State )
     , navbarState : Navbar.State

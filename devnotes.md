@@ -53,7 +53,7 @@ Must filter the hearings down to one case.
 I got all the JSON decoders working. I'm still not sure how to do the interpreters correctly, but I am able to parse responses. Next is wiring up the http requests.
 
 ## To do
-- tell Armando that PROD is serving `[{}]` for empty list
+- -tell Armando that PROD is serving `[{}]` for empty list-
 - dynamic actions in action button
 - consume triage data
 - consume triage websockets
