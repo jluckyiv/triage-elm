@@ -1,17 +1,4 @@
-import 'font-awesome/css/font-awesome.css';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bluebird/js/release/bluebird';
-import 'whatwg-fetch/fetch';
-
-import './main.css';
-import { Main } from './Main.elm';
-import registerServiceWorker from './registerServiceWorker';
-
-var msalconfig = {
-    clientID: "3d5ea4ee-aa72-4605-bb1b-c62079d0af6b",
-    redirectUri: location.origin
-};
-// Graph API endpoint to show user profile
+﻿// Graph API endpoint to show user profile
 var graphApiEndpoint = "https://graph.microsoft.com/v1.0/me";
 
 // Graph API scope used to obtain the access token to read user profile
@@ -55,19 +42,24 @@ function callGraphApi() {
         // the first time the Graph API call to obtain user's profile is executed.
     } else {
 
+        // If user is already signed in, display the user info
+        var userInfoElement = document.getElementById("userInfo");
+        userInfoElement.parentElement.classList.remove("hidden");
+        userInfoElement.innerHTML = JSON.stringify(user, null, 4);
 
-        // TODO:
         // Show Sign-Out button
-        // document.getElementById("signOutButton").classList.remove("invisible");
+        document.getElementById("signOutButton").classList.remove("hidden");
 
         // Now Call Graph API to show the user profile information:
+        var graphCallResponseElement = document.getElementById("graphResponse");
+        graphCallResponseElement.parentElement.classList.remove("hidden");
+        graphCallResponseElement.innerText = "Calling Graph ...";
 
         // In order to call the Graph API, an access token needs to be acquired.
         // Try to acquire the token used to Query Graph API silently first
         userAgentApplication.acquireTokenSilent(graphAPIScopes)
             .then(function (token) {
                 //After the access token is acquired, call the Web API, sending the acquired token
-                var graphCallResponseElement = document.getElementById("graphResponse");
                 callWebApiWithToken(graphApiEndpoint, token, graphCallResponseElement, document.getElementById("accessToken"));
 
             }, function (error) {
@@ -139,10 +131,9 @@ function callWebApiWithToken(endpoint, token, responseElement, showTokenElement)
                     .then(function (data) {
                         // Display response in the page
                         console.log(data);
-                        app.ports.loginResult.send(data);
                         responseElement.innerHTML = JSON.stringify(data, null, 4);
                         if (showTokenElement) {
-                            showTokenElement.parentElement.classList.remove("invisible");
+                            showTokenElement.parentElement.classList.remove("hidden");
                             showTokenElement.innerHTML = token;
                         }
                     })
@@ -172,23 +163,3 @@ function callWebApiWithToken(endpoint, token, responseElement, showTokenElement)
 function signOut() {
     userAgentApplication.logout();
 }
-
-var app = Main.embed(document.getElementById('root'));
-
-app.ports.login.subscribe(function (value) {
-    console.log("JS: login request made with value: " + value);
-    var result = loginRequest(value);
-    console.log("JS: login response received with value: " + value);
-    app.ports.loginResult.send(result);
-});
-
-function loginRequest(value) {
-    callGraphApi();
-
-};
-
-function loginResponse(value) {
-    return "login response with value: " + value;
-}
-
-registerServiceWorker();

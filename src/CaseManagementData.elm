@@ -4,6 +4,21 @@ import Json.Decode
 import Json.Decode.Pipeline exposing (decode, required, optional)
 
 
+hearingsUrl : ( String, Department ) -> String
+hearingsUrl ( date, department ) =
+    -- dev
+    -- "https://cbmdev.riverside.courts.ca.gov/Hearing/FL/" ++ date ++ "/" ++ department
+    -- prod
+    "https://cbmtriage/Hearing/FL/" ++ date ++ "/" ++ department
+
+
+
+-- local
+-- "http://localhost:4049/" ++ department
+-- postman
+-- "https://09ee33ca-34c1-48c5-a6f8-31e31c976519.mock.pstmn.io/" ++ date ++ "/" ++ department
+
+
 type alias Hearing =
     { scheduledEventId : Int
     , scheduledEventDateTime : DateTime

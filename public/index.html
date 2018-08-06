@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -11,12 +12,30 @@
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+
     <title>Elm App</title>
 </head>
+
 <body>
+    <div id="errorMessage" class="text-danger"></div>
+    <div class="invisible">
+        <pre class="well" id="graphResponse"></pre>
+    </div>
+    <div class="invisible">
+        <pre class="well" id="accessToken"></pre>
+    </div>
+    <div class="invisible">
+        <pre class="well" id="userInfo"></pre>
+    </div>
+    <div class="invisible">
+        <pre class="well" id="accessToken"></pre>
+    </div>
+    <button id="signOutButton" type="button" class="btn btn-primary hidden" onclick="signOut()">Sign out</button>
+    <script src="https://secure.aadcdn.microsoftonline-p.com/lib/0.1.5/js/msal.min.js"></script>
     <noscript>
         You need to enable JavaScript to run this app.
     </noscript>
     <div id="root"></div>
 </body>
+
 </html>

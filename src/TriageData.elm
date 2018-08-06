@@ -1,5 +1,6 @@
 module TriageData exposing (..)
 
+import CaseManagementData
 import Json.Decode
 import Json.Decode.Pipeline exposing (decode, required, optional)
 import Json.Encode
@@ -33,43 +34,47 @@ type alias Name =
     String
 
 
+type alias Note =
+    { note : String
+    , dateTime : DateTime
+    , hearing : CaseManagementData.Hearing
+    }
+
+
 type alias Subject =
     String
 
 
 type alias Event =
-    { id : Id
-    , matterId : Id
+    { caseNumber : String
     , category : Category
     , subject : Subject
-    , action : Action
-    , createdAt : DateTime
-    , createdBy : Maybe Id
+    , author : String
+    , action : String
+    , timestamp : String
     }
 
 
-eventDecoder : Json.Decode.Decoder Event
-eventDecoder =
+decodeEvent : Json.Decode.Decoder Event
+decodeEvent =
     Json.Decode.Pipeline.decode Event
-        |> Json.Decode.Pipeline.required "id" Json.Decode.int
-        |> Json.Decode.Pipeline.required "matter_id" Json.Decode.int
-        |> Json.Decode.Pipeline.required "category" Json.Decode.string
-        |> Json.Decode.Pipeline.required "subject" Json.Decode.string
-        |> Json.Decode.Pipeline.required "action" Json.Decode.string
-        |> Json.Decode.Pipeline.required "created_at" Json.Decode.string
-        |> Json.Decode.Pipeline.optional "created_by" maybeIntDecoder Nothing
+        |> Json.Decode.Pipeline.required "CaseNumber" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "Category" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "Subject" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "Author" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "Action" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "Timestamp" (Json.Decode.string)
 
 
 encodeEvent : Event -> Json.Encode.Value
 encodeEvent record =
     Json.Encode.object
-        [ ( "id", Json.Encode.int <| record.id )
-        , ( "matter_id", Json.Encode.int <| record.matterId )
-        , ( "category", Json.Encode.string <| record.category )
-        , ( "subject", Json.Encode.string <| record.subject )
-        , ( "action", Json.Encode.string <| record.action )
-        , ( "created_at", Json.Encode.string <| record.createdAt )
-        , ( "created_by", Json.Encode.int <| Maybe.withDefault 0 record.createdBy )
+        [ ( "CaseNumber", Json.Encode.string <| record.caseNumber )
+        , ( "Category", Json.Encode.string <| record.category )
+        , ( "Subject", Json.Encode.string <| record.subject )
+        , ( "Author", Json.Encode.string <| record.author )
+        , ( "Action", Json.Encode.string <| record.action )
+        , ( "Timestamp", Json.Encode.string <| record.timestamp )
         ]
 
 
