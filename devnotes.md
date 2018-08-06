@@ -52,23 +52,38 @@ Must filter the hearings down to one case.
 
 I got all the JSON decoders working. I'm still not sure how to do the interpreters correctly, but I am able to parse responses. Next is wiring up the http requests.
 
+## Places to register Azure AD apps
+- https://apps.dev.microsoft.com/ (Converged applications and Azure AD)
+- https://portal.azure.com/#blade/Microsoft_AAD_IAM/ (Azure AD only)
+
 ## To do
-- -tell Armando that PROD is serving `[{}]` for empty list-
+### Me
 - dynamic actions in action button
-- consume triage data
+- get triage data 
+- post triage data
+- delete triage data
+- json encoders and decoders for triage data
 - consume triage websockets
-- json encoders and decoders for events and notes
-- filter events by day
-- filter actions/create filter bar
 - add authors to notes and events
-- wire up date/time stamp
+- wire up date/time stamp (is this necessary?)
+- filter actions/create filter bar
+- add pending filter
 - make div collapsible for notes
 - make div collapsible for events
 - add delete to collapsible div instead of dropdown box
+- navigation
+
+### Tibon
+- filter events by day
 - CRUD for users
 - CRUD for dispos
 - CRUD for events
 - export to CSV
 - aggregate reports of dispos by month
-- navigation
+
+### Later
 - interpreter filters
+
+## Done
+- hearing count
+- tell Armando that PROD is serving `[{}]` for empty list
