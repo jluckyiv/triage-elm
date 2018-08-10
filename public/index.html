@@ -19,18 +19,12 @@
 <body>
     <div id="errorMessage" class="text-danger"></div>
     <div class="invisible">
-        <pre class="well" id="graphResponse"></pre>
-    </div>
-    <div class="invisible">
         <pre class="well" id="accessToken"></pre>
     </div>
-    <div class="invisible">
-        <pre class="well" id="userInfo"></pre>
-    </div>
-    <div class="invisible">
-        <pre class="well" id="accessToken"></pre>
-    </div>
-    <button id="signOutButton" type="button" class="btn btn-primary hidden" onclick="signOut()">Sign out</button>
+    <!-- The 'bluebird' and 'fetch' references below are required if you need to run this application │
+on Internet Explorer -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script>
     <script src="https://secure.aadcdn.microsoftonline-p.com/lib/0.1.5/js/msal.min.js"></script>
     <noscript>
         You need to enable JavaScript to run this app.

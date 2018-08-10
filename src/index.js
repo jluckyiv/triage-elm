@@ -1,7 +1,5 @@
 import 'font-awesome/css/font-awesome.css';
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bluebird/js/release/bluebird';
-import 'whatwg-fetch/fetch';
 
 import './main.css';
 import { Main } from './Main.elm';
@@ -56,15 +54,12 @@ function callGraphApi() {
     } else {
 
 
-        // TODO:
-        // Show Sign-Out button
-        // document.getElementById("signOutButton").classList.remove("invisible");
-
         // Now Call Graph API to show the user profile information:
 
         // In order to call the Graph API, an access token needs to be acquired.
         // Try to acquire the token used to Query Graph API silently first
         userAgentApplication.acquireTokenSilent(graphAPIScopes)
+            // userAgentApplication.acquireTokenPopup(graphAPIScopes)
             .then(function (token) {
                 //After the access token is acquired, call the Web API, sending the acquired token
                 var graphCallResponseElement = document.getElementById("graphResponse");
@@ -78,6 +73,7 @@ function callGraphApi() {
                 // Then, acquireTokenSilent will then acquire the token silently, the Graph API call results will be made and results will be displayed in the page.
                 if (error) {
                     userAgentApplication.acquireTokenRedirect(graphAPIScopes);
+                    // userAgentApplication.acquireTokenPopup(graphAPIScopes);
                 }
             });
 
@@ -90,12 +86,11 @@ function callGraphApi() {
  * @param {string} error - the error string
  * @param {object} errorElement - the HTML element in the page to display the error
  */
-function showError(endpoint, error, errorDesc) {
+function logError(endpoint, error, errorDesc) {
     var formattedError = JSON.stringify(error, null, 4);
     if (formattedError.length < 3) {
         formattedError = error;
     }
-    document.getElementById("errorMessage").innerHTML = "An error has occurred:<br/>Endpoint: " + endpoint + "<br/>Error: " + formattedError + "<br/>" + errorDesc;
     console.error(error);
 }
 
@@ -108,7 +103,7 @@ function showError(endpoint, error, errorDesc) {
  */
 function loginCallback(errorDesc, token, error, tokenType) {
     if (errorDesc) {
-        showError(msal.authority, error, errorDesc);
+        logError(msal.authority, error, errorDesc);
     } else {
         callGraphApi();
     }
@@ -137,58 +132,39 @@ function callWebApiWithToken(endpoint, token, responseElement, showTokenElement)
             if (response.status === 200 && contentType && contentType.indexOf("application/json") !== -1) {
                 response.json()
                     .then(function (data) {
-                        // Display response in the page
-                        console.log(data);
+                        window.sessionStorage.setItem('user', JSON.stringify(data));
                         app.ports.loginResult.send(data);
-                        responseElement.innerHTML = JSON.stringify(data, null, 4);
-                        if (showTokenElement) {
-                            showTokenElement.parentElement.classList.remove("invisible");
-                            showTokenElement.innerHTML = token;
-                        }
                     })
                     .catch(function (error) {
-                        showError(endpoint, error);
+                        logError(endpoint, error);
                     });
             } else {
                 response.json()
                     .then(function (data) {
                         // Display response as error in the page
-                        showError(endpoint, data);
+                        logError(endpoint, data);
                     })
                     .catch(function (error) {
-                        showError(endpoint, error);
+                        logError(endpoint, error);
                     });
             }
         })
         .catch(function (error) {
-            showError(endpoint, error);
+            logError(endpoint, error);
         });
 }
 
 
-/**
- * Sign-out the user
- */
-function signOut() {
-    userAgentApplication.logout();
-}
-
 var app = Main.embed(document.getElementById('root'));
 
 app.ports.login.subscribe(function (value) {
-    console.log("JS: login request made with value: " + value);
-    var result = loginRequest(value);
-    console.log("JS: login response received with value: " + value);
-    app.ports.loginResult.send(result);
+    app.ports.loginResult.send(callGraphApi());
 });
 
-function loginRequest(value) {
-    callGraphApi();
 
-};
-
-function loginResponse(value) {
-    return "login response with value: " + value;
-}
+app.ports.logout.subscribe(function (value) {
+    window.sessionStorage.removeItem('user');
+    userAgentApplication.logout();
+});
 
 registerServiceWorker();
