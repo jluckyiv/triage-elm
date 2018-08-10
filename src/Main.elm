@@ -10,8 +10,10 @@ import Bootstrap.Grid.Row as Row
 import Bootstrap.Navbar as Navbar
 import Bootstrap.Text as Text
 import Bootstrap.Utilities.Spacing as Spacing
-import CaseManagementData exposing (DateTime, Department, Hearing, Interpreter, Party)
+import CaseManagementData exposing (DateTime, Department, Hearing, Interpreter, Party, Attorney)
 import Date
+import Dict exposing (Dict)
+import Disposition
 import Html exposing (Html, text, div, span, p, ol, ul, li, h1)
 import Html.Attributes exposing (class, id, src, type_, placeholder, href, attribute, value)
 import Html.Events exposing (onClick)
@@ -20,11 +22,12 @@ import Json.Decode
 import Json.Encode
 import List.Extra
 import Maybe.Extra
-import Msal
+import MsalData as Msal
 import Moment
 import RemoteData exposing (WebData)
 import Task
 import TriageData exposing (Event, Note)
+import WebSocket
 
 
 ---- MODEL ----
@@ -35,16 +38,17 @@ type alias Model =
     , departmentDropdownState : Dropdown.State
     , departmentFilter : DepartmentFilter
     , departmentFilters : List DepartmentFilter
-    , departments : List DepartmentString
-    , events : List TriageData.Event
-    , hearings : List DepartmentHearings
-    , hearingsDropdownStates : List ( CaseNumber, Dropdown.State )
+    , departments : List Department
+    , events : WebData (List TriageData.Event)
+    , hearings : Dict Department HearingResponse
+    , hearingsDropdownStates : Dict CaseNumber Dropdown.State
     , navbarState : Navbar.State
-    , noteBoxValues : List ( CaseNumber, String )
-    , notes : List Note
+    , noteBoxValues : Dict CaseNumber String
+    , notes : WebData (List Note)
     , searchBoxValue : String
     , statusDropdownState : Dropdown.State
-    , userInfo : Maybe Msal.GraphResponse
+    , user : Maybe Msal.User
+    , userLoginStatus : String
     }
 
 
@@ -66,12 +70,12 @@ type DepartmentFilter
     | F502
 
 
-type alias DepartmentHearings =
-    ( DepartmentString, WebData (List Hearing) )
-
-
-type alias DepartmentString =
+type alias Department =
     String
+
+
+type alias HearingResponse =
+    WebData (List Hearing)
 
 
 init : ( Model, Cmd Msg )
@@ -85,59 +89,62 @@ init =
           , departmentFilter = All
           , departmentFilters = [ All, F201, F301, F401, F402, F501, F502 ]
           , departments = [ "F201", "F301", "F401", "F402", "F501", "F502" ]
-          , events = []
+          , events = RemoteData.Loading
           , hearings = initHearings
-          , hearingsDropdownStates = []
+          , hearingsDropdownStates = Dict.empty
           , navbarState = navbarState
-          , noteBoxValues = []
-          , notes = []
+          , noteBoxValues = Dict.empty
+          , notes = RemoteData.Loading
           , searchBoxValue = ""
           , statusDropdownState = Dropdown.initialState
-          , userInfo = Nothing
+          , user = Nothing
+          , userLoginStatus = "Login (ex: jsmith@riverside.courts.ca.gov)"
           }
-        , Cmd.batch [ navbarCmd, Task.perform ReceiveDate Date.now ]
+        , Cmd.batch
+            [ navbarCmd, Task.perform ReceiveDate Date.now, requestTodaysEvents, requestTodaysNotes ]
         )
 
 
-initHearings : List DepartmentHearings
+initHearings : Dict Department HearingResponse
 initHearings =
-    [ ( toString F201, RemoteData.Loading )
-    , ( toString F301, RemoteData.Loading )
-    , ( toString F401, RemoteData.Loading )
-    , ( toString F402, RemoteData.Loading )
-    , ( toString F501, RemoteData.Loading )
-    , ( toString F502, RemoteData.Loading )
-    ]
+    Dict.fromList
+        [ ( toString F201, RemoteData.Loading )
+        , ( toString F301, RemoteData.Loading )
+        , ( toString F401, RemoteData.Loading )
+        , ( toString F402, RemoteData.Loading )
+        , ( toString F501, RemoteData.Loading )
+        , ( toString F502, RemoteData.Loading )
+        ]
 
 
-initHearingDropdownStates : List DepartmentHearings -> List ( CaseNumber, Dropdown.State )
+initHearingDropdownStates : Dict Department HearingResponse -> Dict CaseNumber Dropdown.State
 initHearingDropdownStates departmentHearings =
     departmentHearings
-        |> List.map (Tuple.second)
-        |> List.concatMap
-            (\v ->
-                case v of
-                    RemoteData.Success hearings ->
-                        hearings |> List.map (\hearing -> ( hearing.caseNumber, Dropdown.initialState ))
-
-                    _ ->
-                        []
-            )
+        |> Dict.values
+        |> RemoteData.fromList
+        |> RemoteData.map (List.concat)
+        |> RemoteData.withDefault []
+        |> List.map (\h -> ( h.caseNumber, Dropdown.initialState ))
+        |> Dict.fromList
 
 
-initNoteBoxValues : List ( a1, RemoteData.RemoteData e (List { b | caseNumber : a }) ) -> List ( a, String )
+initNoteBoxValues : Dict Department HearingResponse -> Dict CaseNumber String
 initNoteBoxValues departmentHearings =
     departmentHearings
-        |> List.map (Tuple.second)
-        |> List.concatMap
-            (\v ->
-                case v of
-                    RemoteData.Success hearings ->
-                        hearings |> List.map (\hearing -> ( hearing.caseNumber, "" ))
+        |> Dict.values
+        |> RemoteData.fromList
+        |> RemoteData.map (List.concat)
+        |> RemoteData.withDefault []
+        |> List.map (\h -> ( h.caseNumber, "" ))
+        |> Dict.fromList
 
-                    _ ->
-                        []
-            )
+
+countHearings : Dict Department HearingResponse -> Int
+countHearings departmentHearings =
+    departmentHearings
+        |> Dict.values
+        |> List.concatMap (RemoteData.withDefault [])
+        |> List.length
 
 
 
@@ -146,23 +153,34 @@ initNoteBoxValues departmentHearings =
 
 type Msg
     = NoOp
-    | PerformAction TriageData.Event
+    | AddEvent Hearing Disposition.Action
+    | AddNote Hearing
     | FilterDepartment DepartmentFilter
     | FilterStatus String
-    | LogEvent TriageData.Event
     | Login Json.Encode.Value
     | LoginResult Json.Decode.Value
+    | Logout Json.Encode.Value
     | NavbarMsg Navbar.State
+    | NewEvents String
+    | NewFeed String
+    | NewNotes String
+    | OnEventSave (Result Http.Error Event)
+    | OnNoteSave (Result Http.Error Note)
     | ReceiveDate Date.Date
-    | ReceiveHearings DepartmentString (WebData (List Hearing))
+    | ReceiveEvents (WebData (List Event))
+    | ReceiveHearings Department HearingResponse
+    | ReceiveNotes (WebData (List Note))
+    | RequestEvents String
+    | RequestTodaysEvents
+    | RequestNotes String
+    | RequestTodaysNotes
     | RequestHearings
-    | ToggleHearingDropdown String Dropdown.State
     | ToggleDepartmentDropdown Dropdown.State
+    | ToggleHearingDropdown String Dropdown.State
     | ToggleStatusDropdown Dropdown.State
     | UpdateCurrentDateString DateString
     | UpdateNoteBoxValue Hearing String
     | UpdateSearchBoxValue String
-    | WriteNote Hearing
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -171,8 +189,41 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
-        PerformAction event ->
-            ( { model | events = event :: model.events }, Cmd.none )
+        AddEvent hearing event ->
+            case model.user of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just user ->
+                    ( model, saveEventCmd (Disposition.createEvent user hearing event) )
+
+        AddNote hearing ->
+            let
+                user_ =
+                    model.user |> Maybe.map .id |> Maybe.withDefault "0"
+
+                note =
+                    Note
+                        hearing.caseId
+                        "subject"
+                        (model.noteBoxValues
+                            |> Dict.get hearing.caseNumber
+                            |> Maybe.withDefault ""
+                        )
+                        user_
+                        Nothing
+
+                noteBoxValues =
+                    model.noteBoxValues
+                        |> Dict.update hearing.caseNumber (\_ -> Just "")
+            in
+                ( { model
+                    | noteBoxValues = noteBoxValues
+
+                    {- TODO: update UI with "Saving" -}
+                  }
+                , postNoteCmd note
+                )
 
         FilterDepartment department ->
             ( { model | departmentFilter = department }
@@ -186,28 +237,86 @@ update msg model =
             in
                 ( model, Cmd.none )
 
-        LogEvent event ->
-            ( { model | events = event :: model.events }, Cmd.none )
-
         Login value ->
-            let
-                _ =
-                    Debug.log "Elm: Login" value
-            in
-                ( model, Msal.login value )
+            ( { model | userLoginStatus = "Logging in" }, Msal.login value )
 
         LoginResult value ->
             let
-                userInfo =
-                    (Result.toMaybe (Json.Decode.decodeValue Msal.decodeGraphResponse value))
-
-                _ =
-                    Debug.log "userInfo.givenName" (Maybe.map .givenName)
+                user =
+                    (Result.toMaybe (Json.Decode.decodeValue Msal.decodeUser value))
             in
-                ( { model | userInfo = userInfo }, Cmd.none )
+                ( { model | user = user, userLoginStatus = "Logout" }, Cmd.none )
+
+        Logout value ->
+            ( { model | user = Nothing, userLoginStatus = "Login (ex: jsmith@riverside.courts.ca.gov)" }, Msal.logout value )
 
         NavbarMsg state ->
             ( { model | navbarState = state }, Cmd.none )
+
+        NewEvents json ->
+            let
+                events =
+                    Json.Decode.decodeString TriageData.decodeEvents json
+            in
+                case events of
+                    Ok events ->
+                        ( { model | events = RemoteData.Success events }, Cmd.none )
+
+                    Err error ->
+                        let
+                            _ =
+                                Debug.log "error" error
+                        in
+                            ( model, Cmd.none )
+
+        NewFeed json ->
+            let
+                feed =
+                    Json.Decode.decodeString TriageData.decodeFeed json
+            in
+                case feed of
+                    Ok data ->
+                        ( { model
+                            | events = RemoteData.Success data.events
+                            , notes = RemoteData.Success data.notes
+                          }
+                        , Cmd.none
+                        )
+
+                    Err error ->
+                        let
+                            _ =
+                                Debug.log "error" error
+                        in
+                            ( model, Cmd.none )
+
+        NewNotes json ->
+            let
+                notes =
+                    Json.Decode.decodeString TriageData.decodeNotes json
+            in
+                case notes of
+                    Ok notes ->
+                        ( { model | notes = RemoteData.Success notes }, Cmd.none )
+
+                    Err error ->
+                        let
+                            _ =
+                                Debug.log "error" error
+                        in
+                            ( model, Cmd.none )
+
+        OnEventSave (Ok event) ->
+            Debug.log "Ok" ( model, Cmd.none )
+
+        OnEventSave (Err error) ->
+            Debug.log "Err" ( model, Cmd.none )
+
+        OnNoteSave (Ok event) ->
+            Debug.log "Ok" ( model, Cmd.none )
+
+        OnNoteSave (Err error) ->
+            Debug.log "Err" ( model, Cmd.none )
 
         ReceiveDate date ->
             let
@@ -218,10 +327,14 @@ update msg model =
                 , Cmd.batch <| requestHearings currentDateString
                 )
 
+        ReceiveEvents response ->
+            ( { model | events = response }, Cmd.none )
+
         ReceiveHearings department response ->
             let
                 hearings =
-                    receiveHearings model department response
+                    (receiveHearings model department response)
+                        |> Dict.map (\_ hs -> RemoteData.map filterTriageHearings hs)
             in
                 ( { model
                     | hearings = hearings
@@ -230,6 +343,15 @@ update msg model =
                   }
                 , Cmd.none
                 )
+
+        ReceiveNotes response ->
+            ( { model | notes = response }, Cmd.none )
+
+        RequestEvents dateIsoString ->
+            ( { model | events = RemoteData.Loading }, Cmd.batch [ requestEvents dateIsoString ] )
+
+        RequestTodaysEvents ->
+            ( { model | events = RemoteData.Loading }, requestTodaysEvents )
 
         RequestHearings ->
             let
@@ -245,10 +367,16 @@ update msg model =
                     (requestHearings currentDateString)
                 )
 
+        RequestNotes dateIsoString ->
+            ( { model | notes = RemoteData.Loading }, Cmd.batch [ requestNotes dateIsoString ] )
+
+        RequestTodaysNotes ->
+            ( { model | notes = RemoteData.Loading }, requestTodaysNotes )
+
         ToggleHearingDropdown caseNumber state ->
             let
                 hearingsDropdownStates =
-                    toggleHearingDropdown model caseNumber state
+                    toggleDropdownForCaseNumber model caseNumber state
             in
                 ( { model | hearingsDropdownStates = hearingsDropdownStates }, Cmd.none )
 
@@ -265,86 +393,56 @@ update msg model =
         UpdateCurrentDateString currentDateString ->
             ( { model | currentDateString = currentDateString }, Cmd.none )
 
-        UpdateNoteBoxValue hearing string ->
+        UpdateNoteBoxValue hearing value ->
             let
                 noteBoxValues =
                     model.noteBoxValues
-                        |> List.map
-                            (\( k, v ) ->
-                                if hearing.caseNumber == k then
-                                    ( k, string )
-                                else
-                                    ( k, v )
-                            )
+                        |> Dict.update hearing.caseNumber (\_ -> Just value)
             in
                 ( { model | noteBoxValues = noteBoxValues }, Cmd.none )
 
         UpdateSearchBoxValue string ->
             ( { model | searchBoxValue = string }, Cmd.none )
 
-        WriteNote hearing ->
-            let
-                note =
-                    Note
-                        (model.noteBoxValues
-                            |> List.Extra.find (\( k, v ) -> hearing.caseNumber == k)
-                            |> Maybe.withDefault ( hearing.caseNumber, "" )
-                            |> Tuple.second
-                        )
-                        "datetime"
-                        hearing
-
-                noteBoxValues =
-                    model.noteBoxValues
-                        |> List.map
-                            (\( k, v ) ->
-                                if hearing.caseNumber == k then
-                                    ( k, "" )
-                                else
-                                    ( k, v )
-                            )
-            in
-                ( { model
-                    | noteBoxValues = noteBoxValues
-                    , notes = note :: model.notes
-                  }
-                , Cmd.none
-                )
-
 
 
 ---- HELPERS ----
 
 
-toggleHearingDropdown : Model -> CaseNumber -> Dropdown.State -> List ( CaseNumber, Dropdown.State )
-toggleHearingDropdown model caseNumber state =
+postEventCmd : Event -> Cmd Msg
+postEventCmd event =
+    TriageData.postEventRequest event
+        |> Http.send OnEventSave
+
+
+postNoteCmd : Note -> Cmd Msg
+postNoteCmd note =
+    TriageData.postNoteRequest note
+        |> Http.send OnNoteSave
+
+
+toggleDropdownForCaseNumber : Model -> CaseNumber -> Dropdown.State -> Dict CaseNumber Dropdown.State
+toggleDropdownForCaseNumber model caseNumber state =
     model.hearingsDropdownStates
-        |> List.map
-            (\( cn, s ) ->
-                if caseNumber == cn then
-                    ( cn, state )
-                else
-                    ( cn, s )
-            )
+        |> Dict.update caseNumber (\_ -> Just state)
 
 
-eventsForHearing : Model -> Hearing -> List TriageData.Event
-eventsForHearing model hearing =
-    model.events
-        |> List.filter (\e -> e.caseNumber == hearing.caseNumber)
-
-
-notesForHearing : Model -> Hearing -> List Note
+notesForHearing : Model -> Hearing -> WebData (List Note)
 notesForHearing model hearing =
-    model.notes
-        |> List.filter (\e -> hearing == e.hearing)
+    RemoteData.map (List.filter (\n -> n.matterId == hearing.caseId)) model.notes
 
 
-dropdownStateForHearing : Model -> Hearing -> Dropdown.State
-dropdownStateForHearing model hearing =
+lastEventForHearing : Model -> Hearing -> Maybe Event
+lastEventForHearing model hearing =
+    RemoteData.map (List.Extra.find (\e -> e.matterId == hearing.caseId)) model.events
+        |> RemoteData.toMaybe
+        |> Maybe.Extra.join
+
+
+dropdownStateForCaseNumber : Model -> CaseNumber -> Dropdown.State
+dropdownStateForCaseNumber model caseNumber =
     model.hearingsDropdownStates
-        |> List.Extra.find (\( caseNumber, _ ) -> caseNumber == hearing.caseNumber)
-        |> Maybe.map Tuple.second
+        |> Dict.get caseNumber
         |> Maybe.withDefault Dropdown.initialState
 
 
@@ -353,24 +451,61 @@ dateToDateString date =
     Moment.format [ Moment.YearNumberCapped, Moment.MonthFixed, Moment.DayOfMonthFixed ] date
 
 
-countHearings : List DepartmentHearings -> Int
-countHearings departmentHearings =
-    departmentHearings
-        |> List.map Tuple.second
-        |> List.concatMap (RemoteData.withDefault [])
-        |> List.length
-
-
-receiveHearings : Model -> DepartmentString -> WebData (List Hearing) -> List DepartmentHearings
+receiveHearings : Model -> Department -> WebData (List Hearing) -> Dict Department HearingResponse
 receiveHearings model department response =
-    List.map
-        (\( dept, hs ) ->
-            if department == dept then
-                ( dept, (RemoteData.map filterTriageHearings response) )
-            else
-                ( dept, hs )
-        )
-        model.hearings
+    model.hearings
+        |> Dict.update department (\_ -> Just response)
+
+
+requestEvents : String -> Cmd Msg
+requestEvents dateString =
+    TriageData.decodeEvents
+        |> Http.get (TriageData.getEventsUrl ++ dateString)
+        |> RemoteData.sendRequest
+        |> Cmd.map ReceiveEvents
+
+
+requestTodaysEvents : Cmd Msg
+requestTodaysEvents =
+    TriageData.decodeEvents
+        |> Http.get TriageData.getEventsUrl
+        |> RemoteData.sendRequest
+        |> Cmd.map ReceiveEvents
+
+
+requestNotes : String -> Cmd Msg
+requestNotes dateString =
+    TriageData.decodeNotes
+        |> Http.get (TriageData.getNotesUrl ++ dateString)
+        |> RemoteData.sendRequest
+        |> Cmd.map ReceiveNotes
+
+
+requestTodaysNotes : Cmd Msg
+requestTodaysNotes =
+    TriageData.decodeNotes
+        |> Http.get TriageData.getNotesUrl
+        |> RemoteData.sendRequest
+        |> Cmd.map ReceiveNotes
+
+
+saveEventRequest : Event -> Http.Request Event
+saveEventRequest event =
+    Http.request
+        { body = TriageData.encodeEvent event |> Http.jsonBody
+        , expect = Http.expectJson TriageData.decodeEvent
+        , headers = []
+        , method = "POST"
+        , timeout = Nothing
+        , url = TriageData.postEventUrl
+        , withCredentials = False
+        }
+
+
+saveEventCmd : Event -> Cmd Msg
+saveEventCmd event =
+    saveEventRequest event
+        |> Http.send OnEventSave
 
 
 requestHearings : DateString -> List (Cmd Msg)
@@ -382,7 +517,7 @@ requestHearings currentDateString =
         List.map (\d -> requestHearingsForDepartment ( currentDateString, d )) departments
 
 
-requestHearingsForDepartment : ( DateString, DepartmentString ) -> Cmd Msg
+requestHearingsForDepartment : ( DateString, Department ) -> Cmd Msg
 requestHearingsForDepartment ( date, department ) =
     CaseManagementData.hearingsDecoder
         |> Http.get (CaseManagementData.hearingsUrl ( date, department ))
@@ -415,14 +550,28 @@ view model =
                             )
                         ]
                     ]
-                , Button.button
-                    [ Button.primary
-                    , Button.onClick (Login (Json.Encode.null))
-                    ]
-                    [ text "Login" ]
+                , authButton model
                 , hearingsGrid model
                 ]
             ]
+
+
+authButton : Model -> Html Msg
+authButton model =
+    case model.user of
+        Nothing ->
+            Button.button
+                [ Button.primary
+                , Button.onClick (Login (Json.Encode.null))
+                ]
+                [ text model.userLoginStatus ]
+
+        Just user_ ->
+            Button.button
+                [ Button.primary
+                , Button.onClick (Logout (Json.Encode.null))
+                ]
+                [ text (model.userLoginStatus ++ " " ++ user_.givenName) ]
 
 
 navbar : Model -> Html Msg
@@ -459,18 +608,19 @@ dateSearchForm model =
 hearingsGrid : Model -> Html Msg
 hearingsGrid model =
     let
-        hearings =
+        hearingsList =
             case model.departmentFilter of
                 All ->
-                    model.hearings
+                    model.hearings |> Dict.toList
 
-                departmentFilter ->
+                _ ->
                     model.hearings
-                        |> List.filter (\( d, _ ) -> d == toString departmentFilter)
+                        |> Dict.filter (\k v -> k == (toString model.departmentFilter))
+                        |> Dict.toList
     in
         Grid.container []
             ([ Grid.row
-                [ Row.topLg ]
+                [ Row.topLg, Row.attrs [ class "p-2" ] ]
                 [ Grid.col [ Col.xs1, Col.textAlign Text.alignXsLeft ] [ departmentDropdown model ]
                 , Grid.col [ Col.xs2, Col.middleXs ] [ text "Case Number" ]
                 , Grid.col [ Col.xs1, Col.middleXs ] [ text "Interp" ]
@@ -479,29 +629,29 @@ hearingsGrid model =
                 , Grid.col [ Col.xs1, Col.middleXs ] [ statusDropdown model ]
                 ]
              ]
-                ++ List.concatMap (rowForDepartmentHearings model) hearings
+                ++ List.concatMap (rowForDepartmentHearings model) hearingsList
             )
 
 
-rowForDepartmentHearings : Model -> DepartmentHearings -> List (Html Msg)
-rowForDepartmentHearings model departmentHearings =
-    case departmentHearings of
-        ( departmentString, RemoteData.NotAsked ) ->
+rowForDepartmentHearings : Model -> ( Department, HearingResponse ) -> List (Html Msg)
+rowForDepartmentHearings model ( department, hearingResponse ) =
+    case hearingResponse of
+        RemoteData.NotAsked ->
             [ Grid.row [ Row.middleLg ]
                 [ Grid.col [] [ text "Pending" ] ]
             ]
 
-        ( departmentString, RemoteData.Loading ) ->
+        RemoteData.Loading ->
             [ Grid.row [ Row.middleLg ]
                 [ Grid.col [] [ text "Loading" ] ]
             ]
 
-        ( departmentString, RemoteData.Success hearings ) ->
-            hearingRows model hearings departmentString
+        RemoteData.Success hearings ->
+            hearingRows model ( department, hearings )
 
-        ( departmentString, RemoteData.Failure e ) ->
+        RemoteData.Failure e ->
             [ Grid.row [ Row.middleLg ]
-                [ Grid.col [] [ text <| departmentString ++ ": " ++ (toString e) ]
+                [ Grid.col [] [ text <| (department) ++ ": " ++ (toString e) ]
                 ]
             ]
 
@@ -552,13 +702,18 @@ filterUniqueCaseNumberHearings hearings =
     List.Extra.uniqueBy (\h -> h.caseNumber) hearings
 
 
-hearingRows : Model -> List Hearing -> DepartmentString -> List (Html Msg)
-hearingRows model hearings departmentString =
+filterNotDualRepresentedHearings : List Hearing -> List Hearing
+filterNotDualRepresentedHearings hearings =
+    hearings
+
+
+hearingRows : Model -> ( Department, List Hearing ) -> List (Html Msg)
+hearingRows model ( department, hearings ) =
     case hearings of
         [] ->
             [ Grid.row [ Row.middleLg ]
                 [ Grid.col [ Col.attrs [ class "text-muted" ] ]
-                    [ text (departmentString ++ " has no RFOs on calendar.") ]
+                    [ text (department ++ " has no RFOs on calendar.") ]
                 ]
             ]
 
@@ -568,9 +723,11 @@ hearingRows model hearings departmentString =
 
 hearingRow : Model -> Hearing -> Html Msg
 hearingRow model hearing =
-    Grid.row [ Row.topLg ]
+    Grid.row [ Row.topLg, Row.attrs [ class "p-4" ] ]
         [ Grid.col [ Col.xs1 ] [ text hearing.department ]
-        , Grid.col [ Col.xs2 ] [ text hearing.caseNumber ]
+        , Grid.col [ Col.xs2 ]
+            [ p [] [ text hearing.caseNumber ]
+            ]
         , interpreterCol hearing.interpreter
         , petitionerCol hearing.parties
         , respondentCol hearing.parties
@@ -585,51 +742,92 @@ eventsCol : Model -> Hearing -> Grid.Column msg
 eventsCol model hearing =
     let
         info =
-            (eventsForHearing model hearing)
-                |> List.map (\e -> [ e.category, e.subject, e.action ])
+            model.events
+                |> RemoteData.map
+                    (List.filter (\e -> e.matterId == hearing.caseId))
     in
-        Grid.col [ Col.xs6 ]
-            [ ol [ class "text-muted" ]
-                (info |> List.Extra.reverseMap (\e -> li [] [ text (toString e) ]))
-            ]
+        case info of
+            RemoteData.Success info ->
+                Grid.col [ Col.xs6 ]
+                    [ ol [ class "text-muted" ]
+                        (info |> List.map (\event -> li [] [ text (eventsColText event) ]))
+                    ]
+
+            RemoteData.Loading ->
+                Grid.col [] [ text "Loading events" ]
+
+            RemoteData.Failure e ->
+                Grid.col [] [ text (toString e) ]
+
+            RemoteData.NotAsked ->
+                Grid.col [] [ text "Loading" ]
+
+
+eventsColText : Event -> String
+eventsColText event =
+    (event.subject ++ " " ++ event.action)
 
 
 notesCol : Model -> Hearing -> Grid.Column Msg
 notesCol model hearing =
     let
-        info =
-            (notesForHearing model hearing)
-                |> List.map (\e -> [ e.note ])
+        data =
+            hearing
+                |> notesForHearing model
     in
-        Grid.col [ Col.xs6 ]
-            [ ul [ class "text-muted" ]
-                (info |> List.Extra.reverseMap (\e -> li [] [ text (toString e) ]))
-            , (notesForm model hearing)
-            ]
+        case data of
+            RemoteData.Success data ->
+                Grid.col [ Col.xs6 ]
+                    [ ul [ class "text-muted" ]
+                        (List.map (\note -> li [] [ text (notesColText note) ]) data)
+                    , (notesForm model hearing)
+                    ]
+
+            RemoteData.Failure err ->
+                Grid.col [ Col.xs6 ]
+                    [ text (toString err) ]
+
+            _ ->
+                Grid.col [ Col.xs6 ]
+                    [ text "Loading/NotAsked" ]
+
+
+notesColText : Note -> String
+notesColText note =
+    note.body
 
 
 notesForm : Model -> Hearing -> Html Msg
 notesForm model hearing =
-    Form.formInline []
-        [ Input.text
-            [ Input.attrs [ placeholder "Write a note", value (noteBoxValueForHearing model hearing) ]
-            , Input.onInput (UpdateNoteBoxValue hearing)
+    let
+        noteBoxValues =
+            model.noteBoxValues
+
+        caseNumber =
+            hearing.caseNumber
+    in
+        Form.formInline []
+            [ Input.text
+                [ Input.attrs
+                    [ placeholder "Write a note"
+                    , value (noteBoxValueForCaseNumber noteBoxValues caseNumber)
+                    ]
+                , Input.onInput (UpdateNoteBoxValue hearing)
+                ]
+            , Button.button
+                [ Button.outlineLight
+                , Button.attrs [ Spacing.ml2Sm ]
+                , Button.onClick (AddNote hearing)
+                ]
+                [ text "Enter" ]
             ]
-        , Button.button
-            [ Button.outlineLight
-            , Button.attrs [ Spacing.ml2Sm ]
-            , Button.onClick (WriteNote hearing)
-            ]
-            [ text "Enter" ]
-        ]
 
 
-noteBoxValueForHearing : Model -> Hearing -> String
-noteBoxValueForHearing model hearing =
-    model.noteBoxValues
-        |> List.Extra.find (\( k, v ) -> hearing.caseNumber == k)
-        |> Maybe.withDefault ( hearing.caseNumber, "" )
-        |> Tuple.second
+noteBoxValueForCaseNumber : Dict CaseNumber String -> CaseNumber -> String
+noteBoxValueForCaseNumber noteBoxValues caseNumber =
+    noteBoxValues
+        |> Dict.get caseNumber
+        |> Maybe.withDefault ""
 
 
 interpreterCol : Maybe (List Interpreter) -> Grid.Column msg
@@ -657,26 +855,52 @@ interpreterLanguages interpreters =
 petitionerCol : List Party -> Grid.Column msg
 petitionerCol parties =
     let
-        petitionerName =
-            parties
-                |> maybePetitioner
-                |> firstAndLastName
+        maybePetitioner_ =
+            maybePetitioner parties
+
+        name =
+            Maybe.map firstAndLastName maybePetitioner_
+                |> Maybe.withDefault "Person Doe"
+
+        hasAttorney_ =
+            Maybe.map hasAttorney maybePetitioner_
+
+        class_ =
+            case (hasAttorney_) of
+                Just True ->
+                    "text-warning"
+
+                _ ->
+                    "text-dark"
     in
-        Grid.col [ Col.xs3 ] [ text petitionerName ]
+        Grid.col [ Col.attrs [ class class_ ], Col.xs3 ] [ text name ]
 
 
 respondentCol : List Party -> Grid.Column msg
 respondentCol parties =
     let
-        respondentName =
-            parties
-                |> maybeRespondent
-                |> firstAndLastName
+        maybeRespondent_ =
+            maybeRespondent parties
+
+        name =
+            Maybe.map firstAndLastName maybeRespondent_
+                |> Maybe.withDefault "Person Doe"
+
+        hasAttorney_ =
+            Maybe.map hasAttorney maybeRespondent_
+
+        class_ =
+            case (hasAttorney_) of
+                Just True ->
+                    "text-warning"
+
+                _ ->
+                    "text-dark"
     in
-        Grid.col [ Col.xs3 ] [ text respondentName ]
+        Grid.col [ Col.attrs [ class class_ ], Col.xs3 ] [ text name ]
 
 
-maybePetitioner : List { a | id : comparable, organizationName : Maybe String, partyType : String } -> Maybe { a | id : comparable, partyType : String, organizationName : Maybe String }
+maybePetitioner : List Party -> Maybe Party
 maybePetitioner parties =
     parties
         |> filterParty [ "Other Parent", "Mother", "Wife", "Protected Person", "Petitioner" ]
@@ -684,7 +908,7 @@ maybePetitioner parties =
         |> List.head
 
 
-filterNotCountyOfRiverside : List { a | organizationName : Maybe String } -> List { a | organizationName : Maybe String }
+filterNotCountyOfRiverside : List Party -> List Party
 filterNotCountyOfRiverside parties =
     parties
         |> List.Extra.filterNot
@@ -696,47 +920,64 @@ filterNotCountyOfRiverside parties =
             )
 
 
-maybeRespondent : List { a | id : comparable, partyType : String } -> Maybe { a | id : comparable, partyType : String }
+maybeRespondent : List Party -> Maybe Party
 maybeRespondent parties =
     parties
         |> filterParty [ "Respondent", "Father", "Husband", "Restrained Person" ]
         |> List.head
 
 
-filterParty : List a -> List { b | id : comparable, partyType : a } -> List { b | id : comparable, partyType : a }
+filterParty : List String -> List Party -> List Party
 filterParty partyList parties =
     parties
         |> List.filter (\{ partyType } -> List.member partyType partyList)
         |> List.Extra.uniqueBy (\{ id } -> id)
 
 
-firstAndLastName : Maybe { a | firstName : Maybe String, lastName : Maybe String } -> String
-firstAndLastName maybeNames =
-    maybeNames
-        |> Maybe.map (\p -> [ p.firstName, p.lastName ])
-        |> Maybe.map (Maybe.Extra.combine)
-        |> Maybe.Extra.join
-        |> Maybe.map (String.join " ")
-        |> Maybe.withDefault "Person Doe"
+hasAttorney : Party -> Bool
+hasAttorney party =
+    let
+        name =
+            party
+
+        attorneys =
+            party.attorneys
+    in
+        case attorneys of
+            Nothing ->
+                False
+
+            _ ->
+                True
+
+
+firstAndLastName : Party -> String
+firstAndLastName { firstName, lastName } =
+    Just (String.join " ")
+        |> Maybe.Extra.andMap (Maybe.Extra.combine [ firstName, lastName ])
+        |> Maybe.withDefault "Name not found"
 
 
 hearingDropdown : Model -> Hearing -> Html Msg
 hearingDropdown model hearing =
     Dropdown.dropdown
-        (dropdownStateForHearing model hearing)
+        (dropdownStateForCaseNumber model hearing.caseNumber)
         { options = []
         , toggleMsg = ToggleHearingDropdown hearing.caseNumber
         , toggleButton =
             Dropdown.toggle [ Button.light ] [ text "Action" ]
         , items =
-            [ Dropdown.buttonItem
-                [ onClick (PerformAction (TriageData.Event hearing.caseNumber "category" "subject" "author" "action" "timestamp")) ]
-                [ text "checkin" ]
-            , Dropdown.buttonItem
-                [ onClick (PerformAction (TriageData.Event hearing.caseNumber "category" "subject" "author" "action" "timestamp")) ]
-                [ text "station" ]
-            ]
+            List.map
+                (hearingDropdownItems model hearing)
+                (Disposition.availableActions Disposition.Initial)
         }
+
+
+hearingDropdownItems : { b | user : a } -> Hearing -> Disposition.Action -> Dropdown.DropdownItem Msg
+hearingDropdownItems { user } hearing action =
+    Dropdown.buttonItem
+        [ onClick (AddEvent hearing action) ]
+        [ text (toString action) ]
 
 
 departmentDropdown : Model -> Html Msg
@@ -761,20 +1002,24 @@ departmentDropdown model =
 
 statusDropdown : Model -> Html Msg
 statusDropdown model =
-    -- needs dropdownstate, buttontext, buttoncolor, menuitems
     Dropdown.dropdown
         model.statusDropdownState
         { options = []
         , toggleMsg = ToggleStatusDropdown
         , toggleButton =
             Dropdown.toggle [ Button.light ] [ text "Filter" ]
-        , items =
-            [ Dropdown.buttonItem [ onClick (FilterStatus "Action1") ] [ text "Action1" ]
-            , Dropdown.buttonItem [ onClick (FilterStatus "Action2") ] [ text "Action2" ]
-            , Dropdown.buttonItem [ onClick (FilterStatus "Action3") ] [ text "Action3" ]
-            , Dropdown.buttonItem [ onClick (FilterStatus "Action4") ] [ text "Action4" ]
-            ]
+        , items = statusDropdownItems
         }
+
+
+statusDropdownItems : List (Dropdown.DropdownItem Msg)
+statusDropdownItems =
+    [ Dropdown.buttonItem [ onClick (FilterStatus "Action1") ] [ text "Action1" ]
+    , Dropdown.buttonItem [ onClick (FilterStatus "Action2") ] [ text "Action2" ]
+    , Dropdown.buttonItem [ onClick (FilterStatus "Action3") ] [ text "Action3" ]
+    , Dropdown.buttonItem [ onClick (FilterStatus "Action4") ] [ text "Action4" ]
+    , Dropdown.buttonItem [ onClick (FilterStatus "Action4") ] [ text "Action5" ]
+    ]
 
 
 
@@ -799,6 +1044,7 @@ subscriptions model =
                , Dropdown.subscriptions model.departmentDropdownState ToggleDepartmentDropdown
                , Dropdown.subscriptions model.statusDropdownState ToggleStatusDropdown
                , Msal.loginResult LoginResult
+               , WebSocket.listen TriageData.feedUrl NewFeed
                ]
         )
 
@@ -806,4 +1052,8 @@ subscriptions model =
 hearingDropdownSubscriptions : Model -> List (Sub Msg)
 hearingDropdownSubscriptions model =
     model.hearingsDropdownStates
-        |> List.map (\( caseNumber, state ) -> Dropdown.subscriptions state (ToggleHearingDropdown caseNumber))
+        |> Dict.toList
+        |> List.map
+            (\( caseNumber, state ) ->
+                Dropdown.subscriptions state (ToggleHearingDropdown caseNumber)
+            )

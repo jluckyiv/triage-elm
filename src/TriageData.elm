@@ -1,107 +1,125 @@
 module TriageData exposing (..)
 
-import CaseManagementData
+import Http
 import Json.Decode
 import Json.Decode.Pipeline exposing (decode, required, optional)
 import Json.Encode
 
 
-type alias Action =
-    String
+feedUrl : String
+feedUrl =
+    "wss://triage/ws"
 
 
-type alias Category =
-    String
+getEventsUrl : String
+getEventsUrl =
+    "https://triage/api/v1/events/timeStamp="
 
 
-type alias DateTime =
-    String
+postEventUrl : String
+postEventUrl =
+    "https://triage/api/v1/event"
 
 
-type alias Email =
-    String
+getNotesUrl : String
+getNotesUrl =
+    "https://triage/api/v1/notes/timeStamp="
 
 
-type alias Guid =
-    String
+postNoteUrl : String
+postNoteUrl =
+    "https://triage/api/v1/note"
 
 
-type alias Id =
-    Int
-
-
-type alias Name =
-    String
-
-
-type alias Note =
-    { note : String
-    , dateTime : DateTime
-    , hearing : CaseManagementData.Hearing
+type alias Feed =
+    { notes : List Note
+    , events : List Event
     }
 
 
-type alias Subject =
-    String
+decodeFeed : Json.Decode.Decoder Feed
+decodeFeed =
+    Json.Decode.Pipeline.decode Feed
+        |> Json.Decode.Pipeline.required "notes" (Json.Decode.list decodeNote)
+        |> Json.Decode.Pipeline.required "events" (Json.Decode.list decodeEvent)
+
+
+encodeFeed : Feed -> Json.Encode.Value
+encodeFeed record =
+    Json.Encode.object
+        [ ( "notes", Json.Encode.list <| List.map encodeNote <| record.notes )
+        , ( "events", Json.Encode.list <| List.map encodeEvent <| record.events )
+        ]
 
 
 type alias Event =
-    { caseNumber : String
-    , category : Category
-    , subject : Subject
-    , author : String
+    { matterId : Int
+    , category : String
+    , subject : String
     , action : String
-    , timestamp : String
+    , userId : String
+    , timestamp : Maybe String
     }
+
+
+decodeEvents : Json.Decode.Decoder (List Event)
+decodeEvents =
+    Json.Decode.list decodeEvent
 
 
 decodeEvent : Json.Decode.Decoder Event
 decodeEvent =
     Json.Decode.Pipeline.decode Event
-        |> Json.Decode.Pipeline.required "CaseNumber" (Json.Decode.string)
-        |> Json.Decode.Pipeline.required "Category" (Json.Decode.string)
-        |> Json.Decode.Pipeline.required "Subject" (Json.Decode.string)
-        |> Json.Decode.Pipeline.required "Author" (Json.Decode.string)
-        |> Json.Decode.Pipeline.required "Action" (Json.Decode.string)
-        |> Json.Decode.Pipeline.required "Timestamp" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "matterId" (Json.Decode.int)
+        |> Json.Decode.Pipeline.required "category" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "subject" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "action" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "userId" (Json.Decode.string)
+        |> Json.Decode.Pipeline.optional "timestamp" (maybeStringDecoder) Nothing
 
 
 encodeEvent : Event -> Json.Encode.Value
 encodeEvent record =
     Json.Encode.object
-        [ ( "CaseNumber", Json.Encode.string <| record.caseNumber )
-        , ( "Category", Json.Encode.string <| record.category )
-        , ( "Subject", Json.Encode.string <| record.subject )
-        , ( "Author", Json.Encode.string <| record.author )
-        , ( "Action", Json.Encode.string <| record.action )
-        , ( "Timestamp", Json.Encode.string <| record.timestamp )
+        [ ( "matterId", Json.Encode.int <| record.matterId )
+        , ( "category", Json.Encode.string <| record.category )
+        , ( "subject", Json.Encode.string <| record.subject )
+        , ( "action", Json.Encode.string <| record.action )
+        , ( "userId", Json.Encode.string <| record.userId )
         ]
 
 
-type alias User =
-    { id : Id
-    , guid : Guid
-    , email : Email
-    , givenName : Name
+type alias Note =
+    { matterId : Int
+    , subject : String
+    , body : String
+    , userId : String
+    , timestamp : Maybe String
     }
 
 
-decodeUser : Json.Decode.Decoder User
-decodeUser =
-    Json.Decode.Pipeline.decode User
-        |> Json.Decode.Pipeline.required "id" (Json.Decode.int)
-        |> Json.Decode.Pipeline.required "guid" (Json.Decode.string)
-        |> Json.Decode.Pipeline.required "email" (Json.Decode.string)
-        |> Json.Decode.Pipeline.required "givenName" (Json.Decode.string)
+decodeNotes : Json.Decode.Decoder (List Note)
+decodeNotes =
+    Json.Decode.list decodeNote
 
 
-encodeUser : User -> Json.Encode.Value
-encodeUser record =
+decodeNote : Json.Decode.Decoder Note
+decodeNote =
+    Json.Decode.Pipeline.decode Note
+        |> Json.Decode.Pipeline.required "matterId" (Json.Decode.int)
+        |> Json.Decode.Pipeline.required "subject" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "body" (Json.Decode.string)
+        |> Json.Decode.Pipeline.required "userId" (Json.Decode.string)
+        |> Json.Decode.Pipeline.optional "timestamp" maybeStringDecoder Nothing
+
+
+encodeNote : Note -> Json.Encode.Value
+encodeNote record =
     Json.Encode.object
-        [ ( "id", Json.Encode.int <| record.id )
-        , ( "guid", Json.Encode.string <| record.guid )
-        , ( "email", Json.Encode.string <| record.email )
-        , ( "givenName", Json.Encode.string <| record.givenName )
+        [ ( "matterId", Json.Encode.int <| record.matterId )
+        , ( "subject", Json.Encode.string <| record.subject )
+        , ( "body", Json.Encode.string <| record.body )
+        , ( "userId", Json.Encode.string <| record.userId )
         ]
 
 
@@ -129,3 +147,29 @@ maybeStringDecoder =
                 Just value
         )
         Json.Decode.string
+
+
+postEventRequest : Event -> Http.Request Event
+postEventRequest event =
+    Http.request
+        { body = encodeEvent event |> Http.jsonBody
+        , expect = Http.expectJson decodeEvent
+        , headers = []
+        , method = "POST"
+        , timeout = Nothing
+        , url = postEventUrl
+        , withCredentials = False
+        }
+
+
+postNoteRequest : Note -> Http.Request Note
+postNoteRequest note =
+    Http.request
+        { body = encodeNote note |> Http.jsonBody
+        , expect = Http.expectJson decodeNote
+        , headers = []
+        , method = "POST"
+        , timeout = Nothing
+        , url = postNoteUrl
+        , withCredentials = False
+        }

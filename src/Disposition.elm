@@ -1,61 +1,81 @@
 module Disposition exposing (..)
 
-import CaseManagementData exposing (Hearing)
-
-
-type Party
-    = Petitioner
-    | Respondent
-    | Both
-
-
-type Status
-    = Absent
-    | CheckedIn
-    | WaitingFor
+import CaseManagementData
+import MsalData as Msal
+import TriageData
 
 
 type Location
-    = Courtroom
-    | Triage
-    | CCRC
+    = CCRC CCRCReason
     | DCSS
+    | Triage
+    | Send Location
+    | Left
 
 
-type alias HearingDispositions =
-    ( Hearing, List Disposition )
-
-
-type Disposition
-    = Checkin Location Party
-    | Continuance Reason
-    | Dispatch Location (Maybe AgreementStatus)
-    | Disposition Location AgreementStatus
-    | FOAH
-    | FTA
-    | Hearing AgreementStatus
-    | Judgment AgreementStatus
-    | OffCalendar
-    | Stipulation AgreementStatus
-
-
-type AgreementStatus
-    = FullStipulation
-    | PartialStipulation
-    | Dispute
-    | Default
-
-
-type Reason
-    = NoService
-    | DefectiveService
-    | Other
+type Party
+    = BothParties
+    | Petitioner
+    | Respondent
 
 
 type State
-    = NoParties Location
-    | OneParty Party Location
-    | BothParties Location
+    = Initial
+    | Disposed
+    | BothPartiesAtCCRC CCRCReason
+    | BothPartiesAtTriage
+    | BothPartiesSentCCRC CCRCReason
+    | BothPartiesSentDCSS
+    | BothPartiesSentTriage
+    | OnePartyAtCCRC CCRCReason Party
+    | OnePartyAtTriage Party
+    | OnePartySentDCSS Party
+    | OnePartySentTriage Party
+
+
+type Result
+    = ChildSupport AgreementStatus
+    | Continuance ContinuanceReason
+    | CustodyVisitation AgreementStatus
+    | FOAH AgreementStatus
+    | Hearing AgreementStatus
+    | Ineligible IneligibleReason
+    | Judgment AgreementStatus
+    | OffCalendar OffCalendarReason
+
+
+type CCRCReason
+    = Agreement
+    | Session
+
+
+type AgreementStatus
+    = Default
+    | Dispute
+    | FullStipulation
+    | PartialStipulation
+
+
+type ContinuanceReason
+    = DefectiveService
+    | NoService
+    | Other
+
+
+type OffCalendarReason
+    = FTA
+    | Withdrawn
+
+
+type IneligibleReason
+    = DV
+    | OptOut
+    | Represented
+
+
+type Action
+    = Transition Location Party
+    | Disposition Location Result
 
 
 otherParty : Party -> Party
@@ -67,84 +87,266 @@ otherParty party =
         Respondent ->
             Petitioner
 
-        Both ->
-            Both
+        BothParties ->
+            BothParties
 
 
-availableDispositions : State -> List Disposition
-availableDispositions state =
+availableActions : State -> List Action
+availableActions state =
     case state of
-        NoParties DCSS ->
-            [ Disposition DCSS FullStipulation
-            , Disposition DCSS PartialStipulation
-            , Disposition DCSS Dispute
+        Initial ->
+            checkinActions Triage
+                ++ [ Disposition Triage (OffCalendar FTA)
+                   , Disposition Triage (Ineligible DV)
+                   , Disposition Triage (Ineligible Represented)
+                   , Disposition Triage (Ineligible OptOut)
+                   ]
+
+        OnePartySentTriage party ->
+            [ Transition Triage party ]
+
+        BothPartiesSentTriage ->
+            checkinActions Triage
+
+        OnePartyAtTriage party ->
+            [ Disposition Triage (Continuance DefectiveService)
+            , Disposition Triage (Continuance NoService)
+            , Disposition Triage (FOAH Default)
+            , Disposition Triage (Judgment Default)
+            , Disposition Triage (OffCalendar Withdrawn)
+            , Transition (Send DCSS) party
+            , Transition Triage (otherParty party)
             ]
 
-        NoParties location ->
-            [ Checkin location Petitioner
-            , Checkin location Respondent
-            , Checkin location Both
-            , FTA
+        BothPartiesAtTriage ->
+            [ Disposition Triage (Continuance Other)
+            , Disposition Triage (Judgment FullStipulation)
+            , Disposition Triage (Judgment PartialStipulation)
+            , Disposition Triage (Hearing Dispute)
+            , Disposition Triage (Hearing PartialStipulation)
+            , Transition (Send <| CCRC Agreement) BothParties
+            , Transition (Send <| CCRC Session) BothParties
+            , Transition (Send DCSS) BothParties
             ]
 
-        OneParty party Courtroom ->
-            [ Checkin Courtroom (otherParty party)
-            , Continuance DefectiveService
-            , Continuance NoService
-            , FOAH
-            , Judgment Default
-            , OffCalendar
+        BothPartiesSentCCRC reason ->
+            checkinActions (CCRC reason)
+
+        OnePartyAtCCRC reason party ->
+            [ Transition (Send Triage) party
+            , Transition (CCRC reason) (otherParty party)
             ]
 
-        BothParties Courtroom ->
-            [ Dispatch CCRC (Just FullStipulation)
-            , Dispatch CCRC (Just PartialStipulation)
-            , Dispatch CCRC (Just Dispute)
-            , Dispatch Triage Nothing
+        BothPartiesSentDCSS ->
+            twoPartyActions DCSS ChildSupport
+
+        OnePartySentDCSS party ->
+            [ Disposition DCSS (ChildSupport Default)
             ]
 
-        OneParty party CCRC ->
-            [ Checkin CCRC (otherParty party)
-            , Dispatch Triage Nothing
-            ]
+        BothPartiesAtCCRC reason ->
+            twoPartyActions (CCRC reason) CustodyVisitation
 
-        BothParties CCRC ->
-            [ Disposition CCRC FullStipulation
-            , Disposition CCRC PartialStipulation
-            , Disposition CCRC Dispute
-            ]
-
-        BothParties Triage ->
-            [ Continuance Other
-            , Dispatch DCSS Nothing
-            , Hearing Dispute
-            , Judgment FullStipulation
-            , Judgment PartialStipulation
-            , Stipulation FullStipulation
-            , Stipulation PartialStipulation
-            ]
-
-        _ ->
+        Disposed ->
             []
 
 
-updateDispositions : List HearingDispositions -> Hearing -> Disposition -> List HearingDispositions
-updateDispositions dispositions hearing disposition =
-    List.map
-        (\( h, ds ) ->
-            if h == hearing then
-                ( h, (dispositionsToAdd disposition) ++ ds )
-            else
-                ( h, ds )
-        )
-        dispositions
+checkinActions : Location -> List Action
+checkinActions location =
+    [ Transition location Petitioner
+    , Transition location Respondent
+    , Transition location BothParties
+    ]
 
 
-dispositionsToAdd : Disposition -> List Disposition
-dispositionsToAdd disposition =
-    case disposition of
-        Disposition location agreementStatus ->
-            [ Dispatch Triage Nothing, Disposition location agreementStatus ]
+twoPartyActions : Location -> (AgreementStatus -> Result) -> List Action
+twoPartyActions location resultType =
+    [ Disposition location (resultType FullStipulation)
+    , Disposition location (resultType PartialStipulation)
+    , Disposition location (resultType Dispute)
+    , Transition Left Petitioner
+    , Transition Left Respondent
+    ]
 
-        _ ->
-            [ disposition ]
+
+
+-- Transition Location Party
+-- Disposition Location Result
+
+
+createEvent : Msal.User -> CaseManagementData.Hearing -> Action -> TriageData.Event
+createEvent user hearing action =
+    case action of
+        Transition location party ->
+            TriageData.Event hearing.caseId
+                "Transition"
+                (toString location)
+                (toString party)
+                user.id
+                Nothing
+
+        Disposition location result ->
+            TriageData.Event hearing.caseId
+                "Disposition"
+                (toString location)
+                (toString result)
+                user.id
+                Nothing
+
+
+
+-- case action of
+--     Transition location party ->
+--     (
+--     ,
+--     case disposition of
+--         Checkin location party ->
+--             TriageData.Event hearing.caseId
+--                 "checkin"
+--                 (toString party)
+--                 (toString location)
+--                 user.id
+--                 Nothing
+--         Continuance reason ->
+--             TriageData.Event hearing.caseId
+--                 (toString Disposition)
+--                 (toString Continuance)
+--                 (toString reason)
+--                 (user.id)
+--                 Nothing
+--         Dispatch location agreementStatus ->
+--             TriageData.Event hearing.caseId
+--                 (toString Dispatch)
+--                 (toString location)
+--                 (toString agreementStatus)
+--                 (user.id)
+--                 Nothing
+--         Disposition location agreementStatus ->
+--             TriageData.Event hearing.caseId
+--                 (toString Disposition)
+--                 (toString location)
+--                 (toString agreementStatus)
+--                 (user.id)
+--                 Nothing
+--         FOAH ->
+--             TriageData.Event hearing.caseId
+--                 (toString Disposition)
+--                 (toString FOAH)
+--                 (toString Default)
+--                 (user.id)
+--                 Nothing
+--         Hearing agreementStatus ->
+--             TriageData.Event hearing.caseId
+--                 (toString Disposition)
+--                 (toString Hearing)
+--                 (toString agreementStatus)
+--                 (user.id)
+--                 Nothing
+--         Judgment agreementStatus ->
+--             TriageData.Event hearing.caseId
+--                 (toString Disposition)
+--                 (toString Hearing)
+--                 (toString agreementStatus)
+--                 (user.id)
+--                 Nothing
+--         OffCalendar reason ->
+--             TriageData.Event hearing.caseId
+--                 "disposition"
+--                 "Off calendar"
+--                 (toString reason)
+--                 (user.id)
+--                 Nothing
+--         Stipulation agreementStatus ->
+--             TriageData.Event hearing.caseId
+--                 (toString Disposition)
+--                 (toString Stipulation)
+--                 (toString agreementStatus)
+--                 (user.id)
+--                 Nothing
+--         Transition location party ->
+--             TriageData.Event hearing.caseId
+--                 "Transition"
+--                 (toString location)
+--                 (toString party)
+--                 (user.id)
+--                 Nothing
+
+
+locationToColor : Location -> Color
+locationToColor location =
+    case location of
+        Triage ->
+            Success
+
+        CCRC _ ->
+            Success
+
+        Left ->
+            Danger
+
+        Send _ ->
+            Warning
+
+        DCSS ->
+            Warning
+
+
+
+-- Move to other module
+
+
+type Color
+    = Danger
+    | Info
+    | Primary
+    | Secondary
+    | Success
+    | Warning
+
+
+type alias BootstrapClass =
+    String
+
+
+colorToBackgroundClass : Color -> BootstrapClass
+colorToBackgroundClass color =
+    case color of
+        Info ->
+            ".bg-info"
+
+        Warning ->
+            ".bg-warning"
+
+        Success ->
+            ".bg-success"
+
+        Primary ->
+            ".bg-primary"
+
+        Danger ->
+            ".bg-danger"
+
+        Secondary ->
+            ".bg-secondary"
+
+
+colorToTextClass : Color -> BootstrapClass
+colorToTextClass color =
+    case color of
+        Info ->
+            ".text-info"
+
+        Warning ->
+            ".text-warning"
+
+        Success ->
+            ".text-success"
+
+        Primary ->
+            ".text-primary"
+
+        Danger ->
+            ".text-danger"
+
+        Secondary ->
+            ".text-secondary"

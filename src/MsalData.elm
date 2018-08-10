@@ -1,4 +1,4 @@
-port module Msal exposing (..)
+port module MsalData exposing (..)
 
 import Json.Encode
 import Json.Decode
@@ -12,7 +12,7 @@ type alias AccessToken =
     String
 
 
-type alias GraphResponse =
+type alias User =
     { odataContext : String
     , id : String
     , displayName : String
@@ -50,9 +50,9 @@ type alias IdToken =
     }
 
 
-decodeGraphResponse : Json.Decode.Decoder GraphResponse
-decodeGraphResponse =
-    Json.Decode.Pipeline.decode GraphResponse
+decodeUser : Json.Decode.Decoder User
+decodeUser =
+    Json.Decode.Pipeline.decode User
         |> Json.Decode.Pipeline.required "@odata.context" (Json.Decode.string)
         |> Json.Decode.Pipeline.required "id" (Json.Decode.string)
         |> Json.Decode.Pipeline.required "displayName" (Json.Decode.string)
@@ -62,8 +62,8 @@ decodeGraphResponse =
         |> Json.Decode.Pipeline.required "userPrincipalName" (Json.Decode.string)
 
 
-encodeGraphResponse : GraphResponse -> Json.Encode.Value
-encodeGraphResponse record =
+encodeUser : User -> Json.Encode.Value
+encodeUser record =
     Json.Encode.object
         [ ( "@odata.context", Json.Encode.string <| record.odataContext )
         , ( "id", Json.Encode.string <| record.id )
@@ -140,6 +140,9 @@ encodeIdToken record =
 
 
 port login : Json.Encode.Value -> Cmd msg
+
+
+port logout : Json.Encode.Value -> Cmd msg
 
 
 port loginResult : (Json.Decode.Value -> msg) -> Sub msg
