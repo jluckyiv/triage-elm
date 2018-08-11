@@ -56,6 +56,10 @@ I got all the JSON decoders working. I'm still not sure how to do the interprete
 - https://apps.dev.microsoft.com/ (Converged applications and Azure AD)
 - https://portal.azure.com/#blade/Microsoft_AAD_IAM/ (Azure AD only)
 
+## Information
+
+{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#users/$entity","id":"a1d1f303-8f03-41e5-ad1c-c1da7f227abb","businessPhones":["(951) 777-3764"],"displayName":"Lucky, Jackson","givenName":"Jackson","jobTitle":"Superior Court Judge","mail":"Jackson.Lucky@riverside.courts.ca.gov","mobilePhone":null,"officeLocation":"Riverside Hall of Justice","preferredLanguage":null,"surname":"Lucky","userPrincipalName":"llucky@riverside.courts.ca.gov"}
+
 ## To do
 ### Me
 - dynamic actions in action button
@@ -72,6 +76,7 @@ I got all the JSON decoders working. I'm still not sure how to do the interprete
 - make div collapsible for events
 - add delete to collapsible div instead of dropdown box
 - navigation
+- check sessionstorage for user
 
 ### Tibon
 - filter events by day
@@ -83,6 +88,7 @@ I got all the JSON decoders working. I'm still not sure how to do the interprete
 
 ### Later
 - interpreter filters
+- fix login button UI by using sessionStorage or localStorage
 
 ## Done
 - hearing count
