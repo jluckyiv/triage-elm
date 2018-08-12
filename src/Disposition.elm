@@ -19,6 +19,11 @@ type Party
     | Respondent
 
 
+type Action
+    = Transition Location Party
+    | Disposition Location Result
+
+
 type State
     = Initial
     | Disposed
@@ -31,6 +36,49 @@ type State
     | OnePartyAtTriage Party
     | OnePartySentDCSS Party
     | OnePartySentTriage Party
+
+
+createStateFromAction : Action -> State
+createStateFromAction action =
+    case action of
+        Disposition Triage _ ->
+            Disposed
+
+        Disposition DCSS (ChildSupport (Default party)) ->
+            OnePartySentTriage party
+
+        Disposition location _ ->
+            BothPartiesSentTriage
+
+        Transition (CCRC reason) BothParties ->
+            BothPartiesAtCCRC reason
+
+        Transition Triage BothParties ->
+            BothPartiesAtTriage
+
+        Transition (Send (CCRC reason)) BothParties ->
+            BothPartiesSentCCRC reason
+
+        Transition (Send DCSS) BothParties ->
+            BothPartiesSentDCSS
+
+        Transition (Send Triage) BothParties ->
+            BothPartiesSentTriage
+
+        Transition (CCRC reason) party ->
+            OnePartyAtCCRC reason party
+
+        Transition Triage party ->
+            OnePartyAtTriage party
+
+        Transition (Send DCSS) party ->
+            OnePartySentDCSS party
+
+        Transition (Send Triage) party ->
+            OnePartySentTriage party
+
+        _ ->
+            Initial
 
 
 type Result
@@ -50,7 +98,7 @@ type CCRCReason
 
 
 type AgreementStatus
-    = Default
+    = Default Party
     | Dispute
     | FullStipulation
     | PartialStipulation
@@ -71,11 +119,6 @@ type IneligibleReason
     = DV
     | OptOut
     | Represented
-
-
-type Action
-    = Transition Location Party
-    | Disposition Location Result
 
 
 otherParty : Party -> Party
@@ -109,13 +152,13 @@ availableActions state =
             checkinActions Triage
 
         OnePartyAtTriage party ->
-            [ Disposition Triage (Continuance DefectiveService)
-            , Disposition Triage (Continuance NoService)
-            , Disposition Triage (FOAH Default)
-            , Disposition Triage (Judgment Default)
-            , Disposition Triage (OffCalendar Withdrawn)
+            [ Transition Triage BothParties
             , Transition (Send DCSS) party
-            , Transition Triage (otherParty party)
+            , Disposition Triage (Continuance DefectiveService)
+            , Disposition Triage (Continuance NoService)
+            , Disposition Triage (FOAH (Default party))
+            , Disposition Triage (Judgment (Default party))
+            , Disposition Triage (OffCalendar Withdrawn)
             ]
 
         BothPartiesAtTriage ->
@@ -133,15 +176,15 @@ availableActions state =
             checkinActions (CCRC reason)
 
         OnePartyAtCCRC reason party ->
-            [ Transition (Send Triage) party
-            , Transition (CCRC reason) (otherParty party)
+            [ Transition (CCRC reason) BothParties
+            , Transition (Send Triage) party
             ]
 
         BothPartiesSentDCSS ->
             twoPartyActions DCSS ChildSupport
 
         OnePartySentDCSS party ->
-            [ Disposition DCSS (ChildSupport Default)
+            [ Disposition DCSS (ChildSupport (Default party))
             ]
 
         BothPartiesAtCCRC reason ->
@@ -174,8 +217,158 @@ twoPartyActions location resultType =
 -- Disposition Location Result
 
 
-createEvent : Msal.User -> CaseManagementData.Hearing -> Action -> TriageData.Event
-createEvent user hearing action =
+createActionFromEvent : TriageData.Event -> Action
+createActionFromEvent event =
+    case event.category of
+        "Disposition" ->
+            createDispositionFromEvent event
+
+        "Transition" ->
+            createTransitionFromEvent event
+
+        _ ->
+            createTransitionFromEvent event
+
+
+createDispositionFromEvent : TriageData.Event -> Action
+createDispositionFromEvent event =
+    Disposition (locationFromString event.subject) (resultFromString event.action)
+
+
+createTransitionFromEvent : TriageData.Event -> Action
+createTransitionFromEvent event =
+    Transition (locationFromString event.subject) (partyFromString event.action)
+
+
+resultFromString : String -> Result
+resultFromString string =
+    case string of
+        "ChildSupport FullStipulation" ->
+            ChildSupport FullStipulation
+
+        "ChildSupport PartialStipulation" ->
+            ChildSupport PartialStipulation
+
+        "ChildSupport Dispute" ->
+            ChildSupport Dispute
+
+        "ChildSupport (Default Petitioner)" ->
+            ChildSupport (Default Petitioner)
+
+        "ChildSupport (Default Respondent)" ->
+            ChildSupport (Default Respondent)
+
+        "Continuance DefectiveService" ->
+            Continuance DefectiveService
+
+        "Continuance NoService" ->
+            Continuance NoService
+
+        "Continuance Other" ->
+            Continuance Other
+
+        "CustodyVisitation FullStipulation" ->
+            CustodyVisitation FullStipulation
+
+        "CustodyVisitation PartialStipulation" ->
+            CustodyVisitation PartialStipulation
+
+        "CustodyVisitation Dispute" ->
+            CustodyVisitation Dispute
+
+        "FOAH (Default Petitioner)" ->
+            FOAH (Default Petitioner)
+
+        "FOAH (Default Respondent)" ->
+            FOAH (Default Respondent)
+
+        "Hearing Dispute" ->
+            Hearing Dispute
+
+        "Ineligible DV" ->
+            Ineligible DV
+
+        "Ineligible OptOut" ->
+            Ineligible OptOut
+
+        "Ineligible Represented" ->
+            Ineligible Represented
+
+        "Judgment FullStipulation" ->
+            Judgment FullStipulation
+
+        "Judgment PartialStipulation" ->
+            Judgment PartialStipulation
+
+        "Judgment (Default Petitioner)" ->
+            Judgment (Default Petitioner)
+
+        "Judgment (Default Respondent)" ->
+            Judgment (Default Respondent)
+
+        "OffCalendar FTA" ->
+            OffCalendar FTA
+
+        "OffCalendar Withdrawn" ->
+            OffCalendar Withdrawn
+
+        _ ->
+            OffCalendar Withdrawn
+
+
+locationFromString : String -> Location
+locationFromString string =
+    case string of
+        "Send (CCRC Agreement)" ->
+            Send (CCRC Agreement)
+
+        "Send (CCRC Session)" ->
+            Send (CCRC Session)
+
+        "Send DCSS" ->
+            Send DCSS
+
+        "Send Triage" ->
+            Send Triage
+
+        "Left" ->
+            Left
+
+        "CCRC Agreement" ->
+            CCRC Agreement
+
+        "CCRC Session" ->
+            CCRC Session
+
+        "DCSS" ->
+            DCSS
+
+        "Triage" ->
+            Triage
+
+        _ ->
+            Triage
+
+
+
+--  "Send" Location | Send Location
+
+
+partyFromString : String -> Party
+partyFromString string =
+    case string of
+        "Petitioner" ->
+            Petitioner
+
+        "Respondent" ->
+            Respondent
+
+        _ ->
+            BothParties
+
+
+createEventFromAction : Msal.User -> CaseManagementData.Hearing -> Action -> TriageData.Event
+createEventFromAction user hearing action =
     case action of
         Transition location party ->
             TriageData.Event hearing.caseId

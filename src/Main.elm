@@ -195,7 +195,7 @@ update msg model =
                     ( model, Cmd.none )
 
                 Just user ->
-                    ( model, saveEventCmd (Disposition.createEvent user hearing event) )
+                    ( model, saveEventCmd (Disposition.createEventFromAction user hearing event) )
 
         AddNote hearing ->
             let
@@ -434,7 +434,12 @@ notesForHearing model hearing =
 
 lastEventForHearing : Model -> Hearing -> Maybe Event
 lastEventForHearing model hearing =
-    RemoteData.map (List.Extra.find (\e -> e.matterId == hearing.caseId)) model.events
+    RemoteData.map
+        (List.filter
+            (\e -> e.matterId == hearing.caseId)
+            >> List.Extra.last
+        )
+        model.events
         |> RemoteData.toMaybe
         |> Maybe.Extra.join
 
@@ -969,8 +974,28 @@ hearingDropdown model hearing =
         , items =
             List.map
                 (hearingDropdownItems model hearing)
-                (Disposition.availableActions Disposition.Initial)
+                (availableActions model hearing)
         }
+
+
+availableActions : Model -> Hearing -> List Disposition.Action
+availableActions model hearing =
+    Disposition.availableActions (hearingDisposition model hearing)
+
+
+hearingDisposition : Model -> Hearing -> Disposition.State
+hearingDisposition model hearing =
+    lastEventForHearing model hearing
+        |> Maybe.map
+            (Disposition.createActionFromEvent
+                >> Disposition.createStateFromAction
+            )
+        |> Maybe.withDefault Disposition.Initial
+
+
+
+-- |> Maybe.withDefault Disposition.Initial
+-- Disposition.Initial
 
 
 hearingDropdownItems : { b | user : a } -> Hearing -> Disposition.Action -> Dropdown.DropdownItem Msg
