@@ -663,11 +663,7 @@ rowForDepartmentHearings model ( department, hearingResponse ) =
 
 filterTriageHearings : List Hearing -> List Hearing
 filterTriageHearings =
-    (filterRfoHearings
-        >> filterCustodyVisitationSupport
-        >> filterNotModHearings
-        >> filterUniqueCaseNumberHearings
-    )
+    List.filter (\h -> String.endsWith "T08:15:00" h.scheduledEventDateTime)
 
 
 filterRfoHearings : List Hearing -> List Hearing
