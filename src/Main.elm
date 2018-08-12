@@ -42,6 +42,8 @@ type alias Model =
     , events : WebData (List TriageData.Event)
     , hearings : Dict Department HearingResponse
     , hearingsDropdownStates : Dict CaseNumber Dropdown.State
+    , statusFilter : StatusFilter
+    , statusFilters : List StatusFilter
     , navbarState : Navbar.State
     , noteBoxValues : Dict CaseNumber String
     , notes : WebData (List Note)
@@ -58,6 +60,14 @@ type alias CaseNumber =
 
 type alias DateString =
     String
+
+
+type StatusFilter
+    = Any
+    | Pending
+    | CCRC
+    | DCSS
+    | Triage
 
 
 type DepartmentFilter
@@ -92,6 +102,8 @@ init =
           , events = RemoteData.Loading
           , hearings = initHearings
           , hearingsDropdownStates = Dict.empty
+          , statusFilter = Any
+          , statusFilters = [ Any, Pending, CCRC, DCSS, Triage ]
           , navbarState = navbarState
           , noteBoxValues = Dict.empty
           , notes = RemoteData.Loading
@@ -156,7 +168,7 @@ type Msg
     | AddEvent Hearing Disposition.Action
     | AddNote Hearing
     | FilterDepartment DepartmentFilter
-    | FilterStatus String
+    | FilterStatus StatusFilter
     | Login Json.Encode.Value
     | LoginResult Json.Decode.Value
     | Logout Json.Encode.Value
@@ -231,11 +243,9 @@ update msg model =
             )
 
         FilterStatus status ->
-            let
-                _ =
-                    Debug.log "filter status" status
-            in
-                ( model, Cmd.none )
+            ( { model | statusFilter = status }
+            , Cmd.none
+            )
 
         Login value ->
             ( { model | userLoginStatus = "Logging in" }, Msal.login value )
@@ -432,8 +442,8 @@ notesForHearing model hearing =
     RemoteData.map (List.filter (\n -> n.matterId == hearing.caseId)) model.notes
 
 
-lastEventForHearing : Model -> Hearing -> Maybe Event
-lastEventForHearing model hearing =
+maybeLastEventForHearing : Model -> Hearing -> Maybe Event
+maybeLastEventForHearing model hearing =
     RemoteData.map
         (List.filter
             (\e -> e.matterId == hearing.caseId)
@@ -530,6 +540,144 @@ requestHearingsForDepartment ( date, department ) =
         |> Cmd.map (ReceiveHearings department)
 
 
+filterTriageHearings : List Hearing -> List Hearing
+filterTriageHearings =
+    List.filter (\h -> String.endsWith "T08:15:00" h.scheduledEventDateTime)
+        >> filterUniqueCaseNumberHearings
+
+
+filterRfoHearings : List Hearing -> List Hearing
+filterRfoHearings hearings =
+    List.filter (\h -> String.startsWith "HREO" h.scheduledEventType) hearings
+
+
+filterCustodyVisitationSupport : List Hearing -> List Hearing
+filterCustodyVisitationSupport hearings =
+    List.filter hasCustodyVisitationOrSupport hearings
+
+
+hasCustodyVisitationOrSupport : Hearing -> Bool
+hasCustodyVisitationOrSupport { scheduledEventName } =
+    let
+        hasCust =
+            scheduledEventName |> String.toUpper |> String.contains "CUST"
+
+        hasVisit =
+            scheduledEventName |> String.toUpper |> String.contains "VISIT"
+
+        hasSupp =
+            scheduledEventName |> String.toUpper |> String.contains "SUPP"
+    in
+        hasCust || hasVisit || hasSupp
+
+
+filterNotModHearings : List Hearing -> List Hearing
+filterNotModHearings hearings =
+    hearings
+        |> List.Extra.filterNot (\h -> h.scheduledEventName |> String.toUpper |> String.contains "CHANGE")
+        |> List.Extra.filterNot (\h -> h.scheduledEventName |> String.toUpper |> String.contains "MODIFICATION")
+
+
+filterUniqueCaseNumberHearings : List Hearing -> List Hearing
+filterUniqueCaseNumberHearings hearings =
+    List.Extra.uniqueBy (\h -> h.caseNumber) hearings
+
+
+filterNotDualRepresentedHearings : List Hearing -> List Hearing
+filterNotDualRepresentedHearings hearings =
+    hearings
+
+
+filterByDepartment : Model -> Dict String HearingResponse -> Dict String HearingResponse
+filterByDepartment model hearings =
+    let
+        filter =
+            model.departmentFilter
+    in
+        case filter of
+            All ->
+                hearings
+
+            _ ->
+                hearings
+                    |> Dict.filter
+                        (\department _ ->
+                            department == (toString filter)
+                        )
+
+
+isTriageDisposition : TriageData.Event -> Bool
+isTriageDisposition event =
+    event.category == "Transition" && event.subject == "Triage"
+
+
+filterByStatus : Model -> List Hearing -> List Hearing
+filterByStatus model hearings =
+    let
+        filter =
+            model.statusFilter
+    in
+        case filter of
+            Any ->
+                hearings
+
+            Pending ->
+                hearings
+                    |> List.filter
+                        (\hearing ->
+                            hearing
+                                |> maybeLastEventForHearing model
+                                |> Maybe.map
+                                    (\event ->
+                                        event.category /= "Disposition" && event.subject /= "Triage"
+                                    )
+                                |> Maybe.withDefault True
+                        )
+
+            CCRC ->
+                hearings
+                    |> List.filter
+                        (\hearing ->
+                            hearing
+                                |> maybeLastEventForHearing model
+                                |> Maybe.map
+                                    (\event ->
+                                        event
+                                            |> toString
+                                            |> String.contains "CCRC"
+                                    )
+                                |> Maybe.withDefault False
+                        )
+
+            DCSS ->
+                hearings
+                    |> List.filter
+                        (\hearing ->
+                            hearing
+                                |> maybeLastEventForHearing model
+                                |> Maybe.map
+                                    (\event ->
+                                        event
+                                            |> toString
+                                            |> String.contains "DCSS"
+                                    )
+                                |> Maybe.withDefault False
+                        )
+
+            Triage ->
+                hearings
+                    |> List.filter
+                        (\hearing ->
+                            hearing
+                                |> maybeLastEventForHearing model
+                                |> Maybe.map
+                                    (\event ->
+                                        event.category /= "Disposition" && event.subject == "Triage"
+                                    )
+                                |> Maybe.withDefault False
+                        )
+
+
 
 ---- VIEW ----
 
@@ -614,14 +762,9 @@ hearingsGrid : Model -> Html Msg
 hearingsGrid model =
     let
         hearingsList =
-            case model.departmentFilter of
-                All ->
-                    model.hearings |> Dict.toList
-
-                _ ->
-                    model.hearings
-                        |> Dict.filter (\k v -> k == (toString model.departmentFilter))
-                        |> Dict.toList
+            model.hearings
+                |> filterByDepartment model
+                |> Dict.toList
     in
         Grid.container []
             ([ Grid.row
@@ -661,54 +804,6 @@ rowForDepartmentHearings model ( department, hearingResponse ) =
             ]
 
 
-filterTriageHearings : List Hearing -> List Hearing
-filterTriageHearings =
-    List.filter (\h -> String.endsWith "T08:15:00" h.scheduledEventDateTime)
-        >> filterUniqueCaseNumberHearings
-
-
-filterRfoHearings : List Hearing -> List Hearing
-filterRfoHearings hearings =
-    List.filter (\h -> String.startsWith "HREO" h.scheduledEventType) hearings
-
-
-filterCustodyVisitationSupport : List Hearing -> List Hearing
-filterCustodyVisitationSupport hearings =
-    List.filter hasCustodyVisitationOrSupport hearings
-
-
-hasCustodyVisitationOrSupport : Hearing -> Bool
-hasCustodyVisitationOrSupport { scheduledEventName } =
-    let
-        hasCust =
-            scheduledEventName |> String.toUpper |> String.contains "CUST"
-
-        hasVisit =
-            scheduledEventName |> String.toUpper |> String.contains "VISIT"
-
-        hasSupp =
-            scheduledEventName |> String.toUpper |> String.contains "SUPP"
-    in
-        hasCust || hasVisit || hasSupp
-
-
-filterNotModHearings : List Hearing -> List Hearing
-filterNotModHearings hearings =
-    hearings
-        |> List.Extra.filterNot (\h -> h.scheduledEventName |> String.toUpper |> String.contains "CHANGE")
-        |> List.Extra.filterNot (\h -> h.scheduledEventName |> String.toUpper |> String.contains "MODIFICATION")
-
-
-filterUniqueCaseNumberHearings : List Hearing -> List Hearing
-filterUniqueCaseNumberHearings hearings =
-    List.Extra.uniqueBy (\h -> h.caseNumber) hearings
-
-
-filterNotDualRepresentedHearings : List Hearing -> List Hearing
-filterNotDualRepresentedHearings hearings =
-    hearings
-
-
 hearingRows : Model -> ( Department, List Hearing ) -> List (Html Msg)
 hearingRows model ( department, hearings ) =
     case hearings of
@@ -720,7 +815,7 @@ hearingRows model ( department, hearings ) =
             ]
 
         _ ->
-            List.map (hearingRow model) hearings
+            List.map (hearingRow model) (hearings |> filterByStatus model)
 
 
 hearingRow : Model -> Hearing -> Html Msg
@@ -740,19 +835,24 @@ hearingRow model hearing =
         ]
 
 
+eventsForHearing : WebData (List Event) -> Hearing -> WebData (List Event)
+eventsForHearing events hearing =
+    events
+        |> RemoteData.map
+            (List.filter (\e -> e.matterId == hearing.caseId))
+
+
 eventsCol : Model -> Hearing -> Grid.Column msg
 eventsCol model hearing =
     let
-        info =
-            model.events
-                |> RemoteData.map
-                    (List.filter (\e -> e.matterId == hearing.caseId))
+        events =
+            eventsForHearing model.events hearing
     in
-        case info of
-            RemoteData.Success info ->
+        case events of
+            RemoteData.Success events ->
                 Grid.col [ Col.xs6 ]
                     [ ol [ class "text-muted" ]
-                        (info |> List.map (\event -> li [] [ text (eventsColText event) ]))
+                        (eventsList events)
                     ]
 
             RemoteData.Loading ->
@@ -763,6 +863,12 @@ eventsCol model hearing =
 
             RemoteData.NotAsked ->
                 Grid.col [] [ text "Loading" ]
+
+
+eventsList : List Event -> List (Html msg)
+eventsList events =
+    events
+        |> List.map (\event -> li [] [ text (eventsColText event) ])
 
 
 eventsColText : Event -> String
@@ -984,7 +1090,7 @@ availableActions model hearing =
 
 hearingDisposition : Model -> Hearing -> Disposition.State
 hearingDisposition model hearing =
-    lastEventForHearing model hearing
+    maybeLastEventForHearing model hearing
         |> Maybe.map
             (Disposition.createActionFromEvent
                 >> Disposition.createStateFromAction
@@ -1026,19 +1132,20 @@ statusDropdown model =
         { options = []
         , toggleMsg = ToggleStatusDropdown
         , toggleButton =
-            Dropdown.toggle [ Button.light ] [ text "Filter" ]
-        , items = statusDropdownItems
+            Dropdown.toggle [ Button.light ] [ text (toString model.statusFilter) ]
+        , items = statusDropdownItems model.statusFilters
         }
 
 
-statusDropdownItems : List (Dropdown.DropdownItem Msg)
-statusDropdownItems =
-    [ Dropdown.buttonItem [ onClick (FilterStatus "Action1") ] [ text "Action1" ]
-    , Dropdown.buttonItem [ onClick (FilterStatus "Action2") ] [ text "Action2" ]
-    , Dropdown.buttonItem [ onClick (FilterStatus "Action3") ] [ text "Action3" ]
-    , Dropdown.buttonItem [ onClick (FilterStatus "Action4") ] [ text "Action4" ]
-    , Dropdown.buttonItem [ onClick (FilterStatus "Action4") ] [ text "Action5" ]
-    ]
+statusDropdownItems : List StatusFilter -> List (Dropdown.DropdownItem Msg)
+statusDropdownItems statusFilters =
+    statusFilters
+        |> List.map
+            (\filter ->
+                Dropdown.buttonItem
+                    [ onClick (FilterStatus filter) ]
+                    [ text (toString filter) ]
+            )
 
 
 
