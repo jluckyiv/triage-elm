@@ -5,25 +5,6 @@ import MsalData as Msal
 import TriageData
 
 
-type Location
-    = CCRC CCRCReason
-    | DCSS
-    | Triage
-    | Send Location
-    | Left
-
-
-type Party
-    = BothParties
-    | Petitioner
-    | Respondent
-
-
-type Action
-    = Transition Location Party
-    | Disposition Location Result
-
-
 type State
     = Initial
     | Disposed
@@ -38,47 +19,23 @@ type State
     | OnePartySentTriage Party
 
 
-createStateFromAction : Action -> State
-createStateFromAction action =
-    case action of
-        Disposition Triage _ ->
-            Disposed
+type Action
+    = Transition Location Party
+    | Disposition Location Result
 
-        Disposition DCSS (ChildSupport (Default party)) ->
-            OnePartySentTriage party
 
-        Disposition location _ ->
-            BothPartiesSentTriage
+type Location
+    = CCRC CCRCReason
+    | DCSS
+    | Triage
+    | Send Location
+    | Left
 
-        Transition (CCRC reason) BothParties ->
-            BothPartiesAtCCRC reason
 
-        Transition Triage BothParties ->
-            BothPartiesAtTriage
-
-        Transition (Send (CCRC reason)) BothParties ->
-            BothPartiesSentCCRC reason
-
-        Transition (Send DCSS) BothParties ->
-            BothPartiesSentDCSS
-
-        Transition (Send Triage) BothParties ->
-            BothPartiesSentTriage
-
-        Transition (CCRC reason) party ->
-            OnePartyAtCCRC reason party
-
-        Transition Triage party ->
-            OnePartyAtTriage party
-
-        Transition (Send DCSS) party ->
-            OnePartySentDCSS party
-
-        Transition (Send Triage) party ->
-            OnePartySentTriage party
-
-        _ ->
-            Initial
+type Party
+    = BothParties
+    | Petitioner
+    | Respondent
 
 
 type Result
@@ -92,16 +49,16 @@ type Result
     | OffCalendar OffCalendarReason
 
 
-type CCRCReason
-    = Agreement
-    | Session
-
-
 type AgreementStatus
     = Default Party
     | Dispute
     | FullStipulation
     | PartialStipulation
+
+
+type CCRCReason
+    = Agreement
+    | Session
 
 
 type ContinuanceReason
@@ -162,14 +119,14 @@ availableActions state =
             ]
 
         BothPartiesAtTriage ->
-            [ Disposition Triage (Continuance Other)
-            , Disposition Triage (Judgment FullStipulation)
-            , Disposition Triage (Judgment PartialStipulation)
-            , Disposition Triage (Hearing Dispute)
-            , Disposition Triage (Hearing PartialStipulation)
-            , Transition (Send <| CCRC Agreement) BothParties
+            [ Transition (Send <| CCRC Agreement) BothParties
             , Transition (Send <| CCRC Session) BothParties
             , Transition (Send DCSS) BothParties
+            , Disposition Triage (Judgment FullStipulation)
+            , Disposition Triage (Judgment PartialStipulation)
+            , Disposition Triage (Hearing PartialStipulation)
+            , Disposition Triage (Hearing Dispute)
+            , Disposition Triage (Continuance Other)
             ]
 
         BothPartiesSentCCRC reason ->
@@ -212,9 +169,71 @@ twoPartyActions location resultType =
     ]
 
 
+actionToString : Action -> String
+actionToString action =
+    case action of
+        Transition (Send location) party ->
+            "Send " ++ toString party ++ " to " ++ toString location
+
+        Transition Left party ->
+            toString party ++ " left (no session)"
+
+        Transition location party ->
+            "Checkin " ++ toString party ++ " " ++ toString location
+
+        Disposition Triage result ->
+            toString result
+
+        Disposition _ result ->
+            toString result
+
+
 
 -- Transition Location Party
 -- Disposition Location Result
+
+
+createStateFromAction : Action -> State
+createStateFromAction action =
+    case action of
+        Disposition Triage _ ->
+            Disposed
+
+        Disposition DCSS (ChildSupport (Default party)) ->
+            OnePartySentTriage party
+
+        Disposition location _ ->
+            BothPartiesSentTriage
+
+        Transition (CCRC reason) BothParties ->
+            BothPartiesAtCCRC reason
+
+        Transition Triage BothParties ->
+            BothPartiesAtTriage
+
+        Transition (Send (CCRC reason)) BothParties ->
+            BothPartiesSentCCRC reason
+
+        Transition (Send DCSS) BothParties ->
+            BothPartiesSentDCSS
+
+        Transition (Send Triage) BothParties ->
+            BothPartiesSentTriage
+
+        Transition (CCRC reason) party ->
+            OnePartyAtCCRC reason party
+
+        Transition Triage party ->
+            OnePartyAtTriage party
+
+        Transition (Send DCSS) party ->
+            OnePartySentDCSS party
+
+        Transition (Send Triage) party ->
+            OnePartySentTriage party
+
+        _ ->
+            Initial
 
 
 createActionFromEvent : TriageData.Event -> Action
@@ -350,10 +369,6 @@ locationFromString string =
             Triage
 
 
-
---  "Send" Location | Send Location
-
-
 partyFromString : String -> Party
 partyFromString string =
     case string of
@@ -388,81 +403,7 @@ createEventFromAction user hearing action =
 
 
 
--- case action of
---     Transition location party ->
---     (
---     ,
---     case disposition of
---         Checkin location party ->
---             TriageData.Event hearing.caseId
---                 "checkin"
---                 (toString party)
---                 (toString location)
---                 user.id
---                 Nothing
---         Continuance reason ->
---             TriageData.Event hearing.caseId
---                 (toString Disposition)
---                 (toString Continuance)
---                 (toString reason)
---                 (user.id)
---                 Nothing
---         Dispatch location agreementStatus ->
---             TriageData.Event hearing.caseId
---                 (toString Dispatch)
---                 (toString location)
---                 (toString agreementStatus)
---                 (user.id)
---                 Nothing
---         Disposition location agreementStatus ->
---             TriageData.Event hearing.caseId
---                 (toString Disposition)
---                 (toString location)
---                 (toString agreementStatus)
---                 (user.id)
---                 Nothing
---         FOAH ->
---             TriageData.Event hearing.caseId
---                 (toString Disposition)
---                 (toString FOAH)
---                 (toString Default)
---                 (user.id)
---                 Nothing
---         Hearing agreementStatus ->
---             TriageData.Event hearing.caseId
---                 (toString Disposition)
---                 (toString Hearing)
---                 (toString agreementStatus)
---                 (user.id)
---                 Nothing
---         Judgment agreementStatus ->
---             TriageData.Event hearing.caseId
---                 (toString Disposition)
---                 (toString Hearing)
---                 (toString agreementStatus)
---                 (user.id)
---                 Nothing
---         OffCalendar reason ->
---             TriageData.Event hearing.caseId
---                 "disposition"
---                 "Off calendar"
---                 (toString reason)
---                 (user.id)
---                 Nothing
---         Stipulation agreementStatus ->
---             TriageData.Event hearing.caseId
---                 (toString Disposition)
---                 (toString Stipulation)
---                 (toString agreementStatus)
---                 (user.id)
---                 Nothing
---         Transition location party ->
---             TriageData.Event hearing.caseId
---                 "Transition"
---                 (toString location)
---                 (toString party)
---                 (user.id)
---                 Nothing
+-- Move to other module
 
 
 locationToColor : Location -> Color
@@ -482,10 +423,6 @@ locationToColor location =
 
         DCSS ->
             Warning
-
-
-
--- Move to other module
 
 
 type Color

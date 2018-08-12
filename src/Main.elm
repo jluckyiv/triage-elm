@@ -664,6 +664,7 @@ rowForDepartmentHearings model ( department, hearingResponse ) =
 filterTriageHearings : List Hearing -> List Hearing
 filterTriageHearings =
     List.filter (\h -> String.endsWith "T08:15:00" h.scheduledEventDateTime)
+        >> filterUniqueCaseNumberHearings
 
 
 filterRfoHearings : List Hearing -> List Hearing
@@ -766,7 +767,9 @@ eventsCol model hearing =
 
 eventsColText : Event -> String
 eventsColText event =
-    (event.subject ++ " " ++ event.action)
+    event
+        |> Disposition.createActionFromEvent
+        |> Disposition.actionToString
 
 
 notesCol : Model -> Hearing -> Grid.Column Msg
@@ -989,16 +992,11 @@ hearingDisposition model hearing =
         |> Maybe.withDefault Disposition.Initial
 
 
-
--- |> Maybe.withDefault Disposition.Initial
--- Disposition.Initial
-
-
 hearingDropdownItems : { b | user : a } -> Hearing -> Disposition.Action -> Dropdown.DropdownItem Msg
 hearingDropdownItems { user } hearing action =
     Dropdown.buttonItem
         [ onClick (AddEvent hearing action) ]
-        [ text (toString action) ]
+        [ text (Disposition.actionToString action) ]
 
 
 departmentDropdown : Model -> Html Msg
