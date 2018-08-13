@@ -68,6 +68,7 @@ type StatusFilter
     | CCRC
     | DCSS
     | Triage
+    | Eligible
 
 
 type DepartmentFilter
@@ -103,14 +104,14 @@ init =
           , hearings = initHearings
           , hearingsDropdownStates = Dict.empty
           , statusFilter = Any
-          , statusFilters = [ Any, Pending, CCRC, DCSS, Triage ]
+          , statusFilters = [ Any, Eligible, Pending, CCRC, DCSS, Triage ]
           , navbarState = navbarState
           , noteBoxValues = Dict.empty
           , notes = RemoteData.Loading
           , searchBoxValue = ""
           , statusDropdownState = Dropdown.initialState
           , user = Nothing
-          , userLoginStatus = "Login (ex: jsmith@riverside.courts.ca.gov)"
+          , userLoginStatus = "Login"
           }
         , Cmd.batch
             [ navbarCmd, Task.perform ReceiveDate Date.now, requestTodaysEvents, requestTodaysNotes ]
@@ -258,7 +259,7 @@ update msg model =
                 ( { model | user = user, userLoginStatus = "Logout" }, Cmd.none )
 
         Logout value ->
-            ( { model | user = Nothing, userLoginStatus = "Login (ex: jsmith@riverside.courts.ca.gov)" }, Msal.logout value )
+            ( { model | user = Nothing, userLoginStatus = "Login" }, Msal.logout value )
 
         NavbarMsg state ->
             ( { model | navbarState = state }, Cmd.none )
@@ -677,6 +678,19 @@ filterByStatus model hearings =
                                 |> Maybe.withDefault False
                         )
 
+            Eligible ->
+                hearings
+                    |> List.filter
+                        (\hearing ->
+                            hearing
+                                |> maybeLastEventForHearing model
+                                |> Maybe.map
+                                    (\event ->
+                                        not (String.contains "Ineligible" event.action)
+                                    )
+                                |> Maybe.withDefault False
+                        )
+
 
 
 ---- VIEW ----
@@ -693,15 +707,6 @@ view model =
             , div [ attribute "role" "main", class "container" ]
                 [ div [ class "starter-template" ]
                     [ h1 [] [ text "Riverside Superior Court Triage" ]
-                    , p [ class "lead text-primary" ]
-                        [ text
-                            ("Hearings for "
-                                ++ model.currentDateString
-                                ++ ": "
-                                ++ (toString <| countHearings model.hearings)
-                                ++ " cases."
-                            )
-                        ]
                     ]
                 , authButton model
                 , hearingsGrid model
@@ -713,11 +718,14 @@ authButton : Model -> Html Msg
 authButton model =
     case model.user of
         Nothing ->
-            Button.button
-                [ Button.primary
-                , Button.onClick (Login (Json.Encode.null))
+            div []
+                [ Button.button
+                    [ Button.primary
+                    , Button.onClick (Login (Json.Encode.null))
+                    ]
+                    [ text model.userLoginStatus ]
+                , p [ class "text-primary" ] [ text "To update cases, use your court login ID, e.g., 'jsmith@riverside.courts.ca.gov'" ]
                 ]
-                [ text model.userLoginStatus ]
 
         Just user_ ->
             Button.button
@@ -733,10 +741,10 @@ navbar model =
         |> Navbar.withAnimation
         |> Navbar.dark
         |> Navbar.brand [ href "#" ] [ text "Triage" ]
-        |> Navbar.items
-            [ Navbar.itemLink [ href "#home" ] [ text "Home" ]
-            , Navbar.itemLink [ href "#link" ] [ text "Link" ]
-            ]
+        -- |> Navbar.items
+        --     [ Navbar.itemLink [ href "#home" ] [ text "Home" ]
+        --     , Navbar.itemLink [ href "#link" ] [ text "Link" ]
+        --     ]
         |> Navbar.customItems
             [ dateSearchForm model ]
         |> Navbar.view model.navbarState
@@ -746,7 +754,7 @@ dateSearchForm : Model -> Navbar.CustomItem Msg
 dateSearchForm model =
     Navbar.formItem []
         [ Input.text
-            [ Input.attrs [ placeholder ("Ex: " ++ model.currentDateString), value model.searchBoxValue ]
+            [ Input.attrs [ placeholder ("Date format: " ++ model.currentDateString), value model.searchBoxValue ]
             , Input.onInput UpdateSearchBoxValue
             ]
         , Button.button
@@ -754,7 +762,7 @@ dateSearchForm model =
             , Button.attrs [ Spacing.ml2Sm ]
             , Button.onClick RequestHearings
             ]
-            [ text "Search" ]
+            [ text "Get date" ]
         ]
 
 
@@ -769,7 +777,17 @@ hearingsGrid model =
         Grid.container []
             ([ Grid.row
                 [ Row.topLg, Row.attrs [ class "p-2" ] ]
-                [ Grid.col [ Col.xs1, Col.textAlign Text.alignXsLeft ] [ departmentDropdown model ]
+                [ Grid.col [ Col.attrs [ class "lead text-info" ] ]
+                    [ text
+                        ("Triage for "
+                            ++ model.currentDateString
+                            ++ ": "
+                            ++ (toString <| countHearings model.hearings)
+                            ++ " cases."
+                        )
+                    ]
+                , Grid.colBreak []
+                , Grid.col [ Col.xs1, Col.textAlign Text.alignXsLeft ] [ departmentDropdown model ]
                 , Grid.col [ Col.xs2, Col.middleXs ] [ text "Case Number" ]
                 , Grid.col [ Col.xs1, Col.middleXs ] [ text "Interp" ]
                 , Grid.col [ Col.xs3, Col.middleXs ] [ text "Petitioner" ]
@@ -916,21 +934,26 @@ notesForm model hearing =
         caseNumber =
             hearing.caseNumber
     in
-        Form.formInline []
-            [ Input.text
-                [ Input.attrs
-                    [ placeholder "Write a note"
-                    , value (noteBoxValueForCaseNumber noteBoxValues caseNumber)
+        case model.user of
+            Nothing ->
+                div [] []
+
+            _ ->
+                Form.formInline []
+                    [ Input.text
+                        [ Input.attrs
+                            [ placeholder "Write a note"
+                            , value (noteBoxValueForCaseNumber noteBoxValues caseNumber)
+                            ]
+                        , Input.onInput (UpdateNoteBoxValue hearing)
+                        ]
+                    , Button.button
+                        [ Button.outlineLight
+                        , Button.attrs [ Spacing.ml2Sm ]
+                        , Button.onClick (AddNote hearing)
+                        ]
+                        [ text "Enter" ]
                     ]
-                , Input.onInput (UpdateNoteBoxValue hearing)
-                ]
-            , Button.button
-                [ Button.outlineLight
-                , Button.attrs [ Spacing.ml2Sm ]
-                , Button.onClick (AddNote hearing)
-                ]
-                [ text "Enter" ]
-            ]
 
 
 noteBoxValueForCaseNumber : Dict CaseNumber String -> CaseNumber -> String
@@ -951,7 +974,7 @@ interpreterCol interpreter =
                 col "text-muted" "None"
 
             Just interpreters ->
-                col "text-primary" (interpreters |> interpreterLanguages |> String.left 8)
+                col "text-info" (interpreters |> interpreterLanguages |> String.left 8)
 
 
 interpreterLanguages : List { a | language : String } -> String
@@ -1070,17 +1093,22 @@ firstAndLastName { firstName, lastName } =
 
 hearingDropdown : Model -> Hearing -> Html Msg
 hearingDropdown model hearing =
-    Dropdown.dropdown
-        (dropdownStateForCaseNumber model hearing.caseNumber)
-        { options = []
-        , toggleMsg = ToggleHearingDropdown hearing.caseNumber
-        , toggleButton =
-            Dropdown.toggle [ Button.light ] [ text "Action" ]
-        , items =
-            List.map
-                (hearingDropdownItems model hearing)
-                (availableActions model hearing)
-        }
+    case model.user of
+        Nothing ->
+            div [] []
+
+        _ ->
+            Dropdown.dropdown
+                (dropdownStateForCaseNumber model hearing.caseNumber)
+                { options = []
+                , toggleMsg = ToggleHearingDropdown hearing.caseNumber
+                , toggleButton =
+                    Dropdown.toggle [ Button.light ] [ text "Action" ]
+                , items =
+                    List.map
+                        (hearingDropdownItems model hearing)
+                        (availableActions model hearing)
+                }
 
 
 availableActions : Model -> Hearing -> List Disposition.Action
