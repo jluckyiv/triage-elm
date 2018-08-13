@@ -14,13 +14,9 @@ var graphAPIScopes = ["https://graph.microsoft.com/user.read"];
 
 // Initialize application
 var userAgentApplication = new Msal.UserAgentApplication(msalconfig.clientID, null, loginCallback, {
-    redirectUri: msalconfig.redirectUri
+    redirectUri: msalconfig.redirectUri,
+    cacheLocation: msalconfig.cacheLocation
 });
-
-//Previous version of msal uses redirect url via a property
-if (userAgentApplication.redirectUri) {
-    userAgentApplication.redirectUri = msalconfig.redirectUri;
-}
 
 window.onload = function () {
     // If page is refreshed, continue to display user info
