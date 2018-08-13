@@ -2,13 +2,10 @@ import 'font-awesome/css/font-awesome.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import './main.css';
+import msalconfig from './msalconfig';
 import { Main } from './Main.elm';
 import registerServiceWorker from './registerServiceWorker';
 
-var msalconfig = {
-    clientID: "3d5ea4ee-aa72-4605-bb1b-c62079d0af6b",
-    redirectUri: location.origin
-};
 // Graph API endpoint to show user profile
 var graphApiEndpoint = "https://graph.microsoft.com/v1.0/me";
 
@@ -132,7 +129,7 @@ function callWebApiWithToken(endpoint, token, responseElement, showTokenElement)
             if (response.status === 200 && contentType && contentType.indexOf("application/json") !== -1) {
                 response.json()
                     .then(function (data) {
-                        window.sessionStorage.setItem('user', JSON.stringify(data));
+                        window.localStorage.setItem('user', JSON.stringify(data));
                         app.ports.loginResult.send(data);
                     })
                     .catch(function (error) {
@@ -163,7 +160,7 @@ app.ports.login.subscribe(function (value) {
 
 
 app.ports.logout.subscribe(function (value) {
-    window.sessionStorage.removeItem('user');
+    window.localStorage.removeItem('user');
     userAgentApplication.logout();
 });
 
