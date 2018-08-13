@@ -14,4 +14,4 @@ node_modules
 .DS_Store
 
 # Config secrets
-msalconfig.js
+src/msalconfig.js
