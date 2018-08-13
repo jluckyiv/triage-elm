@@ -76,6 +76,10 @@ type IneligibleReason
     = DV
     | OptOut
     | Represented
+    | Modification
+    | PendingProbateCase
+    | PendingJuvenileCase
+    | PendingDNA
 
 
 otherParty : Party -> Party
@@ -98,8 +102,12 @@ availableActions state =
             checkinActions Triage
                 ++ [ Disposition Triage (OffCalendar FTA)
                    , Disposition Triage (Ineligible DV)
-                   , Disposition Triage (Ineligible Represented)
+                   , Disposition Triage (Ineligible Modification)
                    , Disposition Triage (Ineligible OptOut)
+                   , Disposition Triage (Ineligible PendingDNA)
+                   , Disposition Triage (Ineligible PendingJuvenileCase)
+                   , Disposition Triage (Ineligible PendingProbateCase)
+                   , Disposition Triage (Ineligible Represented)
                    ]
 
         OnePartySentTriage party ->
@@ -183,6 +191,9 @@ actionToString action =
 
         Disposition Triage result ->
             toString result
+
+        Disposition _ (CustodyVisitation Dispute) ->
+            "CustodyVisitation Memo"
 
         Disposition _ result ->
             toString result
@@ -312,6 +323,18 @@ resultFromString string =
 
         "Ineligible Represented" ->
             Ineligible Represented
+
+        "Ineligible Modification" ->
+            Ineligible Modification
+
+        "Ineligible PendingProbateCase" ->
+            Ineligible PendingProbateCase
+
+        "Ineligible PendingJuvenileCase" ->
+            Ineligible PendingJuvenileCase
+
+        "Ineligible PendingDNA" ->
+            Ineligible PendingDNA
 
         "Judgment FullStipulation" ->
             Judgment FullStipulation
