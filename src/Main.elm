@@ -639,7 +639,11 @@ filterByStatus model hearings =
                                 |> maybeLastEventForHearing model
                                 |> Maybe.map
                                     (\event ->
-                                        event.category == "Disposition" && event.subject == "Triage"
+                                        event.category
+                                            == "Disposition"
+                                            && event.subject
+                                            == "Triage"
+                                            |> not
                                     )
                                 |> Maybe.withDefault True
                         )
