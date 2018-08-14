@@ -1,4 +1,4 @@
-port module MsalData exposing (..)
+module MsalData exposing (..)
 
 import Json.Encode
 import Json.Decode
@@ -133,16 +133,3 @@ encodeIdToken record =
         , ( "uti", Json.Encode.string <| record.uti )
         , ( "ver", Json.Encode.string <| record.ver )
         ]
-
-
-
----- PORTS ----
-
-
-port login : Json.Encode.Value -> Cmd msg
-
-
-port logout : Json.Encode.Value -> Cmd msg
-
-
-port loginResult : (Json.Decode.Value -> msg) -> Sub msg

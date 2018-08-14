@@ -24,6 +24,7 @@ import List.Extra
 import Maybe.Extra
 import MsalData as Msal
 import Moment
+import Ports
 import RemoteData exposing (WebData)
 import Task
 import TriageData exposing (Event, Note)
@@ -250,7 +251,7 @@ update msg model =
             )
 
         Login value ->
-            ( model, Msal.login value )
+            ( model, Ports.login value )
 
         LoginResult value ->
             let
@@ -260,7 +261,7 @@ update msg model =
                 ( { model | user = user }, Cmd.none )
 
         Logout value ->
-            ( { model | user = Nothing }, Msal.logout value )
+            ( { model | user = Nothing }, Ports.logout value )
 
         NavbarMsg state ->
             ( { model | navbarState = state }, Cmd.none )
@@ -421,6 +422,7 @@ update msg model =
 ---- HELPERS ----
 
 
+decodeUser : Json.Decode.Value -> Maybe Msal.User
 decodeUser value =
     value
         |> Json.Decode.decodeValue Msal.decodeUser
@@ -637,7 +639,7 @@ filterByStatus model hearings =
                                 |> maybeLastEventForHearing model
                                 |> Maybe.map
                                     (\event ->
-                                        event.category /= "Disposition" && event.subject /= "Triage"
+                                        event.category == "Disposition" && event.subject == "Triage"
                                     )
                                 |> Maybe.withDefault True
                         )
@@ -1213,7 +1215,7 @@ subscriptions model =
             ++ [ Navbar.subscriptions model.navbarState NavbarMsg
                , Dropdown.subscriptions model.departmentDropdownState ToggleDepartmentDropdown
                , Dropdown.subscriptions model.statusDropdownState ToggleStatusDropdown
-               , Msal.loginResult LoginResult
+               , Ports.loginResult LoginResult
                , WebSocket.listen TriageData.feedUrl NewFeed
                ]
         )
