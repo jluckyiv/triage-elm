@@ -50,7 +50,6 @@ type alias Model =
     , searchBoxValue : String
     , statusDropdownState : Dropdown.State
     , user : Maybe Msal.User
-    , userLoginStatus : String
     }
 
 
@@ -89,11 +88,14 @@ type alias HearingResponse =
     WebData (List Hearing)
 
 
-init : ( Model, Cmd Msg )
-init =
+init : Json.Decode.Value -> ( Model, Cmd Msg )
+init value =
     let
         ( navbarState, navbarCmd ) =
             Navbar.initialState NavbarMsg
+
+        user =
+            decodeUser value
     in
         ( { currentDateString = ""
           , departmentDropdownState = Dropdown.initialState
@@ -110,8 +112,7 @@ init =
           , notes = RemoteData.Loading
           , searchBoxValue = ""
           , statusDropdownState = Dropdown.initialState
-          , user = Nothing
-          , userLoginStatus = "Login"
+          , user = user
           }
         , Cmd.batch
             [ navbarCmd, Task.perform ReceiveDate Date.now, requestTodaysEvents, requestTodaysNotes ]
@@ -249,17 +250,17 @@ update msg model =
             )
 
         Login value ->
-            ( { model | userLoginStatus = "Logging in" }, Msal.login value )
+            ( model, Msal.login value )
 
         LoginResult value ->
             let
                 user =
-                    (Result.toMaybe (Json.Decode.decodeValue Msal.decodeUser value))
+                    decodeUser value
             in
-                ( { model | user = user, userLoginStatus = "Logout" }, Cmd.none )
+                ( { model | user = user }, Cmd.none )
 
         Logout value ->
-            ( { model | user = Nothing, userLoginStatus = "Login" }, Msal.logout value )
+            ( { model | user = Nothing }, Msal.logout value )
 
         NavbarMsg state ->
             ( { model | navbarState = state }, Cmd.none )
@@ -276,7 +277,7 @@ update msg model =
                     Err error ->
                         let
                             _ =
-                                Debug.log "error" error
+                                Debug.log "NewEvents error" error
                         in
                             ( model, Cmd.none )
 
@@ -297,7 +298,7 @@ update msg model =
                     Err error ->
                         let
                             _ =
-                                Debug.log "error" error
+                                Debug.log "NewFeed error" error
                         in
                             ( model, Cmd.none )
 
@@ -313,21 +314,21 @@ update msg model =
                     Err error ->
                         let
                             _ =
-                                Debug.log "error" error
+                                Debug.log "NewNotes error" error
                         in
                             ( model, Cmd.none )
 
         OnEventSave (Ok event) ->
-            Debug.log "Ok" ( model, Cmd.none )
+            Debug.log "OnEventSave Ok" ( model, Cmd.none )
 
         OnEventSave (Err error) ->
-            Debug.log "Err" ( model, Cmd.none )
+            Debug.log "OnEventSave Err" ( model, Cmd.none )
 
         OnNoteSave (Ok event) ->
-            Debug.log "Ok" ( model, Cmd.none )
+            Debug.log "OnNoteSave Ok" ( model, Cmd.none )
 
         OnNoteSave (Err error) ->
-            Debug.log "Err" ( model, Cmd.none )
+            Debug.log "OnNoteSave Err" ( model, Cmd.none )
 
         ReceiveDate date ->
             let
@@ -418,6 +419,12 @@ update msg model =
 
 
 ---- HELPERS ----
+
+
+decodeUser value =
+    value
+        |> Json.Decode.decodeValue Msal.decodeUser
+        |> Result.toMaybe
 
 
 postEventCmd : Event -> Cmd Msg
@@ -708,31 +715,20 @@ view model =
                 [ div [ class "starter-template" ]
                     [ h1 [] [ text "Riverside Superior Court Triage" ]
                     ]
-                , authButton model
+                , authMessage model
                 , hearingsGrid model
                 ]
             ]
 
 
-authButton : Model -> Html Msg
-authButton model =
+authMessage : Model -> Html Msg
+authMessage model =
     case model.user of
         Nothing ->
-            div []
-                [ Button.button
-                    [ Button.primary
-                    , Button.onClick (Login (Json.Encode.null))
-                    ]
-                    [ text model.userLoginStatus ]
-                , p [ class "text-primary" ] [ text "To update cases, use your court login ID, e.g., 'jsmith@riverside.courts.ca.gov'" ]
-                ]
+            p [ class "text-primary" ] [ text "To update cases, login with your court ID, e.g., 'jsmith@riverside.courts.ca.gov'" ]
 
-        Just user_ ->
-            Button.button
-                [ Button.primary
-                , Button.onClick (Logout (Json.Encode.null))
-                ]
-                [ text (model.userLoginStatus ++ " " ++ user_.givenName) ]
+        Just user ->
+            p [ class "text-primary" ] [ text ("Welcome " ++ user.givenName) ]
 
 
 navbar : Model -> Html Msg
@@ -741,13 +737,33 @@ navbar model =
         |> Navbar.withAnimation
         |> Navbar.dark
         |> Navbar.brand [ href "#" ] [ text "Triage" ]
-        -- |> Navbar.items
-        --     [ Navbar.itemLink [ href "#home" ] [ text "Home" ]
-        --     , Navbar.itemLink [ href "#link" ] [ text "Link" ]
-        --     ]
         |> Navbar.customItems
-            [ dateSearchForm model ]
+            [ dateSearchForm model, navAuthButton model ]
         |> Navbar.view model.navbarState
+
+
+navAuthButton : Model -> Navbar.CustomItem Msg
+navAuthButton model =
+    let
+        button =
+            case model.user of
+                Nothing ->
+                    Button.button
+                        [ Button.primary
+                        , Button.attrs [ Spacing.ml5Sm ]
+                        , Button.onClick (Login (Json.Encode.null))
+                        ]
+                        [ text "Login" ]
+
+                Just user ->
+                    Button.button
+                        [ Button.info
+                        , Button.attrs [ Spacing.ml5Sm ]
+                        , Button.onClick (Logout (Json.Encode.null))
+                        ]
+                        [ text "Logout" ]
+    in
+        Navbar.formItem [] [ button ]
 
 
 dateSearchForm : Model -> Navbar.CustomItem Msg
@@ -1180,9 +1196,9 @@ statusDropdownItems statusFilters =
 ---- PROGRAM ----
 
 
-main : Program Never Model Msg
+main : Program Json.Decode.Value Model Msg
 main =
-    Html.program
+    Html.programWithFlags
         { view = view
         , init = init
         , update = update

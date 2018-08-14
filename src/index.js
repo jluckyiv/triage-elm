@@ -18,45 +18,31 @@ var userAgentApplication = new Msal.UserAgentApplication(msalconfig.clientID, nu
     cacheLocation: msalconfig.cacheLocation
 });
 
+
 window.onload = function () {
     // If page is refreshed, continue to display user info
     if (!userAgentApplication.isCallback(window.location.hash) && window.parent === window && !window.opener) {
-        var user = userAgentApplication.getUser();
-        if (user) {
-            callGraphApi();
-        }
+        getUser();
     }
 }
 
+function getUser() {
+    var user = userAgentApplication.getUser();
+    if (user) {
+        getUserInfo(user);
+    }
+}
 
 /**
- * Call the Microsoft Graph API and display the results on the page
+ * Call the Microsoft Graph API and store the user
  */
-function callGraphApi() {
-    var user = userAgentApplication.getUser();
+function getUserInfo(user) {
     if (!user) {
-        // If user is not signed in, then prompt user to sign in via loginRedirect.
-        // This will redirect user to the Azure Active Directory v2 Endpoint
         userAgentApplication.loginRedirect(graphAPIScopes);
-
-        // The call to loginRedirect above frontloads the consent to query Graph API during the sign-in.
-        // If you want to use dynamic consent, just remove the graphAPIScopes from loginRedirect call:
-        // As such, user will be prompted to give consent as soon as the token for a resource that 
-        // he/she hasn't consented before is requested. In the case of this application - 
-        // the first time the Graph API call to obtain user's profile is executed.
     } else {
-
-
-        // Now Call Graph API to show the user profile information:
-
-        // In order to call the Graph API, an access token needs to be acquired.
-        // Try to acquire the token used to Query Graph API silently first
         userAgentApplication.acquireTokenSilent(graphAPIScopes)
-            // userAgentApplication.acquireTokenPopup(graphAPIScopes)
             .then(function (token) {
-                //After the access token is acquired, call the Web API, sending the acquired token
-                var graphCallResponseElement = document.getElementById("graphResponse");
-                callWebApiWithToken(graphApiEndpoint, token, graphCallResponseElement, document.getElementById("accessToken"));
+                callWebApiWithTokenAndCallback(graphApiEndpoint, token);
 
             }, function (error) {
                 // If the acquireTokenSilent() method fails, then acquire the token interactively via acquireTokenRedirect().
@@ -98,7 +84,8 @@ function loginCallback(errorDesc, token, error, tokenType) {
     if (errorDesc) {
         logError(msal.authority, error, errorDesc);
     } else {
-        callGraphApi();
+        console.log("longCallback calls getUserInfo()")
+        getUserInfo();
     }
 }
 
@@ -107,10 +94,8 @@ function loginCallback(errorDesc, token, error, tokenType) {
  * 
  * @param {any} endpoint - Web API endpoint
  * @param {any} token - Access token
- * @param {object} responseElement - HTML element used to display the results
- * @param {object} showTokenElement = HTML element used to display the RAW access token
  */
-function callWebApiWithToken(endpoint, token, responseElement, showTokenElement) {
+function callWebApiWithTokenAndCallback(endpoint, token) {
     var headers = new Headers();
     var bearer = "Bearer " + token;
     headers.append("Authorization", bearer);
@@ -125,8 +110,7 @@ function callWebApiWithToken(endpoint, token, responseElement, showTokenElement)
             if (response.status === 200 && contentType && contentType.indexOf("application/json") !== -1) {
                 response.json()
                     .then(function (data) {
-                        window.localStorage.setItem('user', JSON.stringify(data));
-                        app.ports.loginResult.send(data);
+                        saveUser(data);
                     })
                     .catch(function (error) {
                         logError(endpoint, error);
@@ -134,7 +118,6 @@ function callWebApiWithToken(endpoint, token, responseElement, showTokenElement)
             } else {
                 response.json()
                     .then(function (data) {
-                        // Display response as error in the page
                         logError(endpoint, data);
                     })
                     .catch(function (error) {
@@ -148,16 +131,22 @@ function callWebApiWithToken(endpoint, token, responseElement, showTokenElement)
 }
 
 
-var app = Main.embed(document.getElementById('root'));
+var app = Main.embed(document.getElementById("root"), window.localStorage.getItem("user") || null);
 
 app.ports.login.subscribe(function (value) {
-    app.ports.loginResult.send(callGraphApi());
+    app.ports.loginResult.send(getUserInfo());
 });
 
 
 app.ports.logout.subscribe(function (value) {
-    window.localStorage.removeItem('user');
     userAgentApplication.logout();
+    localStorage.setItem("user", value);
 });
+
+
+function saveUser(data) {
+    app.ports.loginResult.send(data);
+}
+
 
 registerServiceWorker();
