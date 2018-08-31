@@ -41,12 +41,17 @@ type Party
 type Result
     = ChildSupport AgreementStatus
     | Continuance ContinuanceReason
-    | CustodyVisitation AgreementStatus
+    | CustodyVisitation CustodyVisitationResult
     | FOAH AgreementStatus
     | Hearing AgreementStatus
     | Ineligible IneligibleReason
     | Judgment AgreementStatus
     | OffCalendar OffCalendarReason
+
+
+type CustodyVisitationResult
+    = Memo
+    | Status AgreementStatus
 
 
 type AgreementStatus
@@ -153,7 +158,13 @@ availableActions state =
             ]
 
         BothPartiesAtCCRC reason ->
-            twoPartyActions (CCRC reason) CustodyVisitation
+            [ Disposition (CCRC reason) (CustodyVisitation (Status FullStipulation))
+            , Disposition (CCRC reason) (CustodyVisitation (Status PartialStipulation))
+            , Disposition (CCRC reason) (CustodyVisitation (Status Dispute))
+            , Disposition (CCRC reason) (CustodyVisitation Memo)
+            , Transition Left Petitioner
+            , Transition Left Respondent
+            ]
 
         Disposed ->
             []
@@ -164,6 +175,8 @@ checkinActions location =
     [ Transition location Petitioner
     , Transition location Respondent
     , Transition location BothParties
+    , Transition Left Petitioner
+    , Transition Left Respondent
     ]
 
 
@@ -192,8 +205,11 @@ actionToString action =
         Disposition Triage result ->
             toString result
 
-        Disposition _ (CustodyVisitation Dispute) ->
+        Disposition _ (CustodyVisitation Memo) ->
             "CustodyVisitation Memo"
+
+        Disposition _ (CustodyVisitation (Status status)) ->
+            "CustodyVisitation " ++ toString status
 
         Disposition _ result ->
             toString result
@@ -298,13 +314,16 @@ resultFromString string =
             Continuance Other
 
         "CustodyVisitation FullStipulation" ->
-            CustodyVisitation FullStipulation
+            CustodyVisitation (Status FullStipulation)
 
         "CustodyVisitation PartialStipulation" ->
-            CustodyVisitation PartialStipulation
+            CustodyVisitation (Status PartialStipulation)
 
         "CustodyVisitation Dispute" ->
-            CustodyVisitation Dispute
+            CustodyVisitation (Status Dispute)
+
+        "CustodyVisitation Memo" ->
+            CustodyVisitation Memo
 
         "FOAH (Default Petitioner)" ->
             FOAH (Default Petitioner)
@@ -405,6 +424,24 @@ partyFromString string =
             BothParties
 
 
+ccrcResultToString result =
+    case result of
+        Status FullStipulation ->
+            "CustodyVisitation FullStipulation"
+
+        Status PartialStipulation ->
+            "CustodyVisitation PartialStipulation"
+
+        Status Dispute ->
+            "CustodyVisitation Dispute"
+
+        Memo ->
+            "CustodyVisitation Memo"
+
+        _ ->
+            ""
+
+
 createEventFromAction : Msal.User -> CaseManagementData.Hearing -> Action -> TriageData.Event
 createEventFromAction user hearing action =
     case action of
@@ -413,6 +450,14 @@ createEventFromAction user hearing action =
                 "Transition"
                 (toString location)
                 (toString party)
+                user.id
+                Nothing
+
+        Disposition (CCRC reason) (CustodyVisitation result) ->
+            TriageData.Event hearing.caseId
+                "Disposition"
+                (toString (CCRC reason))
+                (ccrcResultToString result)
                 user.id
                 Nothing
 

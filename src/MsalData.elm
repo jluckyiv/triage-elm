@@ -12,9 +12,13 @@ type alias AccessToken =
     String
 
 
+type alias UserId =
+    String
+
+
 type alias User =
     { odataContext : String
-    , id : String
+    , id : UserId
     , displayName : String
     , givenName : String
     , mail : String

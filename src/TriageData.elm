@@ -6,29 +6,38 @@ import Json.Decode.Pipeline exposing (decode, required, optional)
 import Json.Encode
 
 
-feedUrl : String
-feedUrl =
-    "wss://triage/ws"
+host value =
+    case value of
+        "localhost:3000" ->
+            "triagedev"
+
+        host ->
+            host
 
 
-getEventsUrl : String
-getEventsUrl =
-    "https://triage/api/v1/events/timeStamp="
+baseUrl value =
+    "https://" ++ host value ++ "/api/v1/"
 
 
-postEventUrl : String
-postEventUrl =
-    "https://triage/api/v1/event"
+feedUrl value =
+    -- "wss://triage/ws"
+    "wss://" ++ host value ++ "/ws"
 
 
-getNotesUrl : String
-getNotesUrl =
-    "https://triage/api/v1/notes/timeStamp="
+getEventsUrl value =
+    baseUrl value ++ "events/timeStamp="
 
 
-postNoteUrl : String
-postNoteUrl =
-    "https://triage/api/v1/note"
+postEventUrl value =
+    baseUrl value ++ "event"
+
+
+getNotesUrl value =
+    baseUrl value ++ "notes/timeStamp="
+
+
+postNoteUrl value =
+    baseUrl value ++ "note"
 
 
 type alias Feed =
@@ -149,27 +158,25 @@ maybeStringDecoder =
         Json.Decode.string
 
 
-postEventRequest : Event -> Http.Request Event
-postEventRequest event =
+postEventRequest value event =
     Http.request
         { body = encodeEvent event |> Http.jsonBody
         , expect = Http.expectJson decodeEvent
         , headers = []
         , method = "POST"
         , timeout = Nothing
-        , url = postEventUrl
+        , url = postEventUrl value
         , withCredentials = False
         }
 
 
-postNoteRequest : Note -> Http.Request Note
-postNoteRequest note =
+postNoteRequest host note =
     Http.request
         { body = encodeNote note |> Http.jsonBody
         , expect = Http.expectJson decodeNote
         , headers = []
         , method = "POST"
         , timeout = Nothing
-        , url = postNoteUrl
+        , url = postNoteUrl host
         , withCredentials = False
         }

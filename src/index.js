@@ -2,7 +2,7 @@ import 'font-awesome/css/font-awesome.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import './main.css';
-import msalconfig from './msalconfig';
+import config from './config';
 import { Main } from './Main.elm';
 import registerServiceWorker from './registerServiceWorker';
 
@@ -13,9 +13,9 @@ var graphApiEndpoint = "https://graph.microsoft.com/v1.0/me";
 var graphAPIScopes = ["https://graph.microsoft.com/user.read"];
 
 // Initialize application
-var userAgentApplication = new Msal.UserAgentApplication(msalconfig.clientID, null, loginCallback, {
-    redirectUri: msalconfig.redirectUri,
-    cacheLocation: msalconfig.cacheLocation
+var userAgentApplication = new Msal.UserAgentApplication(config.msal.clientID, null, loginCallback, {
+    redirectUri: config.msal.redirectUri,
+    cacheLocation: config.msal.cacheLocation
 });
 
 
@@ -131,7 +131,8 @@ function callWebApiWithTokenAndCallback(endpoint, token) {
 }
 
 
-var app = Main.embed(document.getElementById("root"), window.localStorage.getItem("user") || null);
+var flags = { host: window.location.host, user: window.localStorage.getItem("user") || null };
+var app = Main.embed(document.getElementById("root"), flags);
 
 app.ports.login.subscribe(function (value) {
     app.ports.loginResult.send(getUserInfo());
@@ -145,6 +146,7 @@ app.ports.logout.subscribe(function (value) {
 
 
 function saveUser(data) {
+    localStorage.setItem("user", JSON.stringify(data));
     app.ports.loginResult.send(data);
 }
 

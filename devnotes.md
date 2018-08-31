@@ -62,34 +62,42 @@ I got all the JSON decoders working. I'm still not sure how to do the interprete
 
 ## To do
 ### Me
-- dynamic actions in action button
-- get triage data 
-- post triage data
-- delete triage data
-- json encoders and decoders for triage data
-- consume triage websockets
 - add authors to notes and events
-- wire up date/time stamp (is this necessary?)
-- filter actions/create filter bar
-- add pending filter
-- make div collapsible for notes
-- make div collapsible for events
-- add delete to collapsible div instead of dropdown box
+- add date to localStorage
 - navigation
-- check sessionstorage for user
+- clean up UI
+- wire up date/time stamp (is this necessary?)
+- make div collapsible for notes & events
+- make div collapsible for unnecessary rows
+- add delete action to icon by notes and events
+- fix login button UI by using sessionStorage or localStorage
 
 ### Tibon
-- filter events by day
+- change events and notes queries to use case numbers instead of dates
+- allow filtering events by day
 - CRUD for users
-- CRUD for dispos
-- CRUD for events
 - export to CSV
 - aggregate reports of dispos by month
+- work out historical data
 
 ### Later
 - interpreter filters
-- fix login button UI by using sessionStorage or localStorage
+- add check for DV
+- filter availableActions to eliminate options for things already completed
+- delete triage data before 8/13/18
 
 ## Done
 - hearing count
 - tell Armando that PROD is serving `[{}]` for empty list
+- dynamic actions in action button
+- get triage data 
+- post triage data
+- json encoders and decoders for triage data
+- consume triage websockets
+- CRUD for dispos
+- CRUD for events
+- create friendly action strings
+- filter actions/create filter bar
+- add pending filter
+- save user in localStorage
+- check for user at init
